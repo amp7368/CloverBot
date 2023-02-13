@@ -1,7 +1,0 @@
-version: '3.8'
-services:
-    cloverbot:
-        container_name: ${COMPOSE_NAME}.${CLOVER_IMAGE}
-        image: docker.appleptr16.com/${COMPOSE_NAME}/${CLOVER_IMAGE}:1.0
-        volumes:
-            - '${MOUNT_DIR}:${WORKINGDIR}/data'

@@ -1,17 +1,19 @@
 package apple.discord.clover.discord.inactivity;
 
-import apple.discord.acd.gui.awd.page.scrollable.AWDEntry;
-import apple.discord.acd.gui.awd.page.scrollable.AWDPageGuiScrollable;
 import apple.discord.clover.util.Pretty;
 import apple.discord.clover.wynncraft.player.WynnPlayer;
+import discord.util.dcf.gui.scroll.DCFEntry;
+import discord.util.dcf.gui.scroll.DCFScrollGui;
+import java.util.Comparator;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
-import java.util.Comparator;
+public class MessageInactivity extends DCFScrollGui<GuiInactivity, WynnPlayer> {
 
-public class MessageInactivity extends AWDPageGuiScrollable<GuiInactivity, WynnPlayer> {
     private static final Comparator<WynnPlayer> MEMBERS_COMPARATOR = (p1, p2) -> {
         long time = (p1.meta.lastJoin.getTime() - p2.meta.lastJoin.getTime());
         if (time > 0) return 1;
@@ -26,7 +28,7 @@ public class MessageInactivity extends AWDPageGuiScrollable<GuiInactivity, WynnP
 
     public MessageInactivity(GuiInactivity gui) {
         super(gui);
-        this.addAllEntries(gui.getGuildMembers());
+        this.addEntries(gui.getGuildMembers());
         this.sort();
     }
 
@@ -36,16 +38,17 @@ public class MessageInactivity extends AWDPageGuiScrollable<GuiInactivity, WynnP
 
 
     @Override
-    public Message makeMessage() {
-        return this.messageBuilder()
-                .setContent(this.messageContent())
-                .setActionRows(this.getNavigationRow())
-                .build();
+    public MessageCreateData makeMessage() {
+        return new MessageCreateBuilder()
+            .setContent(this.messageContent())
+            .addComponents(this.getNavigationRow())
+            .build();
     }
 
     private String messageContent() {
-        StringBuilder content = new StringBuilder(String.format("```ml\n|%5s %-30s| %-25s| %-25s|\n", "", this.parent.getGuildName() + " Members", "Rank", "Time Inactive"));
-        for (AWDEntry<WynnPlayer> entry : this.getCurrentPageEntries()) {
+        StringBuilder content = new StringBuilder(
+            String.format("```ml\n|%5s %-30s| %-25s| %-25s|\n", "", this.parent.getGuildName() + " Members", "Rank", "Time Inactive"));
+        for (DCFEntry<WynnPlayer> entry : this.getCurrentPageEntries()) {
             if (entry.indexInPage() % getEntriesPerSection() == 0)
                 content.append(DIVIDER);
             content.append(this.asEntryString(entry));
@@ -55,7 +58,7 @@ public class MessageInactivity extends AWDPageGuiScrollable<GuiInactivity, WynnP
         return Pretty.limit(content.toString(), limitMessage) + "\n```";
     }
 
-    private String asEntryString(AWDEntry<WynnPlayer> entry) {
+    private String asEntryString(DCFEntry<WynnPlayer> entry) {
         WynnPlayer player = entry.entry();
         long days = player.getInactiveDays();
         String daysInactive;
@@ -63,10 +66,10 @@ public class MessageInactivity extends AWDPageGuiScrollable<GuiInactivity, WynnP
         else if (days == 1) daysInactive = days + " day";
         else daysInactive = days + " days";
         return String.format("|%4d. %-30s| %-25s| %-25s|",
-                entry.indexInAll() + 1,
-                Pretty.limit(player.username, 30),
-                Pretty.uppercaseFirst(player.guildMember.rank),
-                daysInactive);
+            entry.indexInAll() + 1,
+            Pretty.limit(player.username, 30),
+            Pretty.uppercaseFirst(player.guildMember.rank),
+            daysInactive);
     }
 
     @Override
@@ -81,7 +84,7 @@ public class MessageInactivity extends AWDPageGuiScrollable<GuiInactivity, WynnP
 
 
     private void resetPage() {
-        this.pageInEntries = 0;
+        this.entryPage = 0;
     }
 
     public void onReverse(ButtonInteraction interaction) {
@@ -93,28 +96,28 @@ public class MessageInactivity extends AWDPageGuiScrollable<GuiInactivity, WynnP
     private ActionRow getNavigationRow() {
         Button backButton = this.getBackButton();
         Button forwardButton = this.getForwardButton();
-        if (this.getMaxPage() == this.pageInEntries) forwardButton = forwardButton.asDisabled();
-        if (0 == this.pageInEntries) backButton = backButton.asDisabled();
+        if (this.getMaxPage() == this.entryPage) forwardButton = forwardButton.asDisabled();
+        if (0 == this.entryPage) backButton = backButton.asDisabled();
         return ActionRow.of(backButton, forwardButton, this.getTopButton(), this.getReverseButton());
     }
 
     private Button getForwardButton() {
-        addManualSimpleButton(event -> this.forward(), this.btnForwardId());
-        return this.btnForward();
+        registerButton(this.btnNext().getId(), event -> this.forward());
+        return this.btnNext();
     }
 
     private Button getBackButton() {
-        addManualSimpleButton(event -> this.back(), this.btnBackId());
-        return this.btnBack();
+        registerButton(this.btnPrev().getId(), event -> this.btnPrev());
+        return this.btnPrev();
     }
 
     private Button getTopButton() {
-        addManualSimpleButton(interaction -> resetPage(), "top1");
+        registerButton("top1", interaction -> resetPage());
         return Button.primary("top1", "To page 1");
     }
 
     private Button getReverseButton() {
-        addManualSimpleButton(this::onReverse, "reverse");
+        registerButton("reverse", this::onReverse);
         return Button.primary("reverse", "Reverse sort");
     }
 }

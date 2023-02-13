@@ -1,10 +1,11 @@
 package apple.discord.clover.wynncraft.player;
 
-import apple.discord.acd.MillisTimeUnits;
 
+import discord.util.dcf.util.TimeMillis;
 import java.util.UUID;
 
 public class WynnInactivePlayer {
+
     private final UUID uuid;
     private final String name;
     private final long millisInactive;
@@ -30,11 +31,11 @@ public class WynnInactivePlayer {
     }
 
     public int getPossibleDaysInactive() {
-        return (int) ((System.currentTimeMillis() - timeChecked + millisInactive) / MillisTimeUnits.DAY);
+        return (int) ((System.currentTimeMillis() - timeChecked + millisInactive) / TimeMillis.DAY);
     }
 
     public int getDaysInactive() {
-        return (int) (millisInactive / MillisTimeUnits.DAY);
+        return (int) (millisInactive / TimeMillis.DAY);
     }
 
     public String getName() {

@@ -1,28 +1,27 @@
 package apple.discord.clover.discord.inactivity;
 
-import apple.discord.acd.ACD;
-import apple.discord.acd.gui.awd.main.AWDGui;
-import apple.discord.clover.wynncraft.WynnDatabase;
 import apple.discord.clover.wynncraft.guild.WynnGuild;
 import apple.discord.clover.wynncraft.guild.WynnGuildHeader;
 import apple.discord.clover.wynncraft.guild.WynnGuildMember;
 import apple.discord.clover.wynncraft.player.WynnPlayer;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import discord.util.dcf.DCF;
+import discord.util.dcf.gui.base.GuiReplyFirstMessage;
+import discord.util.dcf.gui.base.gui.DCFGui;
+import java.util.ArrayList;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+public class GuiInactivity extends DCFGui {
 
-public class GuiInactivity extends AWDGui {
     private final List<WynnPlayer> members = new ArrayList<>();
     @NotNull
     private final WynnGuildHeader wynnGuildHeader;
     @Nullable
     private WynnGuild guild;
 
-    public GuiInactivity(ACD acd, SlashCommandInteractionEvent event, @NotNull WynnGuildHeader wynnGuildHeader) {
-        super(acd, event);
+    public GuiInactivity(DCF dcf, GuiReplyFirstMessage firstMessage, @NotNull WynnGuildHeader wynnGuildHeader) {
+        super(dcf, firstMessage);
         this.wynnGuildHeader = wynnGuildHeader;
     }
 
@@ -35,7 +34,6 @@ public class GuiInactivity extends AWDGui {
             this.members.add(player);
             player.addGuildMemberInfo(guildMember);
         }
-        WynnDatabase.addMember(player);
     }
 
     public boolean isGuildMembersPresent() {

@@ -1,6 +1,5 @@
 package apple.discord.clover.guild;
 
-import apple.discord.acd.MillisTimeUnits;
 import apple.discord.clover.CloverBot;
 import apple.discord.clover.util.Links;
 import apple.discord.clover.wynncraft.WynnDatabase;
@@ -9,28 +8,30 @@ import apple.discord.clover.wynncraft.WynncraftService;
 import apple.utilities.lamdas.daemon.AppleDaemon;
 import apple.utilities.request.AppleJsonFromURL;
 import apple.utilities.util.ExceptionUnpackaging;
-import org.slf4j.event.Level;
+import discord.util.dcf.util.TimeMillis;
 
 public class GuildListDaemon implements AppleDaemon {
+
     @Override
     public long getSleepTime() {
-        return MillisTimeUnits.DAY / 2;
+        return TimeMillis.DAY / 2;
     }
 
     @Override
     public void onPostInit() {
-        CloverBot.log("Daemon GuildList started", Level.INFO);
+        CloverBot.get().logger().info("Daemon GuildList started");
     }
 
     @Override
     public void daemon() {
-        WynncraftService.get().queue(new AppleJsonFromURL<>(Links.GUILD_LIST, WynncraftGuildListResponse.class), response -> {
-            WynnDatabase.setGuilds(response.getGuilds());
-        }).completeAndRun();
+        AppleJsonFromURL<WynncraftGuildListResponse> fromURL = new AppleJsonFromURL<>(Links.GUILD_LIST,
+            WynncraftGuildListResponse.class);
+        WynncraftService.get().taskCreator().accept(fromURL, response -> WynnDatabase.get().setGuilds(response.getGuilds()))
+            .complete();
     }
 
     @Override
     public void error(Exception e) {
-        CloverBot.log("Exception in guild list daemon" + "\n" + ExceptionUnpackaging.getStackTrace(e), Level.ERROR);
+        CloverBot.get().logger().error("Exception in guild list daemon" + "\n" + ExceptionUnpackaging.getStackTrace(e));
     }
 }

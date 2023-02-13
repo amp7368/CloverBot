@@ -1,13 +1,13 @@
 package apple.discord.clover.wynncraft.player;
 
-import apple.discord.acd.MillisTimeUnits;
 import apple.discord.clover.wynncraft.guild.WynnGuildMember;
 import apple.utilities.util.FuzzyStringMatcher;
-
+import discord.util.dcf.util.TimeMillis;
 import java.util.UUID;
 
 public class WynnPlayer {
-    private static final long TIME_TO_SAVE = MillisTimeUnits.HOUR;
+
+    private static final long TIME_TO_SAVE = TimeMillis.HOUR;
     public String username;
     public UUID uuid;
     public String rank;
@@ -29,7 +29,7 @@ public class WynnPlayer {
     }
 
     public int getInactiveDays() {
-        return (int) (getInactivityMillis() / MillisTimeUnits.DAY);
+        return (int) (getInactivityMillis() / TimeMillis.DAY);
     }
 
     public long getInactivityMillis() {
@@ -80,14 +80,16 @@ public class WynnPlayer {
 
     public boolean nameContains(String playerName) {
         if (usernamePattern == null) {
-            usernamePattern = new FuzzyStringMatcher(username, FuzzyStringMatcher.Flag.CONTAINS, FuzzyStringMatcher.Flag.CASE_INSENSITIVE);
+            usernamePattern = new FuzzyStringMatcher(username, FuzzyStringMatcher.Flag.CONTAINS,
+                FuzzyStringMatcher.Flag.CASE_INSENSITIVE);
         }
         return usernamePattern.operationsToMatch(playerName, 0) >= 0;
     }
 
     public boolean nameOneCharOff(String playerName) {
         if (usernamePattern == null) {
-            usernamePattern = new FuzzyStringMatcher(username, FuzzyStringMatcher.Flag.CONTAINS, FuzzyStringMatcher.Flag.CASE_INSENSITIVE);
+            usernamePattern = new FuzzyStringMatcher(username, FuzzyStringMatcher.Flag.CONTAINS,
+                FuzzyStringMatcher.Flag.CASE_INSENSITIVE);
         }
         return usernamePattern.operationsToMatch(playerName, 1) >= 0;
     }

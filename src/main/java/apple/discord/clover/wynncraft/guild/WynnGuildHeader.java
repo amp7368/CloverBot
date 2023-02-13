@@ -1,11 +1,11 @@
 package apple.discord.clover.wynncraft.guild;
 
 import com.google.gson.annotations.Expose;
-
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class WynnGuildHeader {
+
     @Expose
     public String name;
     @Expose
@@ -67,8 +67,7 @@ public class WynnGuildHeader {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof WynnGuildHeader other) {
-            return this.name.equals(other.name);
-//            return this.name.equals(other.name) && this.prefix.equals(other.prefix);
+            return this.name.equals(other.name) && this.prefix.equals(other.prefix);
         }
         return false;
     }
@@ -76,8 +75,8 @@ public class WynnGuildHeader {
     @Override
     public String toString() {
         return "WynnGuildHeader{" +
-                "name='" + name + '\'' +
-                ", prefix='" + prefix + '\'' +
-                '}';
+            "name='" + name + '\'' +
+            ", prefix='" + prefix + '\'' +
+            '}';
     }
 }

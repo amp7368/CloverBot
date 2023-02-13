@@ -1,61 +1,71 @@
 package apple.discord.clover.wynncraft;
 
-import apple.discord.clover.CloverBot;
 import apple.discord.clover.util.FileIOService;
 import apple.discord.clover.wynncraft.guild.WynnGuild;
 import apple.discord.clover.wynncraft.guild.WynnGuildHeader;
 import apple.discord.clover.wynncraft.player.WynnPlayer;
-import apple.utilities.request.AppleJsonFromFile;
-import apple.utilities.request.AppleJsonToFile;
-import apple.utilities.request.AppleRequestService;
-import com.google.gson.reflect.TypeToken;
+import apple.utilities.database.ajd.AppleAJD;
+import apple.utilities.database.ajd.AppleAJDInst;
+import apple.utilities.fileio.serializing.FileIOJoined;
+import apple.utilities.threading.service.priority.TaskPriorityCommon;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.event.Level;
-
-import java.io.File;
-import java.util.*;
 
 public class WynnDatabase {
-    private static final File GUILD_FOLDER = CloverBot.getFolder("guildList");
-    private final static WynnDatabase instance = new WynnDatabase();
+
+    private static final File GUILD_FOLDER = WynncraftModule.get().getFile("guildList");
+    private static AppleAJDInst<WynnDatabase> manager;
 
     private final Set<String> guildsRequestedToBeUpdated = new HashSet<>();
     private final Map<String, WynnPlayer> members = new HashMap<>();
     private final Map<String, WynnGuildHeader> guilds = new HashMap<>(20000);
 
     public static WynnDatabase get() {
-        return instance;
+        return manager.getInstance();
     }
 
-    public static List<WynnGuildHeader> getFromGuildName(String guildName) {
-        synchronized (instance) {
+    public static void load() {
+        File file = WynncraftModule.get().getFile("WynnDatabase.json");
+        manager = AppleAJD.createInst(WynnDatabase.class, file, FileIOService.get().taskCreator());
+        manager.loadOrMake();
+    }
+
+    public List<WynnGuildHeader> getFromGuildName(String guildName) {
+        synchronized (this) {
             List<WynnGuildHeader> matches = new ArrayList<>();
-            for (WynnGuildHeader guild : get().guilds.values()) {
+            for (WynnGuildHeader guild : guilds.values()) {
                 if (guild.matchesTag(guildName)) {
                     matches.add(guild);
                 }
             }
             if (!matches.isEmpty()) return matches;
-            for (WynnGuildHeader guild : get().guilds.values()) {
+            for (WynnGuildHeader guild : guilds.values()) {
                 if (guild.matchesTagIgnoreCase(guildName)) {
                     matches.add(guild);
                 }
             }
             if (!matches.isEmpty()) return matches;
-            for (WynnGuildHeader guild : get().guilds.values()) {
+            for (WynnGuildHeader guild : guilds.values()) {
                 if (guild.matchesGuildNameExactly(guildName)) {
                     matches.add(guild);
                 }
             }
             if (!matches.isEmpty()) return matches;
-            for (WynnGuildHeader guild : get().guilds.values()) {
+            for (WynnGuildHeader guild : guilds.values()) {
                 if (guild.matchesGuildName(guildName)) {
                     matches.add(guild);
                 }
             }
             if (!matches.isEmpty()) return matches;
-            for (WynnGuildHeader guild : get().guilds.values()) {
+            for (WynnGuildHeader guild : guilds.values()) {
                 if (guild.matchesGuildNameIgnoreCase(guildName)) {
                     matches.add(guild);
                 }
@@ -64,100 +74,73 @@ public class WynnDatabase {
         }
     }
 
-    public static void loadDatabase() {
-        File[] files = GUILD_FOLDER.listFiles();
-        if (files != null) {
-            AppleRequestService.RequestHandler<?>[] requests = new AppleRequestService.RequestHandler<?>[files.length];
-            synchronized (instance) {
-                for (int i = 0; i < files.length; i++) {
-                    File file = files[i];
-                    if (file.isDirectory()) continue;
-                    requests[i] = FileIOService.get().queue(new AppleJsonFromFile<HashMap<String, WynnGuildHeader>>(file, new TypeToken<HashMap<String, WynnGuildHeader>>() {
-                            }.getType()),
-                            (map) -> {
-                                synchronized (instance) {
-                                    for (Map.Entry<String, WynnGuildHeader> header : map.entrySet()) {
-                                        get().guilds.put(header.getKey(), header.getValue());
-                                    }
-                                }
-                            }
-                    );
-                }
-            }
-            for (AppleRequestService.RequestHandler<?> request : requests) {
-                if (request != null) request.completeAndRun();
-            }
-        }
-        CloverBot.log("Wynn Guild DB loaded", Level.INFO);
-    }
-
-    public static void setGuilds(String[] guilds) {
-        synchronized (instance) {
-            int i = 0, j = 0;
+    public void setGuilds(String[] guilds) {
+        synchronized (this) {
             for (String guild : guilds) {
-                WynnGuildHeader guildHeader = get().guilds.get(guild);
+                WynnGuildHeader guildHeader = this.guilds.get(guild);
                 if (guildHeader == null || guildHeader.prefix == null) {
-                    i++;
-                    get().guilds.put(guild, new WynnGuildHeader(guild));
-                    if (get().guildsRequestedToBeUpdated.add(guild)) {
-                        WynncraftService.queue(WynnRequestPriority.BACKGROUND, guild, (wynnGuild) -> {
+                    this.guilds.put(guild, new WynnGuildHeader(guild));
+                    if (guildsRequestedToBeUpdated.add(guild)) {
+                        WynncraftService.queueGuild(TaskPriorityCommon.LOWER, guild, (wynnGuild) -> {
                             addGuild(wynnGuild);
 
                             HashMap<String, WynnGuildHeader> headersToSave = getHeaders();
                             File file = new File(GUILD_FOLDER, "guilds_all.json");
-                            FileIOService.get().queueVoid(new AppleJsonToFile(file, headersToSave));
+                            try {
+                                FileIOJoined.get().saveJson(file, headersToSave, null);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         });
                     }
-                } else {
-                    j++;
                 }
             }
         }
     }
 
-    private static HashMap<String, WynnGuildHeader> getHeaders() {
-        synchronized (instance) {
+    private HashMap<String, WynnGuildHeader> getHeaders() {
+        synchronized (this) {
             return new HashMap<>(get().guilds);
         }
     }
 
-    private static void addGuild(WynnGuild wynnGuild) {
-        synchronized (instance) {
+    private void addGuild(WynnGuild wynnGuild) {
+        synchronized (this) {
             WynnGuildHeader header = wynnGuild.toHeader();
-            get().guilds.put(header.name, header);
-            get().guildsRequestedToBeUpdated.remove(header.name);
+            guilds.put(header.name, header);
+            guildsRequestedToBeUpdated.remove(header.name);
         }
     }
 
-    public static void addMember(WynnPlayer member) {
-        synchronized (instance) {
-            get().members.put(member.uuid.toString(), member);
+    public void addMember(WynnPlayer member) {
+        synchronized (this) {
+            members.put(member.uuid.toString(), member);
         }
         WynnPlayerDatabase.get().addPlayer(member.toWynnInactivePlayer());
     }
 
     @Nullable
-    public static WynnPlayer getPlayer(String uuid) {
-        synchronized (instance) {
-            WynnPlayer member = get().members.get(uuid);
+    public WynnPlayer getPlayer(String uuid) {
+        synchronized (this) {
+            WynnPlayer member = members.get(uuid);
             if (member == null) return null;
             if (member.isOld()) {
-                get().members.remove(uuid);
+                members.remove(uuid);
                 return null;
             }
             return member;
         }
     }
 
-    public static int getSize() {
-        synchronized (instance) {
-            return get().guilds.size();
+    public int getSize() {
+        synchronized (this) {
+            return guilds.size();
         }
     }
 
     @NotNull
     public List<WynnPlayer> getPlayerMatches(String playerName) {
-        synchronized (instance) {
+        synchronized (this) {
             List<WynnPlayer> matches = new ArrayList<>();
             List<WynnPlayer> badMatches = new ArrayList<>();
             for (WynnPlayer player : members.values()) {
