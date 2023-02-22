@@ -1,7 +1,7 @@
 package apple.discord.clover.discord.util;
 
 import apple.discord.clover.wynncraft.WynnDatabase;
-import apple.discord.clover.wynncraft.guild.WynnGuildHeader;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuildHeader;
 import apple.utilities.util.Pretty;
 import java.util.List;
 import java.util.stream.Collectors;

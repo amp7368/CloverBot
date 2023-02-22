@@ -1,9 +1,9 @@
 package apple.discord.clover.wynncraft;
 
 import apple.discord.clover.util.FileIOService;
-import apple.discord.clover.wynncraft.guild.WynnGuild;
-import apple.discord.clover.wynncraft.guild.WynnGuildHeader;
-import apple.discord.clover.wynncraft.player.WynnPlayer;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuildHeader;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.utilities.database.ajd.AppleAJD;
 import apple.utilities.database.ajd.AppleAJDInst;
 import apple.utilities.fileio.serializing.FileIOJoined;

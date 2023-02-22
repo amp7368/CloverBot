@@ -1,10 +1,10 @@
-package apple.discord.clover.discord.inactivity;
+package apple.discord.clover.discord.command.activity;
 
 import apple.discord.clover.util.Pretty;
 import apple.discord.clover.wynncraft.WynnDatabase;
 import apple.discord.clover.wynncraft.WynncraftService;
-import apple.discord.clover.wynncraft.guild.WynnGuildMember;
-import apple.discord.clover.wynncraft.player.WynnPlayer;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import discord.util.dcf.gui.base.page.DCFGuiPage;
 import discord.util.dcf.util.IMessageBuilder;

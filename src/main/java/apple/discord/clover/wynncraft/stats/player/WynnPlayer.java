@@ -1,6 +1,6 @@
-package apple.discord.clover.wynncraft.player;
+package apple.discord.clover.wynncraft.stats.player;
 
-import apple.discord.clover.wynncraft.guild.WynnGuildMember;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
 import apple.utilities.util.FuzzyStringMatcher;
 import discord.util.dcf.util.TimeMillis;
 import java.util.UUID;

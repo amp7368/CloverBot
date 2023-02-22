@@ -47,7 +47,7 @@ dependencies {
     implementation 'discord.util:discorddcf:1.0-SNAPSHOT'
     implementation 'apple.lib:applemodules:2.0-SNAPSHOT'
 }
-mainClassName = 'apple.discord.exercise.CloverBot'
+mainClassName = 'apple.discord.clover.CloverBot'
 shadowJar {
     manifest {
         attributes 'Multi-Release': true

@@ -1,4 +1,4 @@
-package apple.discord.clover.wynncraft.guild;
+package apple.discord.clover.wynncraft.stats.guild;
 
 
 import java.util.Date;

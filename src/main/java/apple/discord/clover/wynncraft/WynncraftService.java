@@ -1,9 +1,9 @@
 package apple.discord.clover.wynncraft;
 
 import apple.discord.clover.util.Links;
-import apple.discord.clover.wynncraft.guild.WynnGuild;
-import apple.discord.clover.wynncraft.player.WynnPlayer;
-import apple.discord.clover.wynncraft.player.WynnPlayerResponse;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
 import apple.utilities.request.AppleJsonFromURL;
 import apple.utilities.threading.service.priority.AsyncTaskPriority;
 import apple.utilities.threading.service.priority.TaskHandlerPriority;
@@ -11,7 +11,6 @@ import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import discord.util.dcf.util.TimeMillis;
-import java.io.IOException;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class WynncraftService {
 
     // rate limit with 429
-    private static final TaskHandlerPriority instance = new TaskHandlerPriority(600 / 3, (int) TimeMillis.minToMillis(10), 10);
+    private static final TaskHandlerPriority instance = new TaskHandlerPriority(600 / 3, (int) TimeMillis.minToMillis(10), 350);
 
     @NotNull
     private static Gson gson() {

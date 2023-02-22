@@ -1,7 +1,7 @@
-package apple.discord.clover.discord.inactivity;
+package apple.discord.clover.discord.command.activity;
 
 import apple.discord.clover.util.Pretty;
-import apple.discord.clover.wynncraft.player.WynnPlayer;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import discord.util.dcf.gui.scroll.DCFEntry;
 import discord.util.dcf.gui.scroll.DCFScrollGui;
 import java.util.Comparator;

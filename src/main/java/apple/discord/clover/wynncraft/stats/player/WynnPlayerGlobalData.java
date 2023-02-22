@@ -1,4 +1,4 @@
-package apple.discord.clover.wynncraft.player;
+package apple.discord.clover.wynncraft.stats.player;
 
 public class WynnPlayerGlobalData {
     public int chestsFound;

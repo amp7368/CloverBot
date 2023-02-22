@@ -1,4 +1,4 @@
-package apple.discord.clover.guild;
+package apple.discord.clover.wynncraft.overview.guild;
 
 import apple.discord.clover.CloverBot;
 import apple.discord.clover.util.Links;
@@ -8,6 +8,7 @@ import apple.discord.clover.wynncraft.WynncraftService;
 import apple.utilities.lamdas.daemon.AppleDaemon;
 import apple.utilities.request.AppleJsonFromURL;
 import apple.utilities.util.ExceptionUnpackaging;
+import com.google.gson.Gson;
 import discord.util.dcf.util.TimeMillis;
 
 public class GuildListDaemon implements AppleDaemon {
@@ -25,7 +26,7 @@ public class GuildListDaemon implements AppleDaemon {
     @Override
     public void daemon() {
         AppleJsonFromURL<WynncraftGuildListResponse> fromURL = new AppleJsonFromURL<>(Links.GUILD_LIST,
-            WynncraftGuildListResponse.class);
+            WynncraftGuildListResponse.class, new Gson());
         WynncraftService.get().taskCreator().accept(fromURL, response -> WynnDatabase.get().setGuilds(response.getGuilds()))
             .complete();
     }

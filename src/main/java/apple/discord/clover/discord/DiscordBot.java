@@ -1,6 +1,7 @@
 package apple.discord.clover.discord;
 
-import apple.discord.clover.discord.inactivity.CommandInactivity;
+import apple.discord.clover.discord.command.activity.CommandInactivity;
+import apple.discord.clover.discord.command.help.CommandHelp;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import discord.util.dcf.DCF;
@@ -13,6 +14,8 @@ public class DiscordBot extends AppleModule {
 
 
     public static DCF dcf;
+    public static String INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=616398849803681889&permissions=18496&scope"
+        + "=applications.commands%20bot";
 
     public static void load() {
         JDABuilder builder = JDABuilder.createLight(DiscordConfig.get().getToken());
@@ -20,6 +23,7 @@ public class DiscordBot extends AppleModule {
         client.getPresence().setPresence(Activity.playing("Slash commands!"), false);
         dcf = new DCF(client);
         dcf.commands().addCommand(new CommandInactivity());
+        dcf.commands().addCommand(new CommandHelp());
         dcf.commands().updateCommands();
     }
 

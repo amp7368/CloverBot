@@ -1,7 +1,7 @@
-package apple.discord.clover.discord.inactivity;
+package apple.discord.clover.discord.command.activity;
 
 import apple.discord.clover.discord.util.ArgumentUtils;
-import apple.discord.clover.wynncraft.guild.WynnGuildHeader;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuildHeader;
 import discord.util.dcf.slash.DCFSlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;

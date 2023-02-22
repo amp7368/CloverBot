@@ -1,9 +1,9 @@
-package apple.discord.clover.discord.inactivity;
+package apple.discord.clover.discord.command.activity;
 
-import apple.discord.clover.wynncraft.guild.WynnGuild;
-import apple.discord.clover.wynncraft.guild.WynnGuildHeader;
-import apple.discord.clover.wynncraft.guild.WynnGuildMember;
-import apple.discord.clover.wynncraft.player.WynnPlayer;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuildHeader;
+import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import discord.util.dcf.DCF;
 import discord.util.dcf.gui.base.GuiReplyFirstMessage;
 import discord.util.dcf.gui.base.gui.DCFGui;

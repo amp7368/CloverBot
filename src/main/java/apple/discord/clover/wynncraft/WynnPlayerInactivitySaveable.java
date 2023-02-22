@@ -1,6 +1,6 @@
 package apple.discord.clover.wynncraft;
 
-import apple.discord.clover.wynncraft.player.WynnInactivePlayer;
+import apple.discord.clover.wynncraft.stats.player.WynnInactivePlayer;
 import apple.utilities.database.SaveFileable;
 
 import java.util.HashMap;

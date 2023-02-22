@@ -2,7 +2,7 @@ package apple.discord.clover.wynncraft;
 
 import apple.discord.clover.CloverBot;
 import apple.discord.clover.util.FileIOService;
-import apple.discord.clover.wynncraft.player.WynnInactivePlayer;
+import apple.discord.clover.wynncraft.stats.player.WynnInactivePlayer;
 import apple.utilities.database.ajd.AppleAJD;
 import apple.utilities.database.ajd.AppleAJDTyped;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
