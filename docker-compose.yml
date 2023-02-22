@@ -1,14 +1,17 @@
 version: '3.8'
 services:
-    cloverbot:
-        restart: unless-stopped
-        container_name: ${COMPOSE_NAME}.${CLOVER_IMAGE}
-        image: ${COMPOSE_NAME}/${CLOVER_IMAGE}
-        build:
-            context: .
-            args:
-                - GRADLE_VERSION=${GRADLE_VERSION}
-                - JAVA_VERSION=${JAVA_VERSION}
-                - WORKINGDIR=${WORKINGDIR}
-        volumes:
-            - '${MOUNT_DIR}:${WORKINGDIR}/data'
+  clover:
+    restart: unless-stopped
+    container_name: ${COMPOSE_NAME}.${IMAGE_NAME}
+    image: ${COMPOSE_NAME}/${IMAGE_NAME}
+    build:
+      context: .
+      args:
+        - JAVA_VERSION=${JAVA_VERSION}
+        - JAR_FILE=${JAR_FILE}
+        - WORKINGDIR=${WORKINGDIR}
+    environment:
+      - JAR_FILE=${JAR_FILE}
+      - WORKINGDIR=${WORKINGDIR}
+    volumes:
+      - '${MOUNT_DIR}/java:${WORKINGDIR}/data'

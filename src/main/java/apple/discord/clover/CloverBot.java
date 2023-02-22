@@ -1,43 +1,41 @@
 package apple.discord.clover;
 
+import apple.discord.clover.database.CloverDatabase;
 import apple.discord.clover.discord.DiscordBot;
-import apple.discord.clover.guild.GuildListDaemon;
+import apple.discord.clover.wynncraft.overview.guild.GuildListDaemon;
 import apple.discord.clover.wynncraft.WynnDatabase;
-import apple.discord.clover.wynncraft.WynnPlayerDatabase;
-import apple.utilities.util.ArrayUtils;
-import apple.utilities.util.FileFormatting;
-import org.slf4j.event.Level;
+import apple.discord.clover.wynncraft.WynncraftModule;
+import apple.lib.modules.AppleModule;
+import apple.lib.modules.ApplePlugin;
+import java.util.List;
 
-import javax.security.auth.login.LoginException;
-import java.io.File;
+public class CloverBot extends ApplePlugin {
 
-public class CloverBot {
-    public static void main(String[] args) throws LoginException {
-        log("CloverBot starting", Level.INFO);
-        CloverConfig.load();
-        new WynnPlayerDatabase();
-        WynnDatabase.loadDatabase();
+    private static CloverBot instance;
+
+    public static void main(String[] args) {
+        instance = new CloverBot();
+        instance.start();
+    }
+
+    public static CloverBot get() {
+        return instance;
+    }
+
+    @Override
+    public void onEnable() {
+        WynnDatabase.load();
         DiscordBot.load();
         new GuildListDaemon().start();
-        log("CloverBot started", Level.INFO);
     }
 
-    public static void log(String msg, Level lvl) {
-        System.out.println(msg);
+    @Override
+    public String getName() {
+        return "CloverBot";
     }
 
-    public static File getBuildFile(String... children) {
-        return FileFormatting.fileWithChildren(getDbFolder(), children);
-    }
-
-    private static File getDbFolder() {
-        return FileFormatting.getDBFolder(CloverBot.class);
-    }
-
-    public static File getFolder(String... children) {
-        children = ArrayUtils.combine(new String[][]{new String[]{"data"}, children}, String[]::new);
-        File file = getBuildFile(children);
-        file.mkdirs();
-        return file;
+    @Override
+    public List<AppleModule> createModules() {
+        return List.of(new CloverDatabase(), new WynncraftModule(), new DiscordBot());
     }
 }
