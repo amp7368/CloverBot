@@ -16,7 +16,7 @@ public class WynncraftModule extends AppleModule {
 
     @Override
     public void onEnable() {
-        new WynnDatabase();
+        WynnDatabase.load();
         new WynnPlayerDatabase();
     }
 

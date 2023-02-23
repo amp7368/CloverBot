@@ -10,14 +10,15 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 
-public class DiscordBot extends AppleModule {
+public class DiscordModule extends AppleModule {
 
 
     public static DCF dcf;
     public static String INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=616398849803681889&permissions=18496&scope"
         + "=applications.commands%20bot";
 
-    public static void load() {
+    @Override
+    public void onEnable() {
         JDABuilder builder = JDABuilder.createLight(DiscordConfig.get().getToken());
         JDA client = builder.build();
         client.getPresence().setPresence(Activity.playing("Slash commands!"), false);
