@@ -43,13 +43,15 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
     implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0'
 
-    // util
+    // apple
     implementation 'apple.utilities:AppleUtilities:1.3-SNAPSHOT'
     implementation 'discord.util:discorddcf:1.0-SNAPSHOT'
     implementation 'apple.lib:applemodules:2.0-SNAPSHOT'
 
     // discord
     implementation 'net.dv8tion:JDA:5.0.0-beta.3'
+    // http
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }
 mainClassName = 'apple.discord.clover.CloverBot'
 shadowJar {
