@@ -1,8 +1,8 @@
-package apple.discord.clover.wynncraft.stats.player;
+package apple.discord.clover.wynncraft.stats.player.primitive;
 
 
 import apple.discord.clover.util.Pretty;
-
+import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerClassProfessions;
 import java.util.function.Function;
 
 public enum ProfessionType {

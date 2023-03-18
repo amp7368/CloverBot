@@ -1,7 +1,9 @@
-package apple.discord.clover.wynncraft.stats.player;
+package apple.discord.clover.wynncraft.stats.player.global;
+
+import apple.discord.clover.wynncraft.stats.player.WynnPlayerTotalLevel;
 
 public class WynnPlayerGlobalData {
-    public int chestsFound;
+
     public long blocksWalked;
     public long itemsIdentified;
     public long mobsKilled;

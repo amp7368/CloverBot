@@ -1,6 +1,7 @@
-package apple.discord.clover.wynncraft.stats.player;
+package apple.discord.clover.wynncraft.stats.player.primitive;
 
 public class ProfessionLevel {
+
     public int level;
     public float xp;
 

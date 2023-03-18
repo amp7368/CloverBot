@@ -1,20 +1,21 @@
-package apple.discord.clover.service.network;
+package apple.discord.clover.service.player;
 
+import apple.discord.clover.database.activity.partial.LoginStorage;
+import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
 import apple.discord.clover.wynncraft.WynncraftRatelimit;
-import apple.discord.clover.wynncraft.network.ServerListResponse;
 import apple.discord.clover.wynncraft.response.RepeatThrottle;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
+import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
 import apple.utilities.threading.service.base.create.AsyncTaskQueueStart;
 import apple.utilities.threading.service.priority.AsyncTaskPriority;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -22,20 +23,27 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class ServerList {
+public class ServicePlayerStats {
 
-    private static final Builder SERVER_LIST_REQUEST = new Builder().url(WynncraftApi.SERVER_LIST)
-        .cacheControl(CacheControl.FORCE_NETWORK);
-    private static final AsyncTaskQueueStart<AsyncTaskPriority> SERVICE = WynncraftRatelimit.getNetwork()
+    private static final AsyncTaskQueueStart<AsyncTaskPriority> SERVICE = WynncraftRatelimit.getPlayer()
         .taskCreator(new AsyncTaskPriority(TaskPriorityCommon.LOW));
-    private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(5);
-
+    private static final int REQUESTS = 750;
+    private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(30) / REQUESTS;
+    private static ServicePlayerStats instance;
     private final OkHttpClient http = new OkHttpClient();
     private final RepeatThrottle throttle = new RepeatThrottle(1000);
+    private final List<String> nextPlayers = new ArrayList<>();
 
-    public ServerList() {
+    public ServicePlayerStats() {
+        instance = this;
         new Thread(this::run).start();
+    }
+
+    public static ServicePlayerStats get() {
+        return instance;
     }
 
     private void run() {
@@ -47,29 +55,38 @@ public class ServerList {
                     Thread.sleep(REPEAT_INTERVAL);
                 }
             } catch (Exception e) {
-                logger().error(e);
+                logger().error("==ServicePlayerStats==", e);
             }
         }
     }
 
     private void daemon() {
-        SERVICE.accept(this::call, this::queuePlayers, (e) -> this.logger().error(e));
+        if (nextPlayers.isEmpty()) {
+            @NotNull List<String> updates = LoginStorage.findUpdates();
+            if (updates.isEmpty()) return;
+            this.nextPlayers.addAll(updates);
+        }
+        SERVICE.accept(this::call, this::updatePlayer, (e) -> this.logger().error("", e));
     }
 
-    private void queuePlayers(ServerListResponse response) {
-        for (List<UUID> players : response.players.values()) {
-            for (UUID player : players) {
-                // todo queue player to be downloaded
-            }
-        }
+    private void updatePlayer(WynnPlayerResponse response) {
+        if (response == null) return;
+        WynnPlayer player = response.getPlayer();
+        if (player == null) return;
+        LoginStorage.remove(player.username);
+        System.err.println(new Gson().toJson(response));
     }
 
     private Logger logger() {
-        return NetworkModule.get().logger();
+        return ServiceModule.get().logger();
     }
 
-    private ServerListResponse call() throws IOException {
-        Call call = http.newCall(SERVER_LIST_REQUEST.get().build());
+    @Nullable
+    private WynnPlayerResponse call() throws IOException {
+        if (this.nextPlayers.isEmpty()) return null;
+        String nextPlayer = this.nextPlayers.remove(0);
+        Call call = http.newCall(new Builder().url(WynncraftApi.playerStats(nextPlayer))
+            .cacheControl(CacheControl.FORCE_NETWORK).get().build());
         try (Response response = call.execute()) {
             if (!response.isSuccessful()) {
                 throttle.incrementError();
@@ -82,14 +99,12 @@ public class ServerList {
                 }
                 return null;
             }
-            Type responseType = TypeToken.getParameterized(Map.class, String.class, String[].class).getType();
             ResponseBody body = response.body();
             if (body == null) {
                 logger().error("Ok response, but had no body");
                 return null;
             }
-            Map<String, List<UUID>> players = WynncraftRatelimit.gson().fromJson(body.charStream(), responseType);
-            return new ServerListResponse(players);
+            return WynncraftRatelimit.gson().fromJson(body.charStream(), WynnPlayerResponse.class);
         }
     }
 

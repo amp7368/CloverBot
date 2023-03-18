@@ -10,6 +10,10 @@ public class WynncraftApi {
     public static final String GET_USERNAME = "https://api.mojang.com/user/profiles/%s/names";
     public static final String SERVER_LIST = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
 
+    public static String playerStats(String player) {
+        return PLAYER_STATS.formatted(player);
+    }
+
     public static class Status {
 
         public static final int TOO_MANY_REQUESTS = 429;

@@ -2,6 +2,7 @@ package apple.discord.clover.database;
 
 import apple.discord.clover.CloverBot;
 import apple.discord.clover.database.activity.DPlaySession;
+import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.activity.run.DDungeonRun;
 import apple.discord.clover.database.activity.run.DLevelupRun;
 import apple.discord.clover.database.activity.run.DRaidRun;
@@ -35,7 +36,7 @@ public class CloverDatabase extends AppleModule {
         // entities
         entities.addAll(List.of(DGuild.class, DCharacter.class, DPlayer.class));
         // session
-        entities.addAll(List.of(DPlaySession.class, DLevelupRun.class, DDungeonRun.class, DRaidRun.class));
+        entities.addAll(List.of(DLoginQueue.class, DPlaySession.class, DLevelupRun.class, DDungeonRun.class, DRaidRun.class));
         return entities;
     }
 

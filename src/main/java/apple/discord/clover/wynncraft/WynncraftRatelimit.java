@@ -37,7 +37,7 @@ public class WynncraftRatelimit {
      * Rate limit 750 requests / 30 minutes
      */
     private static TaskHandlerPriority playerApi() {
-        return createResource(700, (int) TimeMillis.minToMillis(30));
+        return createResource(750, (int) TimeMillis.minToMillis(30));
     }
 
 
