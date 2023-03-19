@@ -2,7 +2,6 @@ package apple.discord.clover.database.guild;
 
 import io.ebean.Model;
 import java.sql.Timestamp;
-import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,15 +12,34 @@ import javax.persistence.Table;
 public class DGuild extends Model {
 
     @Id
-    public String name;
+    private String name;
     @Column
-    public String tag;
+    private String tag;
     @Column
-    public Timestamp created;
+    private Timestamp created;
 
-    public DGuild(String name, String tag, Instant created) {
+    public DGuild(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
         this.tag = tag;
-        this.created = Timestamp.from(created);
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public DGuild setCreated(Timestamp created) {
+        this.created = created;
+        return this;
     }
 }

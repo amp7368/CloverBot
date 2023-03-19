@@ -10,6 +10,8 @@ import apple.discord.clover.database.activity.run.DSessionRunBase;
 import apple.discord.clover.database.character.DCharacter;
 import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.database.player.DPlayer;
+import apple.discord.clover.database.primitive.IncrementalBigInt;
+import apple.discord.clover.database.primitive.IncrementalFloat;
 import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.database.primitive.IncrementalString;
 import apple.lib.modules.AppleModule;
@@ -32,7 +34,7 @@ public class CloverDatabase extends AppleModule {
         // superclass
         entities.add(DSessionRunBase.class);
         // embedded
-        entities.addAll(List.of(IncrementalInt.class, IncrementalString.class));
+        entities.addAll(List.of(IncrementalInt.class, IncrementalBigInt.class, IncrementalFloat.class, IncrementalString.class));
         // entities
         entities.addAll(List.of(DGuild.class, DCharacter.class, DPlayer.class));
         // session

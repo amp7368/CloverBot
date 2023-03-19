@@ -64,7 +64,7 @@ public class WynncraftRatelimit {
     public static void queueGuild(TaskPriorityCommon priority, String guild, Consumer<WynnGuild> runAfter) {
         AppleJsonFromURL<WynnGuild> task = new AppleJsonFromURL<>(String.format(WynncraftApi.GUILD_STATS, guild), WynnGuild.class,
             gson());
-        WynncraftRatelimit.guild.taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess(runAfter);
+        getGuild().taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess(runAfter);
     }
 
     // todo

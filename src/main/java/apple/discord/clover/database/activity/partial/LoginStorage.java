@@ -4,7 +4,6 @@ import apple.discord.clover.database.activity.partial.query.QDLoginQueue;
 import io.ebean.typequery.PString;
 import java.time.Instant;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 
 public class LoginStorage {
 
@@ -21,11 +20,10 @@ public class LoginStorage {
         new QDLoginQueue().where().isOnline.eq(false).asUpdate().setRaw("offline = offline + 1").update();
     }
 
-    @NotNull
-    public static List<String> findUpdates() {
+    public static List<DLoginQueue> findUpdates() {
         PString<QDLoginQueue> aPlayer = QDLoginQueue.alias().player;
         return new QDLoginQueue().select(aPlayer).orderBy().offline.desc().setMaxRows(FIND_UPDATES_ROW_LIMIT)
-            .findSingleAttributeList();
+            .findList();
     }
 
     public static void remove(String player) {

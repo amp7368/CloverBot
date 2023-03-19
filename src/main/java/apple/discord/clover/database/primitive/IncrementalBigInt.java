@@ -1,24 +1,25 @@
 package apple.discord.clover.database.primitive;
 
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class IncrementalInt {
+public class IncrementalBigInt {
 
     /**
      * the value at the end of this session
      */
     @Column
-    public int snapshot;
+    public BigInteger snapshot;
     /**
      * The change in value from the last known value
      */
     @Column
-    public int delta;
+    public BigInteger delta;
 
-    public IncrementalInt(IncrementalInt last, int next) {
+    public IncrementalBigInt(IncrementalBigInt last, BigInteger next) {
         this.snapshot = next;
-        this.delta = this.snapshot - (last == null ? 0 : last.snapshot);
+        this.delta = this.snapshot.subtract(last == null ? BigInteger.ZERO : last.snapshot);
     }
 }

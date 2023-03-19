@@ -7,7 +7,7 @@ import javax.persistence.Embeddable;
 public class IncrementalString {
 
     @Column
-    public int last;
+    public String last;
     @Column
-    public int next;
+    public String next;
 }

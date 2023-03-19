@@ -4,20 +4,20 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class IncrementalInt {
+public class IncrementalFloat {
 
     /**
      * the value at the end of this session
      */
     @Column
-    public int snapshot;
+    public float snapshot;
     /**
      * The change in value from the last known value
      */
     @Column
-    public int delta;
+    public float delta;
 
-    public IncrementalInt(IncrementalInt last, int next) {
+    public IncrementalFloat(IncrementalFloat last, float next) {
         this.snapshot = next;
         this.delta = this.snapshot - (last == null ? 0 : last.snapshot);
     }

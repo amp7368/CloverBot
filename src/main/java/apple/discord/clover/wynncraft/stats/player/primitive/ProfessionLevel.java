@@ -19,4 +19,8 @@ public class ProfessionLevel {
         else if (this.level == other.level) return this.xp > other.xp;
         return false;
     }
+
+    public float full() {
+        return this.level + this.xp / 100;
+    }
 }

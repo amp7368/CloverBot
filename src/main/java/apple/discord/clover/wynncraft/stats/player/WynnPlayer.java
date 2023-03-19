@@ -1,8 +1,11 @@
 package apple.discord.clover.wynncraft.stats.player;
 
+import apple.discord.clover.database.guild.DGuild;
+import apple.discord.clover.database.guild.GuildStorage;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
 import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
 import apple.discord.clover.wynncraft.stats.player.global.WynnPlayerGlobalData;
+import apple.discord.clover.wynncraft.stats.player.guild.WynnPlayerGuildData;
 import apple.discord.clover.wynncraft.stats.player.meta.WynnPlayerMeta;
 import apple.discord.clover.wynncraft.stats.player.primitive.ProfessionLevel;
 import apple.discord.clover.wynncraft.stats.player.primitive.ProfessionType;
@@ -20,6 +23,7 @@ public class WynnPlayer {
     public String rank;
     public WynnPlayerMeta meta;
     public Map<UUID, WynnPlayerCharacter> characters;
+    public WynnPlayerGuildData guild;
     public WynnPlayerGlobalData global;
     public WynnPlayerRanking ranking;
     public transient long timeRetrieved = System.currentTimeMillis();
@@ -65,7 +69,7 @@ public class WynnPlayer {
     private ProfessionLevel calculateMaxProf(ProfessionType prof) {
         ProfessionLevel level = null;
         for (WynnPlayerCharacter wynnClass : characters.values()) {
-            ProfessionLevel level1 = prof.get(wynnClass.professions);
+            ProfessionLevel level1 = wynnClass.professions.get(prof.name());
             if (level1 == null) continue;
             if (level1.isThisGreater(level)) {
                 level = level1;
@@ -99,5 +103,10 @@ public class WynnPlayer {
                 FuzzyStringMatcher.Flag.CASE_INSENSITIVE);
         }
         return usernamePattern.operationsToMatch(playerName, 1) >= 0;
+    }
+
+    public DGuild dGuild() {
+        if (this.guild.name == null) return null;
+        return GuildStorage.findOrCreate(this.guild.name);
     }
 }

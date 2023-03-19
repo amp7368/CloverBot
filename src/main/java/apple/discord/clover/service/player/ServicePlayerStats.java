@@ -1,6 +1,8 @@
 package apple.discord.clover.service.player;
 
+import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.activity.partial.LoginStorage;
+import apple.discord.clover.database.player.PlayerStorage;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
@@ -11,7 +13,6 @@ import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
 import apple.utilities.threading.service.base.create.AsyncTaskQueueStart;
 import apple.utilities.threading.service.priority.AsyncTaskPriority;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
-import com.google.gson.Gson;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ServicePlayerStats {
@@ -35,7 +35,7 @@ public class ServicePlayerStats {
     private static ServicePlayerStats instance;
     private final OkHttpClient http = new OkHttpClient();
     private final RepeatThrottle throttle = new RepeatThrottle(1000);
-    private final List<String> nextPlayers = new ArrayList<>();
+    private final List<DLoginQueue> nextPlayers = new ArrayList<DLoginQueue>();
 
     public ServicePlayerStats() {
         instance = this;
@@ -62,19 +62,19 @@ public class ServicePlayerStats {
 
     private void daemon() {
         if (nextPlayers.isEmpty()) {
-            @NotNull List<String> updates = LoginStorage.findUpdates();
+            List<DLoginQueue> updates = LoginStorage.findUpdates();
             if (updates.isEmpty()) return;
             this.nextPlayers.addAll(updates);
         }
         SERVICE.accept(this::call, this::updatePlayer, (e) -> this.logger().error("", e));
     }
 
-    private void updatePlayer(WynnPlayerResponse response) {
+    private void updatePlayer(PlaySessionRaw response) {
         if (response == null) return;
         WynnPlayer player = response.getPlayer();
         if (player == null) return;
         LoginStorage.remove(player.username);
-        System.err.println(new Gson().toJson(response));
+        PlayerStorage.save(response.login(), player);
     }
 
     private Logger logger() {
@@ -82,29 +82,30 @@ public class ServicePlayerStats {
     }
 
     @Nullable
-    private WynnPlayerResponse call() throws IOException {
+    private PlaySessionRaw call() throws IOException {
         if (this.nextPlayers.isEmpty()) return null;
-        String nextPlayer = this.nextPlayers.remove(0);
-        Call call = http.newCall(new Builder().url(WynncraftApi.playerStats(nextPlayer))
+        DLoginQueue nextPlayer = this.nextPlayers.remove(0);
+        Call call = http.newCall(new Builder().url(WynncraftApi.playerStats(nextPlayer.player))
             .cacheControl(CacheControl.FORCE_NETWORK).get().build());
-        try (Response response = call.execute()) {
-            if (!response.isSuccessful()) {
+        try (Response httpResponse = call.execute()) {
+            if (!httpResponse.isSuccessful()) {
                 throttle.incrementError();
-                if (response.code() == Status.TOO_MANY_REQUESTS) {
+                if (httpResponse.code() == Status.TOO_MANY_REQUESTS) {
                     logger().warn("Rate limit reached: %d error(s) in a row".formatted(throttle.getErrorCount()));
                 } else {
-                    ResponseBody body = response.body();
+                    ResponseBody body = httpResponse.body();
                     String message = body == null ? "No body" : body.string();
-                    logger().error("Response code: %d, Body: %s".formatted(response.code(), message));
+                    logger().error("Response code: %d, Body: %s".formatted(httpResponse.code(), message));
                 }
                 return null;
             }
-            ResponseBody body = response.body();
+            ResponseBody body = httpResponse.body();
             if (body == null) {
                 logger().error("Ok response, but had no body");
                 return null;
             }
-            return WynncraftRatelimit.gson().fromJson(body.charStream(), WynnPlayerResponse.class);
+            WynnPlayerResponse response = WynncraftRatelimit.gson().fromJson(body.charStream(), WynnPlayerResponse.class);
+            return new PlaySessionRaw(nextPlayer, response);
         }
     }
 

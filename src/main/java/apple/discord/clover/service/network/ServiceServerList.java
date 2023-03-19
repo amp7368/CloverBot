@@ -65,7 +65,7 @@ public class ServiceServerList {
 
     private void queuePlayers(ServerListResponse response) {
         if (response == null) return;
-        Instant requestedAt = Instant.ofEpochMilli(response.request.timestamp);
+        Instant requestedAt = Instant.ofEpochSecond(response.request.timestamp);
         new Thread(() -> LoginStorage.queuePlayers(response.players, requestedAt)).start();
     }
 

@@ -3,7 +3,6 @@ package apple.discord.clover.wynncraft.overview.guild;
 import apple.discord.clover.CloverBot;
 import apple.discord.clover.wynncraft.WynnDatabase;
 import apple.discord.clover.wynncraft.WynncraftApi;
-import apple.discord.clover.wynncraft.WynncraftGuildListResponse;
 import apple.discord.clover.wynncraft.WynncraftRatelimit;
 import apple.utilities.lamdas.daemon.AppleDaemon;
 import apple.utilities.request.AppleJsonFromURL;

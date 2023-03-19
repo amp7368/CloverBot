@@ -1,5 +1,7 @@
 package apple.discord.clover.database.player;
 
+import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
+
 /**
  * Running statistics about the player.
  * <p>
@@ -7,4 +9,7 @@ package apple.discord.clover.database.player;
  */
 public class PlayerMoment {
 
+    public PlayerMoment(WynnPlayer player) {
+
+    }
 }
