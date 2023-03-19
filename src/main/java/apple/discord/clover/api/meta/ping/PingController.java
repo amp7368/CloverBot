@@ -1,4 +1,4 @@
-package apple.discord.clover.api.ping;
+package apple.discord.clover.api.meta.ping;
 
 import apple.discord.clover.api.base.ApiController;
 import io.javalin.Javalin;
