@@ -39,7 +39,7 @@ public class ServiceServerList {
     private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(5);
 
     private final OkHttpClient http = new OkHttpClient();
-    private final RepeatThrottle throttle = new RepeatThrottle(1000);
+    private final RepeatThrottle throttle = new RepeatThrottle(5000);
 
     public ServiceServerList() {
         new Thread(this::run).start();

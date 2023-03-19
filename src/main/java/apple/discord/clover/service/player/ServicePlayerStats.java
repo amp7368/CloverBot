@@ -34,7 +34,7 @@ public class ServicePlayerStats {
     private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(30) / REQUESTS;
     private static ServicePlayerStats instance;
     private final OkHttpClient http = new OkHttpClient();
-    private final RepeatThrottle throttle = new RepeatThrottle(1000);
+    private final RepeatThrottle throttle = new RepeatThrottle(5000);
     private final List<DLoginQueue> nextPlayers = new ArrayList<DLoginQueue>();
 
     public ServicePlayerStats() {
