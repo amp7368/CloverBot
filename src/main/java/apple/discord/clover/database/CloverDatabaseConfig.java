@@ -21,11 +21,7 @@ public class CloverDatabaseConfig {
     }
 
     public String getUrl() {
-        return "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database;
-    }
-
-    public String getDatabase() {
-        return this.database;
+        return "jdbc:postgresql://" + this.host + ":" + this.port + "/" + this.database;
     }
 
     public String getUsername() {

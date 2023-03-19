@@ -1,8 +1,18 @@
 package apple.discord.clover.wynncraft.stats.player;
 
+import apple.discord.clover.database.guild.DGuild;
+import apple.discord.clover.database.guild.GuildStorage;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
+import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
+import apple.discord.clover.wynncraft.stats.player.global.WynnPlayerGlobalData;
+import apple.discord.clover.wynncraft.stats.player.guild.WynnPlayerGuildData;
+import apple.discord.clover.wynncraft.stats.player.meta.WynnPlayerMeta;
+import apple.discord.clover.wynncraft.stats.player.primitive.ProfessionLevel;
+import apple.discord.clover.wynncraft.stats.player.primitive.ProfessionType;
+import apple.discord.clover.wynncraft.stats.player.ranking.WynnPlayerRanking;
 import apple.utilities.util.FuzzyStringMatcher;
 import discord.util.dcf.util.TimeMillis;
+import java.util.Map;
 import java.util.UUID;
 
 public class WynnPlayer {
@@ -12,12 +22,13 @@ public class WynnPlayer {
     public UUID uuid;
     public String rank;
     public WynnPlayerMeta meta;
-    public WynnPlayerClass[] classes;
+    public Map<UUID, WynnPlayerCharacter> characters;
+    public WynnPlayerGuildData guild;
     public WynnPlayerGlobalData global;
     public WynnPlayerRanking ranking;
-    private transient FuzzyStringMatcher usernamePattern = null;
     public transient long timeRetrieved = System.currentTimeMillis();
     public transient WynnGuildMember guildMember;
+    private transient FuzzyStringMatcher usernamePattern = null;
     private transient ProfessionLevel[] maxProfs = null;
 
     public boolean isOld() {
@@ -57,8 +68,8 @@ public class WynnPlayer {
 
     private ProfessionLevel calculateMaxProf(ProfessionType prof) {
         ProfessionLevel level = null;
-        for (WynnPlayerClass wynnClass : classes) {
-            ProfessionLevel level1 = prof.get(wynnClass.professions);
+        for (WynnPlayerCharacter wynnClass : characters.values()) {
+            ProfessionLevel level1 = wynnClass.professions.get(prof.name());
             if (level1 == null) continue;
             if (level1.isThisGreater(level)) {
                 level = level1;
@@ -92,5 +103,10 @@ public class WynnPlayer {
                 FuzzyStringMatcher.Flag.CASE_INSENSITIVE);
         }
         return usernamePattern.operationsToMatch(playerName, 1) >= 0;
+    }
+
+    public DGuild dGuild() {
+        if (this.guild.name == null) return null;
+        return GuildStorage.findOrCreate(this.guild.name);
     }
 }

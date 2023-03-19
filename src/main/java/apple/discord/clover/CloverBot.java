@@ -1,9 +1,7 @@
 package apple.discord.clover;
 
 import apple.discord.clover.database.CloverDatabase;
-import apple.discord.clover.discord.DiscordBot;
-import apple.discord.clover.wynncraft.overview.guild.GuildListDaemon;
-import apple.discord.clover.wynncraft.WynnDatabase;
+import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.ApplePlugin;
@@ -24,9 +22,7 @@ public class CloverBot extends ApplePlugin {
 
     @Override
     public void onEnable() {
-        WynnDatabase.load();
-        DiscordBot.load();
-        new GuildListDaemon().start();
+//        new GuildListDaemon().start();
     }
 
     @Override
@@ -36,6 +32,6 @@ public class CloverBot extends ApplePlugin {
 
     @Override
     public List<AppleModule> createModules() {
-        return List.of(new CloverDatabase(), new WynncraftModule(), new DiscordBot());
+        return List.of(new CloverDatabase(), new WynncraftModule(), new ServiceModule());
     }
 }

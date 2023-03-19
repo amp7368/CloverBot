@@ -81,7 +81,7 @@ public class WynnDatabase {
                 if (guildHeader == null || guildHeader.prefix == null) {
                     this.guilds.put(guild, new WynnGuildHeader(guild));
                     if (guildsRequestedToBeUpdated.add(guild)) {
-                        WynncraftService.queueGuild(TaskPriorityCommon.LOWER, guild, (wynnGuild) -> {
+                        WynncraftRatelimit.queueGuild(TaskPriorityCommon.LOWER, guild, (wynnGuild) -> {
                             addGuild(wynnGuild);
 
                             HashMap<String, WynnGuildHeader> headersToSave = getHeaders();

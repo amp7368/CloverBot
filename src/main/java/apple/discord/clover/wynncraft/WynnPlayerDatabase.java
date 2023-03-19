@@ -9,14 +9,15 @@ import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 
 public class WynnPlayerDatabase {
 
-    private static final HashMap<UUID, WynnInactivePlayer> players = new HashMap<>();
-    private static final HashMap<String, WynnPlayerInactivitySaveable> dbs = new HashMap<>();
+    private static final Map<UUID, WynnInactivePlayer> players = new HashMap<>();
+    private static final Map<String, WynnPlayerInactivitySaveable> dbs = new HashMap<>();
     private static WynnPlayerDatabase instance;
     private static AppleAJDTyped<WynnPlayerInactivitySaveable> manager;
 
@@ -30,11 +31,11 @@ public class WynnPlayerDatabase {
     }
 
 
-    public static File getDBFolder() {
+    public File getDBFolder() {
         return WynncraftModule.get().getFile("inactive", "player");
     }
 
-    public static void loadNow() {
+    public void loadNow() {
         manager = AppleAJD.createTyped(WynnPlayerInactivitySaveable.class, getDBFolder(), FileIOService.get().taskCreator());
         @NotNull Collection<WynnPlayerInactivitySaveable> loadedDbs = manager.loadFolderNow();
         for (WynnPlayerInactivitySaveable db : loadedDbs) {
@@ -49,9 +50,9 @@ public class WynnPlayerDatabase {
         synchronized (players) {
             players.put(player.getUUID(), player);
             String key = player.getUUID().toString().substring(0, 2);
-            WynnPlayerInactivitySaveable saveable = dbs.computeIfAbsent(key, WynnPlayerInactivitySaveable::new);
-            saveable.put(player);
-            manager.saveInFolderNow(saveable);
+            WynnPlayerInactivitySaveable savable = dbs.computeIfAbsent(key, WynnPlayerInactivitySaveable::new);
+            savable.put(player);
+            manager.saveInFolderNow(savable);
         }
     }
 
@@ -59,7 +60,7 @@ public class WynnPlayerDatabase {
         synchronized (players) {
             WynnInactivePlayer player = players.get(uuid);
             if (player == null) {
-                WynncraftService.queuePlayer(TaskPriorityCommon.LOWEST, uuid.toString(), p -> {
+                WynncraftRatelimit.queuePlayer(TaskPriorityCommon.LOWEST, uuid.toString(), p -> {
                     callback.accept(p == null ? null : p.toWynnInactivePlayer());
                 });
             } else {
@@ -69,7 +70,7 @@ public class WynnPlayerDatabase {
     }
 
     public void updatePlayer(UUID uuid, Consumer<WynnInactivePlayer> callback) {
-        WynncraftService.queuePlayer(TaskPriorityCommon.LOWEST, uuid.toString(), p -> {
+        WynncraftRatelimit.queuePlayer(TaskPriorityCommon.LOWEST, uuid.toString(), p -> {
             callback.accept(p == null ? null : p.toWynnInactivePlayer());
         });
     }

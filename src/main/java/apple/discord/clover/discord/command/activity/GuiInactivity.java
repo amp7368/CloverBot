@@ -40,7 +40,6 @@ public class GuiInactivity extends DCFGui {
         synchronized (this) {
             int membersThere = this.members.size();
             int membersRequired = this.guild == null ? 1 : this.guild.members.length;
-            System.out.println(membersThere + " " + membersRequired);
             return membersThere >= membersRequired;
         }
     }

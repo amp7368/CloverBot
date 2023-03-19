@@ -1,7 +1,10 @@
-package apple.discord.clover.wynncraft.stats.player;
+package apple.discord.clover.wynncraft.stats.player.character;
 
+
+import apple.discord.clover.wynncraft.stats.player.primitive.ProfessionLevel;
 
 public class WynnPlayerClassProfessions {
+
     public ProfessionLevel alchemism;
     public ProfessionLevel armouring;
     public ProfessionLevel combat;

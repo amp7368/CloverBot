@@ -2,7 +2,7 @@ package apple.discord.clover.discord.command.activity;
 
 import apple.discord.clover.util.Pretty;
 import apple.discord.clover.wynncraft.WynnDatabase;
-import apple.discord.clover.wynncraft.WynncraftService;
+import apple.discord.clover.wynncraft.WynncraftRatelimit;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
@@ -21,7 +21,7 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
     public MessageInactivityProgress(GuiInactivity parent, Runnable onFinished) {
         super(parent);
         this.onFinished = onFinished;
-        WynncraftService.queueGuild(TaskPriorityCommon.HIGH, parent.getGuildName(), wynnGuild -> {
+        WynncraftRatelimit.queueGuild(TaskPriorityCommon.HIGH, parent.getGuildName(), wynnGuild -> {
             this.parent.setGuild(wynnGuild);
             editMessageOnTimer();
             if (wynnGuild == null) {
@@ -32,7 +32,7 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
                     continue;
                 @Nullable WynnPlayer player = WynnDatabase.get().getPlayer(guildMember.uuid);
                 if (player == null) {
-                    WynncraftService.queuePlayer(TaskPriorityCommon.HIGHEST, guildMember.uuid,
+                    WynncraftRatelimit.queuePlayer(TaskPriorityCommon.HIGHEST, guildMember.uuid,
                         member -> this.addPlayer(guildMember, member));
                 } else {
                     addPlayer(guildMember, player);

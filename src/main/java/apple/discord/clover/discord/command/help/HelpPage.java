@@ -1,6 +1,6 @@
 package apple.discord.clover.discord.command.help;
 
-import apple.discord.clover.discord.DiscordBot;
+import apple.discord.clover.discord.DiscordModule;
 import discord.util.dcf.gui.base.gui.DCFGui;
 import discord.util.dcf.gui.base.page.DCFGuiPage;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -23,10 +23,10 @@ public class HelpPage extends DCFGuiPage<DCFGui> {
         MessageCreateBuilder builder = new MessageCreateBuilder();
         EmbedBuilder embed = new EmbedBuilder(pageData);
         embed.setAuthor("(Page %d)".formatted(getPageNum() + 1));
-        embed.setAuthor("", DiscordBot.INVITE_LINK, DiscordBot.dcf.jda().getSelfUser().getEffectiveAvatarUrl());
+        embed.setAuthor("", DiscordModule.INVITE_LINK, DiscordModule.dcf.jda().getSelfUser().getEffectiveAvatarUrl());
 
         builder.setEmbeds(embed.build());
-        builder.setActionRow(btnFirst(), btnLast(), btnNext(), Button.link(DiscordBot.INVITE_LINK, "Invite"));
-       return builder.build();
+        builder.setActionRow(btnFirst(), btnLast(), btnNext(), Button.link(DiscordModule.INVITE_LINK, "Invite"));
+        return builder.build();
     }
 }

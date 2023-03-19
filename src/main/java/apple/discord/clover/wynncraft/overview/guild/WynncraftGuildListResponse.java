@@ -1,9 +1,10 @@
-package apple.discord.clover.wynncraft;
+package apple.discord.clover.wynncraft.overview.guild;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WynncraftGuildListResponse {
+
     private String[] guilds;
 
     public String[] getGuilds() {
