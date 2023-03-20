@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class DRaidRun extends DSessionRunBase {
 
     @Column
-    @Embedded(prefix = "runs")
+    @Embedded(prefix = "runs_")
     private IncrementalInt runs;
 
     public DRaidRun(WynnPlayerRaid raid, DCharacter character, @Nullable DCharacter lastCharacter) {

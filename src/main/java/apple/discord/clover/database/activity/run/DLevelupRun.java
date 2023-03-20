@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class DLevelupRun extends DSessionRunBase {
 
     @Column
-    @Embedded(prefix = "level")
+    @Embedded(prefix = "level_")
     private IncrementalFloat level;
 
     public DLevelupRun(String name, ProfessionLevel level, DCharacter character, @Nullable DCharacter lastCharacter) {

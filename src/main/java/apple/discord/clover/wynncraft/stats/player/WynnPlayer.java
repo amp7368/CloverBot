@@ -26,7 +26,7 @@ public class WynnPlayer {
     public WynnPlayerGuildData guild;
     public WynnPlayerGlobalData global;
     public WynnPlayerRanking ranking;
-    public transient long timeRetrieved = System.currentTimeMillis();
+    public transient long timeRetrieved;
     public transient WynnGuildMember guildMember;
     private transient FuzzyStringMatcher usernamePattern = null;
     private transient ProfessionLevel[] maxProfs = null;

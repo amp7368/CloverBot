@@ -1,7 +1,6 @@
 package apple.discord.clover.database.player;
 
 import io.ebean.Model;
-import io.ebean.annotation.DbJson;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,10 +15,15 @@ public class DPlayer extends Model {
     @Column
     public UUID uuid;
 
-    @DbJson
-    public PlayerMoment current;
+    @Column
+    public String username;
 
-    public DPlayer(UUID player) {
+    public DPlayer(UUID player, String username) {
         this.uuid = player;
+        this.username = username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

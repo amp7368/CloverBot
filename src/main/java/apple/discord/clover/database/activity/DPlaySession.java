@@ -8,7 +8,6 @@ import apple.discord.clover.database.primitive.IncrementalBigInt;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import io.ebean.Model;
 import io.ebean.annotation.Index;
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -50,10 +49,20 @@ public class DPlaySession extends Model {
      * @apiNote Uses Wynncraft's "minutes". There is a formula to translate this number to human "minutes"
      */
     @Column
-    @Embedded(prefix = "playtime")
+    @Embedded(prefix = "playtime_")
     public IncrementalBigInt playtime;
+    @Column
+    @Embedded(prefix = "items_identified_")
+    public IncrementalBigInt itemsIdentified;
+    @Column
+    @Embedded(prefix = "mobs_killed_")
+    public IncrementalBigInt mobsKilled;
 
-    @OneToMany(mappedBy = "session")
+    @Column
+    @Embedded(prefix = "level_")
+    public DPlaySessionLevel level;
+
+    @OneToMany(mappedBy = "session_")
     public List<DCharacter> characters;
 
     public DPlaySession(DPlayer playerInDB, DPlaySession lastSession, DLoginQueue login, WynnPlayer currentValue) {
@@ -61,9 +70,14 @@ public class DPlaySession extends Model {
         this.joinTime = login.joinTime;
         this.retrievedTime = Timestamp.from(Instant.ofEpochMilli(currentValue.timeRetrieved));
         this.guild = currentValue.dGuild();
-        IncrementalBigInt lastPlaytime = lastSession == null ? null : lastSession.playtime;
-        BigInteger currentPlaytime = BigInteger.valueOf(currentValue.meta.playtime);
-        this.playtime = new IncrementalBigInt(lastPlaytime, currentPlaytime);
+
+        long playtime = currentValue.meta.playtime;
+        this.playtime = IncrementalBigInt.create(lastSession, s -> s.playtime, playtime);
+        long itemsIdentified = currentValue.global.itemsIdentified;
+        this.itemsIdentified = IncrementalBigInt.create(lastSession, s -> s.itemsIdentified, itemsIdentified);
+        long mobsKilled = currentValue.global.mobsKilled;
+        this.mobsKilled = IncrementalBigInt.create(lastSession, s -> s.mobsKilled, mobsKilled);
+        this.level = new DPlaySessionLevel(lastSession == null ? null : lastSession.level, currentValue.global.totalLevel);
     }
 
     public DCharacter getCharacter(UUID id) {

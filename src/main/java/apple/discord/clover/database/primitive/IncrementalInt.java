@@ -1,5 +1,6 @@
 package apple.discord.clover.database.primitive;
 
+import java.util.function.Function;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -20,5 +21,9 @@ public class IncrementalInt {
     public IncrementalInt(IncrementalInt last, int next) {
         this.snapshot = next;
         this.delta = this.snapshot - (last == null ? 0 : last.snapshot);
+    }
+
+    public static <T> IncrementalInt create(T last, Function<T, IncrementalInt> fn, int next) {
+        return new IncrementalInt(last == null ? null : fn.apply(last), next);
     }
 }

@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class DDungeonRun extends DSessionRunBase {
 
     @Column
-    @Embedded(prefix = "runs")
+    @Embedded(prefix = "runs_")
     public IncrementalInt runs;
 
     public DDungeonRun(WynnPlayerDungeon dungeon, DCharacter character, DCharacter lastCharacter) {

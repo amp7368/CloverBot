@@ -28,7 +28,7 @@ import javax.persistence.Table;
 public class DCharacter extends Model {
 
     @Id
-    public UUID id;
+    public UUID sku;
     @Column
     public UUID character_id;
 
