@@ -5,6 +5,7 @@ import apple.discord.clover.database.character.DCharacter;
 import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.database.player.DPlayer;
 import apple.discord.clover.database.primitive.IncrementalBigInt;
+import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import io.ebean.Model;
 import io.ebean.annotation.Index;
@@ -39,9 +40,11 @@ public class DPlaySession extends Model {
     @Column
     public Timestamp retrievedTime;
 
-    // data
     @ManyToOne
     public DGuild guild;
+
+    @OneToMany(mappedBy = "session")
+    public List<DCharacter> characters;
 
     /**
      * The duration that the player has been logged in
@@ -59,11 +62,11 @@ public class DPlaySession extends Model {
     public IncrementalBigInt mobsKilled;
 
     @Column
-    @Embedded(prefix = "level_")
-    public DPlaySessionLevel level;
-
-    @OneToMany(mappedBy = "session_")
-    public List<DCharacter> characters;
+    @Embedded(prefix = "combat_")
+    public IncrementalInt combatLevel;
+    @Column
+    @Embedded(prefix = "prof_")
+    public IncrementalInt profLevel;
 
     public DPlaySession(DPlayer playerInDB, DPlaySession lastSession, DLoginQueue login, WynnPlayer currentValue) {
         this.player = playerInDB;
@@ -77,12 +80,16 @@ public class DPlaySession extends Model {
         this.itemsIdentified = IncrementalBigInt.create(lastSession, s -> s.itemsIdentified, itemsIdentified);
         long mobsKilled = currentValue.global.mobsKilled;
         this.mobsKilled = IncrementalBigInt.create(lastSession, s -> s.mobsKilled, mobsKilled);
-        this.level = new DPlaySessionLevel(lastSession == null ? null : lastSession.level, currentValue.global.totalLevel);
+        int combatLevel = currentValue.global.totalLevel.combat;
+        this.combatLevel = IncrementalInt.create(lastSession, l -> l.combatLevel, combatLevel);
+        int profLevel = currentValue.global.totalLevel.profession;
+        this.profLevel = IncrementalInt.create(lastSession, l -> l.profLevel, profLevel);
+
     }
 
     public DCharacter getCharacter(UUID id) {
         for (DCharacter ch : this.characters) {
-            if (ch.character_id.equals(id)) {
+            if (ch.characterId.equals(id)) {
                 return ch;
             }
         }

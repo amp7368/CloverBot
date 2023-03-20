@@ -35,7 +35,8 @@ public class PlayerStorage {
             session.insert(transaction);
 
             for (Entry<UUID, WynnPlayerCharacter> dataChar : currentValue.characters.entrySet()) {
-                DCharacter character = new DCharacter(dataChar.getKey(), session, dataChar.getValue(), lastSession);
+                DCharacter lastChar = lastSession == null ? null : lastSession.getCharacter(dataChar.getKey());
+                DCharacter character = new DCharacter(dataChar.getKey(), session, dataChar.getValue(), lastChar);
                 character.insert();
 
                 character.addRuns(dataChar.getValue(), lastSession);

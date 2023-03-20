@@ -2,7 +2,6 @@ package apple.discord.clover.database;
 
 import apple.discord.clover.CloverBot;
 import apple.discord.clover.database.activity.DPlaySession;
-import apple.discord.clover.database.activity.DPlaySessionLevel;
 import apple.discord.clover.database.activity.blacklist.DBlacklist;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.activity.run.DDungeonRun;
@@ -36,11 +35,9 @@ public class CloverDatabase extends AppleModule {
         // superclass
         entities.add(DSessionRunBase.class);
         // embedded
-        entities.add(DPlaySessionLevel.class);
         entities.addAll(List.of(IncrementalInt.class, IncrementalBigInt.class, IncrementalFloat.class, IncrementalString.class));
         // entities
         entities.addAll(List.of(DGuild.class, DCharacter.class, DPlayer.class));
-        // session
         entities.addAll(List.of(DBlacklist.class, DLoginQueue.class, DPlaySession.class));
         entities.addAll(List.of(DLevelupRun.class, DDungeonRun.class, DRaidRun.class));
         return entities;
@@ -62,7 +59,6 @@ public class CloverDatabase extends AppleModule {
         dataSourceConfig.setUsername(loadedConfig.getUsername());
         dataSourceConfig.setPassword(loadedConfig.getPassword());
         dataSourceConfig.setUrl(loadedConfig.getUrl());
-        dataSourceConfig.setAutoCommit(true);
         return dataSourceConfig;
     }
 

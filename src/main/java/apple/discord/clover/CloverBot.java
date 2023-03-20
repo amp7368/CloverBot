@@ -26,6 +26,7 @@ public class CloverBot extends ApplePlugin {
     public void onEnable() {
     }
 
+
     @Override
     public String getName() {
         return "CloverBot";

@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-@Index(columnNames = {"character_id", "name"})
+@Index(columnNames = {"character_sku", "name"})
 public abstract class DSessionRunBase extends Model {
 
     @Id

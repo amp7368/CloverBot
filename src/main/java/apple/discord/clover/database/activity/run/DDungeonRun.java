@@ -23,7 +23,7 @@ public class DDungeonRun extends DSessionRunBase {
             this.runs = new IncrementalInt(null, snapshot);
             return;
         }
-        DDungeonRun last = lastCharacter.getDungeon(dungeon.name, character.character_id);
+        DDungeonRun last = lastCharacter.getDungeon(dungeon.name, character.characterId);
         this.runs = new IncrementalInt(last == null ? null : last.runs, dungeon.completed);
     }
 }

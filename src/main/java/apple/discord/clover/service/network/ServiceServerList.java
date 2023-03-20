@@ -14,14 +14,11 @@ import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -65,6 +62,7 @@ public class ServiceServerList {
 
     private void queuePlayers(ServerListResponse response) {
         if (response == null) return;
+        throttle.incrementSuccess();
         Instant requestedAt = Instant.ofEpochSecond(response.request.timestamp);
         new Thread(() -> LoginStorage.queuePlayers(response.players, requestedAt)).start();
     }
@@ -87,7 +85,6 @@ public class ServiceServerList {
                 }
                 return null;
             }
-            Type responseType = TypeToken.getParameterized(Map.class, String.class, String[].class).getType();
             ResponseBody body = response.body();
             if (body == null) {
                 logger().error("Ok response, but had no body");
