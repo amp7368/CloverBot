@@ -13,7 +13,7 @@ public abstract class ApiController {
     }
 
     public ApiController() {
-        this.basePath = "";
+        this.basePath = "/v1";
     }
 
     protected String path(String subPath) {

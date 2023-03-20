@@ -24,13 +24,6 @@ public class BlacklistStorage {
         return new QDBlacklist().where().login.id.eq(login.id);
     }
 
-    public static boolean tryQueue(String player) {
-        DBlacklist blacklist = new QDBlacklist().where().login.player.eq(player).findOne();
-        if (blacklist == null) return true;
-        Instant nextAllowed = blacklist.lastFailure.toInstant().plus(BLACKLIST_WAIT);
-        return Instant.now().isAfter(nextAllowed);
-    }
-
     public static Instant getLastAllowedFailure() {
         return Instant.now().minus(BLACKLIST_WAIT);
     }

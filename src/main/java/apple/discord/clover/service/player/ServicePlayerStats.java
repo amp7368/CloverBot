@@ -63,11 +63,6 @@ public class ServicePlayerStats {
     }
 
     private void daemon() {
-        if (nextPlayers.isEmpty()) {
-            List<DLoginQueue> updates = LoginStorage.findUpdates();
-            if (updates.isEmpty()) return;
-            this.nextPlayers.addAll(updates);
-        }
         SERVICE.accept(this::call, this::updatePlayer, (e) -> this.logger().error("", e));
     }
 
@@ -87,7 +82,11 @@ public class ServicePlayerStats {
     }
 
     private PlaySessionRaw call() throws IOException {
-        if (this.nextPlayers.isEmpty()) return null;
+        if (nextPlayers.isEmpty()) {
+            List<DLoginQueue> updates = LoginStorage.findUpdates();
+            if (updates.isEmpty()) return null;
+            this.nextPlayers.addAll(updates);
+        }
         DLoginQueue nextPlayer = this.nextPlayers.remove(0);
         Call call = http.newCall(new Builder().url(WynncraftApi.playerStats(nextPlayer.player))
             .cacheControl(CacheControl.FORCE_NETWORK).get().build());

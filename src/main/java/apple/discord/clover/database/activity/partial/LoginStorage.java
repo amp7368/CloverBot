@@ -2,14 +2,17 @@ package apple.discord.clover.database.activity.partial;
 
 import apple.discord.clover.database.activity.blacklist.BlacklistStorage;
 import apple.discord.clover.database.activity.partial.query.QDLoginQueue;
-import io.ebean.typequery.PString;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class LoginStorage {
 
     public static final int FIND_UPDATES_ROW_LIMIT = 100;
+    private static final TemporalAmount ONLINE_TOO_LONG = Duration.ofHours(6);
 
     public static void queuePlayers(List<String> players, Instant requestedAt) {
         QDLoginQueue alias = QDLoginQueue.alias();
@@ -23,12 +26,24 @@ public class LoginStorage {
     }
 
     public static List<DLoginQueue> findUpdates() {
-        PString<QDLoginQueue> aPlayer = QDLoginQueue.alias().player;
+        List<DLoginQueue> updates = queryNotBlacklist().joinTime.before(Timestamp.from(getOnlineTooLong())).orderBy().joinTime.asc()
+            .setMaxRows(FIND_UPDATES_ROW_LIMIT).findList();
+        if (updates.size() == FIND_UPDATES_ROW_LIMIT) return updates;
+        updates.addAll(queryNotBlacklist()
+            .orderBy().offline.desc().setMaxRows(FIND_UPDATES_ROW_LIMIT - updates.size())
+            .findList());
+        return updates;
+    }
+
+    private static Instant getOnlineTooLong() {
+        return Instant.now().minus(ONLINE_TOO_LONG);
+    }
+
+    @NotNull
+    private static QDLoginQueue queryNotBlacklist() {
         Timestamp lastAllowedFailure = Timestamp.from(BlacklistStorage.getLastAllowedFailure());
-        return new QDLoginQueue().where().and().blacklist.isNotNull().blacklist.lastFailure.before(lastAllowedFailure).endAnd()
-            .select(aPlayer)
-            .orderBy().offline.desc().setMaxRows(FIND_UPDATES_ROW_LIMIT)
-            .findList();
+        return new QDLoginQueue().where().or().blacklist.isNull().and().blacklist.isNotNull().blacklist.lastFailure.before(
+            lastAllowedFailure).endAnd().endOr();
     }
 
     public static void success(DLoginQueue login) {
