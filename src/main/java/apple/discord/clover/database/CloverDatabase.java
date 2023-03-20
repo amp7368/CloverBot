@@ -38,7 +38,6 @@ public class CloverDatabase extends AppleModule {
         entities.addAll(List.of(IncrementalInt.class, IncrementalBigInt.class, IncrementalFloat.class, IncrementalString.class));
         // entities
         entities.addAll(List.of(DGuild.class, DCharacter.class, DPlayer.class));
-        // session
         entities.addAll(List.of(DBlacklist.class, DLoginQueue.class, DPlaySession.class));
         entities.addAll(List.of(DLevelupRun.class, DDungeonRun.class, DRaidRun.class));
         return entities;
@@ -60,7 +59,6 @@ public class CloverDatabase extends AppleModule {
         dataSourceConfig.setUsername(loadedConfig.getUsername());
         dataSourceConfig.setPassword(loadedConfig.getPassword());
         dataSourceConfig.setUrl(loadedConfig.getUrl());
-        dataSourceConfig.setAutoCommit(true);
         return dataSourceConfig;
     }
 

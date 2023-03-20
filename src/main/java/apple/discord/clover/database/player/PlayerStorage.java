@@ -24,15 +24,19 @@ public class PlayerStorage {
 
         DPlayer playerInDB = new QDPlayer().where().uuid.eq(currentValue.uuid).findOne();
         if (playerInDB == null) {
-            playerInDB = new DPlayer(currentValue.uuid);
+            playerInDB = new DPlayer(currentValue.uuid, currentValue.username);
             playerInDB.insert();
+        } else {
+            playerInDB.setUsername(currentValue.username);
+            playerInDB.save();
         }
         try (Transaction transaction = DB.beginTransaction()) {
             DPlaySession session = new DPlaySession(playerInDB, lastSession, login, currentValue);
             session.insert(transaction);
 
             for (Entry<UUID, WynnPlayerCharacter> dataChar : currentValue.characters.entrySet()) {
-                DCharacter character = new DCharacter(dataChar.getKey(), session, dataChar.getValue(), lastSession);
+                DCharacter lastChar = lastSession == null ? null : lastSession.getCharacter(dataChar.getKey());
+                DCharacter character = new DCharacter(dataChar.getKey(), session, dataChar.getValue(), lastChar);
                 character.insert();
 
                 character.addRuns(dataChar.getValue(), lastSession);

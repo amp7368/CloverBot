@@ -6,8 +6,13 @@ public class WynnPlayerResponse {
 
     public WynnPlayer[] data;
 
+    public long timestamp;
+
     @Nullable
     public WynnPlayer getPlayer() {
-        return this.data.length == 0 ? null : data[0];
+        if (this.data.length == 0) return null;
+        WynnPlayer player = data[0];
+        if (player != null) player.timeRetrieved = timestamp;
+        return player;
     }
 }

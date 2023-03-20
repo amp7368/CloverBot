@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class DLevelupRun extends DSessionRunBase {
 
     @Column
-    @Embedded(prefix = "level")
+    @Embedded(prefix = "level_")
     private IncrementalFloat level;
 
     public DLevelupRun(String name, ProfessionLevel level, DCharacter character, @Nullable DCharacter lastCharacter) {
@@ -24,7 +24,7 @@ public class DLevelupRun extends DSessionRunBase {
             this.level = new IncrementalFloat(null, snapshot);
             return;
         }
-        DLevelupRun lastLevelUp = lastCharacter.getLevelup(name, character.character_id);
+        DLevelupRun lastLevelUp = lastCharacter.getLevelup(name, character.characterId);
         this.level = new IncrementalFloat(lastLevelUp.level, snapshot);
     }
 }

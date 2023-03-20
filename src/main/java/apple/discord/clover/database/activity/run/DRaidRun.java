@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class DRaidRun extends DSessionRunBase {
 
     @Column
-    @Embedded(prefix = "runs")
+    @Embedded(prefix = "runs_")
     private IncrementalInt runs;
 
     public DRaidRun(WynnPlayerRaid raid, DCharacter character, @Nullable DCharacter lastCharacter) {
@@ -24,7 +24,7 @@ public class DRaidRun extends DSessionRunBase {
             this.runs = new IncrementalInt(null, snapshot);
             return;
         }
-        DRaidRun last = lastCharacter.getRaid(raid.name, character.character_id);
+        DRaidRun last = lastCharacter.getRaid(raid.name, character.characterId);
         this.runs = new IncrementalInt(last == null ? null : last.runs, snapshot);
     }
 }
