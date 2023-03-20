@@ -1,6 +1,8 @@
 package apple.discord.clover;
 
+import apple.discord.clover.api.ApiModule;
 import apple.discord.clover.database.CloverDatabase;
+import apple.discord.clover.discord.DiscordModule;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.lib.modules.AppleModule;
@@ -22,7 +24,6 @@ public class CloverBot extends ApplePlugin {
 
     @Override
     public void onEnable() {
-//        new GuildListDaemon().start();
     }
 
     @Override
@@ -32,6 +33,6 @@ public class CloverBot extends ApplePlugin {
 
     @Override
     public List<AppleModule> createModules() {
-        return List.of(new CloverDatabase(), new WynncraftModule(), new ServiceModule());
+        return List.of(new CloverDatabase(), new WynncraftModule(), new ApiModule(), new ServiceModule(), new DiscordModule());
     }
 }
