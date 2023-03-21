@@ -11,6 +11,7 @@ public class CloverDatabaseConfig {
     public String port = "${port}";
     public String database = "add";
     public boolean DROP_THE_DATABASE_AND_RECREATE = false;
+    public boolean createOnly = true;
 
     public CloverDatabaseConfig() {
         instance = this;
@@ -38,5 +39,9 @@ public class CloverDatabaseConfig {
 
     public boolean getDDLRun() {
         return this.DROP_THE_DATABASE_AND_RECREATE;
+    }
+
+    public boolean getDDLCreateOnly() {
+        return this.createOnly;
     }
 }

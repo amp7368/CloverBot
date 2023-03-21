@@ -52,10 +52,10 @@ public class ServicePlayerStats {
         while (true) {
             try {
                 this.daemon();
-                if (!throttle.doSleepBuffer()) {
-                    //noinspection BusyWait
-                    Thread.sleep(REPEAT_INTERVAL);
-                }
+                long sleep = throttle.getSleepBuffer(REPEAT_INTERVAL);
+                logger().info("Sleeping for %d millis".formatted(sleep));
+                //noinspection BusyWait
+                Thread.sleep(sleep);
             } catch (Exception e) {
                 logger().error("==ServicePlayerStats==", e);
             }
@@ -67,14 +67,19 @@ public class ServicePlayerStats {
     }
 
     private void updatePlayer(PlaySessionRaw response) {
-        if (response == null) return;
-        WynnPlayer player = response.getPlayer();
-        if (player == null) {
-            LoginStorage.failure(response.login());
-            return;
+        try {
+            if (response == null) return;
+            WynnPlayer player = response.getPlayer();
+            if (player == null) {
+                LoginStorage.failure(response.login());
+                return;
+            }
+            throttle.incrementSuccess();
+            LoginStorage.success(response.login());
+            PlayerStorage.save(response.login(), player);
+        } catch (Exception e) {
+            this.logger().error("", e);
         }
-        LoginStorage.success(response.login());
-        PlayerStorage.save(response.login(), player);
     }
 
     private Logger logger() {

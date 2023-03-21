@@ -46,12 +46,12 @@ public class ServiceServerList {
         while (true) {
             try {
                 this.daemon();
-                if (!throttle.doSleepBuffer()) {
-                    //noinspection BusyWait
-                    Thread.sleep(REPEAT_INTERVAL);
-                }
+                long sleep = throttle.getSleepBuffer(REPEAT_INTERVAL);
+                logger().info("Sleeping for %d millis".formatted(sleep));
+                //noinspection BusyWait
+                Thread.sleep(sleep);
             } catch (Exception e) {
-                logger().error(e);
+                logger().error("==ServiceServerList==", e);
             }
         }
     }
@@ -80,17 +80,12 @@ public class ServiceServerList {
                     logger().warn("Rate limit reached: %d error(s) in a row".formatted(throttle.getErrorCount()));
                 } else {
                     ResponseBody body = response.body();
-                    String message = body == null ? "No body" : body.string();
+                    String message = body.string();
                     logger().error("Response code: %d, Body: %s".formatted(response.code(), message));
                 }
                 return null;
             }
-            ResponseBody body = response.body();
-            if (body == null) {
-                logger().error("Ok response, but had no body");
-                return null;
-            }
-            JsonObject json = WynncraftRatelimit.gson().fromJson(body.charStream(), JsonObject.class);
+            JsonObject json = WynncraftRatelimit.gson().fromJson(response.body().charStream(), JsonObject.class);
             List<String> players = new ArrayList<>();
             ServerListResponseTimestamp responseMeta = null;
             for (String worldName : json.keySet()) {

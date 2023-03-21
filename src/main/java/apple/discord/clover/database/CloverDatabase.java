@@ -49,6 +49,7 @@ public class CloverDatabase extends AppleModule {
         dbConfig.setDataSourceConfig(dataSourceConfig);
         dbConfig.setDdlGenerate(true);
         dbConfig.setDdlRun(CloverDatabaseConfig.get().getDDLRun());
+        dbConfig.setDdlCreateOnly(CloverDatabaseConfig.get().getDDLCreateOnly());
         dbConfig.addAll(getEntities());
         return dbConfig;
     }

@@ -31,4 +31,8 @@ public class IncrementalBigInt {
     public static <T> IncrementalBigInt create(T last, Function<T, IncrementalBigInt> fn, long next) {
         return create(last, fn, BigInteger.valueOf(next));
     }
+
+    public BigInteger beforeSnapshot() {
+        return this.snapshot.subtract(this.delta);
+    }
 }
