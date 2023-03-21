@@ -16,12 +16,16 @@ public class BlacklistStorage {
     }
 
     public static void failure(DLoginQueue login) {
-        if (!query(login).exists()) new DBlacklist(login).save();
-        query(login).asUpdate().setRaw("failure = failure + 1").update();
+        if (query(login).exists()) {
+            query(login).asUpdate()
+                .setRaw("failure = failure + 1")
+                .set(QDBlacklist.alias().login, login)
+                .update();
+        } else new DBlacklist(login).save();
     }
 
     public static QDBlacklist query(DLoginQueue login) {
-        return new QDBlacklist().where().login.id.eq(login.id);
+        return new QDBlacklist().where().username.eq(login.player);
     }
 
     public static Instant getLastAllowedFailure() {

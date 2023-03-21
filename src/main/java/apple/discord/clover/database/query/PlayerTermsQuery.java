@@ -53,6 +53,7 @@ public class PlayerTermsQuery {
                 WHERE player_uuid = :player
                   AND retrieved_time BETWEEN date(:start) AND date(:end)
                 GROUP BY retrieved
+                ORDER BY retrieved
                 """)
             .setParameter("resolution", request.timeResolution.sql())
             .setParameter("player", request.player)

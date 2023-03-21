@@ -29,7 +29,7 @@ public class PlayerResponse {
         this.startingSnapshot = new PlaySessionSnapshot(first, true);
     }
 
-    public void setLast(DPlaySession first) {
-        this.endingSnapshot = new PlaySessionSnapshot(first, false);
+    public void setLast(DPlaySession last) {
+        this.endingSnapshot = new PlaySessionSnapshot(last, false);
     }
 }

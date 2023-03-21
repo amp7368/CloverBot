@@ -10,8 +10,8 @@ public class CloverDatabaseConfig {
     public String host = "${host}";
     public String port = "${port}";
     public String database = "add";
-    public boolean DROP_THE_DATABASE_AND_RECREATE = false;
-    public boolean createOnly = true;
+    public boolean RUN_MIGRATION = false;
+    public boolean CREATE_DATABASE = true;
 
     public CloverDatabaseConfig() {
         instance = this;
@@ -37,11 +37,11 @@ public class CloverDatabaseConfig {
         return this.isConfigured;
     }
 
-    public boolean getDDLRun() {
-        return this.DROP_THE_DATABASE_AND_RECREATE;
+    public boolean getDDLMigration() {
+        return this.RUN_MIGRATION;
     }
 
-    public boolean getDDLCreateOnly() {
-        return this.createOnly;
+    public boolean getDDLCreateDatabase() {
+        return this.CREATE_DATABASE;
     }
 }

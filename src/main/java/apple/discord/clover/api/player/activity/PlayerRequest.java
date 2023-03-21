@@ -14,6 +14,8 @@ public class PlayerRequest {
      * The number of terms of the resolution duration requested
      */
     public int count;
+
+    // transient
     private transient Instant startSql;
     private transient Instant endSql;
 

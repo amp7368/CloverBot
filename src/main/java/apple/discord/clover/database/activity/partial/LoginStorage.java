@@ -26,11 +26,14 @@ public class LoginStorage {
     }
 
     public static List<DLoginQueue> findUpdates() {
-        List<DLoginQueue> updates = queryNotBlacklist().joinTime.before(Timestamp.from(getOnlineTooLong())).orderBy().joinTime.asc()
+        List<DLoginQueue> updates = queryNotBlacklist()
+            .joinTime.before(Timestamp.from(getOnlineTooLong()))
+            .orderBy().joinTime.asc()
             .setMaxRows(FIND_UPDATES_ROW_LIMIT).findList();
         if (updates.size() == FIND_UPDATES_ROW_LIMIT) return updates;
         updates.addAll(queryNotBlacklist()
-            .orderBy().offline.desc().setMaxRows(FIND_UPDATES_ROW_LIMIT - updates.size())
+            .orderBy().offline.desc()
+            .setMaxRows(FIND_UPDATES_ROW_LIMIT - updates.size())
             .findList());
         return updates;
     }
@@ -42,8 +45,16 @@ public class LoginStorage {
     @NotNull
     private static QDLoginQueue queryNotBlacklist() {
         Timestamp lastAllowedFailure = Timestamp.from(BlacklistStorage.getLastAllowedFailure());
-        return new QDLoginQueue().where().or().blacklist.isNull().and().blacklist.isNotNull().blacklist.lastFailure.before(
-            lastAllowedFailure).endAnd().endOr();
+        return new QDLoginQueue()
+            .where()
+            .and()
+            .offline.gt(0)
+            .or()
+            .blacklist.isNull()
+            .and()
+            .blacklist.isNotNull()
+            .blacklist.lastFailure.before(lastAllowedFailure)
+            .endAnd().endOr().endAnd();
     }
 
     public static void success(DLoginQueue login) {
