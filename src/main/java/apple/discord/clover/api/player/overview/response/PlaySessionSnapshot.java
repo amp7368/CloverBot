@@ -1,4 +1,4 @@
-package apple.discord.clover.api.player.activity;
+package apple.discord.clover.api.player.overview.response;
 
 import apple.discord.clover.database.activity.DPlaySession;
 

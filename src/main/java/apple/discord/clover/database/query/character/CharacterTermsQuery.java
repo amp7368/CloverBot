@@ -1,9 +1,9 @@
 package apple.discord.clover.database.query.character;
 
-import apple.discord.clover.api.player.activity.PlayerRequest;
-import apple.discord.clover.api.player.character.CharacterStats;
-import apple.discord.clover.api.player.character.CharacterStatsListResponse;
-import apple.discord.clover.api.player.character.CharacterTerm;
+import apple.discord.clover.api.character.request.CharacterRequest;
+import apple.discord.clover.api.character.response.CharacterStats;
+import apple.discord.clover.api.character.response.CharacterStatsListResponse;
+import apple.discord.clover.api.character.response.CharacterTerm;
 import apple.discord.clover.database.character.DCharacter;
 import apple.discord.clover.database.character.query.QDCharacter;
 import io.ebean.DB;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class CharacterTermsQuery {
 
-    public static CharacterStatsListResponse queryCharacterTerms(PlayerRequest request) {
+    public static CharacterStatsListResponse queryCharacterTerms(CharacterRequest request) {
         CharacterStatsListResponse response = new CharacterStatsListResponse(request.start(), request.end());
         List<UUID> characters = queryCharacterIds(request.player);
         for (UUID character : characters) {
@@ -21,7 +21,7 @@ public class CharacterTermsQuery {
         return response;
     }
 
-    private static CharacterStats queryCharacter(PlayerRequest request, UUID id) {
+    private static CharacterStats queryCharacter(CharacterRequest request, UUID id) {
         CharacterStats character = new CharacterStats(id);
         character.setTerms(queryTerms(request, id));
         character.setFirst(queryFirstTerm(request, id));
@@ -29,19 +29,19 @@ public class CharacterTermsQuery {
         return character;
     }
 
-    private static DCharacter queryFirstTerm(PlayerRequest request, UUID id) {
+    private static DCharacter queryFirstTerm(CharacterRequest request, UUID id) {
         return queryTerm(request, id)
             .orderBy().session.retrievedTime.asc()
             .findOne();
     }
 
-    private static DCharacter queryLastTerm(PlayerRequest request, UUID id) {
+    private static DCharacter queryLastTerm(CharacterRequest request, UUID id) {
         return queryTerm(request, id)
             .orderBy().session.retrievedTime.desc()
             .findOne();
     }
 
-    private static QDCharacter queryTerm(PlayerRequest request, UUID id) {
+    private static QDCharacter queryTerm(CharacterRequest request, UUID id) {
         return new QDCharacter()
             .where().and()
             .characterId.eq(id)
@@ -50,7 +50,7 @@ public class CharacterTermsQuery {
             .setMaxRows(1);
     }
 
-    private static List<CharacterTerm> queryTerms(PlayerRequest request, UUID id) {
+    private static List<CharacterTerm> queryTerms(CharacterRequest request, UUID id) {
         return DB.findDto(CharacterTerm.class,
                 """
                     SELECT r.*

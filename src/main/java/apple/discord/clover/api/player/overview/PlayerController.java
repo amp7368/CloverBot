@@ -1,6 +1,8 @@
-package apple.discord.clover.api.player.activity;
+package apple.discord.clover.api.player.overview;
 
 import apple.discord.clover.api.base.ApiController;
+import apple.discord.clover.api.player.overview.request.PlayerRequest;
+import apple.discord.clover.api.player.overview.response.PlayerResponse;
 import apple.discord.clover.database.query.PlayerTermsQuery;
 import io.javalin.Javalin;
 import io.javalin.http.Context;

@@ -1,8 +1,8 @@
 package apple.discord.clover.database.query;
 
-import apple.discord.clover.api.player.activity.PlaySessionTerm;
-import apple.discord.clover.api.player.activity.PlayerRequest;
-import apple.discord.clover.api.player.activity.PlayerResponse;
+import apple.discord.clover.api.player.overview.request.PlayerRequest;
+import apple.discord.clover.api.player.overview.response.PlaySessionTerm;
+import apple.discord.clover.api.player.overview.response.PlayerResponse;
 import apple.discord.clover.database.activity.DPlaySession;
 import apple.discord.clover.database.activity.query.QDPlaySession;
 import io.ebean.DB;

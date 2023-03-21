@@ -1,14 +1,11 @@
-package apple.discord.clover.api.player.activity;
+package apple.discord.clover.api.base;
 
-import apple.discord.clover.api.base.TimeResolution;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.UUID;
 
-public class PlayerRequest {
+public class TermRequest {
 
     public TimeResolution timeResolution;
-    public UUID player;
     public Instant start;
     /**
      * The number of terms of the resolution duration requested

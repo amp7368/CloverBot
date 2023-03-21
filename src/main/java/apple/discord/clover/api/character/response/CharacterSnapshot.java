@@ -1,4 +1,4 @@
-package apple.discord.clover.api.player.character;
+package apple.discord.clover.api.character.response;
 
 import apple.discord.clover.database.character.DCharacter;
 

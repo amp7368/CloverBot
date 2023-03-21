@@ -77,8 +77,8 @@ public class CloverDatabase extends AppleModule {
 
     @Override
     public List<AppleConfigLike> getConfigs() {
-        Builder<CloverDatabaseConfig> databaseConfig = configJson(CloverDatabaseConfig.class, "Database.config", "Config");
-        this.databaseConfigFile = this.getFile("Config", "Database.config.json");
+        Builder<CloverDatabaseConfig> databaseConfig = configJson(CloverDatabaseConfig.class, "Database.config");
+        this.databaseConfigFile = this.getFile("Database.config.json");
         return List.of(databaseConfig);
     }
 
