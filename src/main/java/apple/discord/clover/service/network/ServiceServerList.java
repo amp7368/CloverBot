@@ -34,22 +34,26 @@ public class ServiceServerList {
     private static final AsyncTaskQueueStart<AsyncTaskPriority> SERVICE = WynncraftRatelimit.getNetwork()
         .taskCreator(new AsyncTaskPriority(TaskPriorityCommon.LOW));
     private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(5);
-
+    private final static long ERROR_MARGIN = 100;
     private final OkHttpClient http = new OkHttpClient();
     private final RepeatThrottle throttle = new RepeatThrottle(5000);
 
     public ServiceServerList() {
+        ServiceServerListConfig.sleepIfLastQueryRecent(REPEAT_INTERVAL);
         new Thread(this::run).start();
     }
 
     private void run() {
         while (true) {
             try {
+                long start = System.currentTimeMillis();
                 this.daemon();
-                long sleep = throttle.getSleepBuffer(REPEAT_INTERVAL);
+                ServiceServerListConfig.updateLastQuery();
+                long timeTaken = System.currentTimeMillis() - start;
+                long sleep = throttle.getSleepBuffer(REPEAT_INTERVAL - timeTaken);
                 logger().info("Sleeping for %d millis".formatted(sleep));
                 //noinspection BusyWait
-                Thread.sleep(sleep);
+                Thread.sleep(sleep + ERROR_MARGIN);
             } catch (Exception e) {
                 logger().error("==ServiceServerList==", e);
             }

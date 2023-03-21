@@ -1,5 +1,6 @@
 package apple.discord.clover.wynncraft;
 
+import apple.discord.clover.api.base.InstantSerializer;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
@@ -56,7 +57,8 @@ public class WynncraftRatelimit {
 
     @NotNull
     public static Gson gson() {
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm'Z'").create();
+        GsonBuilder gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        return InstantSerializer.registerGson(gson).create();
     }
 
 
