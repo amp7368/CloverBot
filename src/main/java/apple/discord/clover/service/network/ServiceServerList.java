@@ -29,17 +29,17 @@ import org.apache.logging.log4j.Logger;
 
 public class ServiceServerList {
 
+    public static final long SERVER_LIST_OFFLINE_INTERVAL = TimeMillis.minToMillis(5);
     private static final Builder SERVER_LIST_REQUEST = new Builder().url(WynncraftApi.SERVER_LIST)
         .cacheControl(CacheControl.FORCE_NETWORK);
     private static final AsyncTaskQueueStart<AsyncTaskPriority> SERVICE = WynncraftRatelimit.getNetwork()
         .taskCreator(new AsyncTaskPriority(TaskPriorityCommon.LOW));
-    private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(5);
     private final static long ERROR_MARGIN = 100;
     private final OkHttpClient http = new OkHttpClient();
     private final RepeatThrottle throttle = new RepeatThrottle(5000);
 
     public ServiceServerList() {
-        ServiceServerListConfig.sleepIfLastQueryRecent(REPEAT_INTERVAL);
+        ServiceServerListConfig.sleepIfLastQueryRecent(SERVER_LIST_OFFLINE_INTERVAL);
         new Thread(this::run).start();
     }
 
@@ -50,7 +50,7 @@ public class ServiceServerList {
                 this.daemon();
                 ServiceServerListConfig.updateLastQuery();
                 long timeTaken = System.currentTimeMillis() - start;
-                long sleep = throttle.getSleepBuffer(REPEAT_INTERVAL - timeTaken);
+                long sleep = throttle.getSleepBuffer(SERVER_LIST_OFFLINE_INTERVAL - timeTaken);
                 logger().info("Sleeping for %d millis".formatted(sleep));
                 //noinspection BusyWait
                 Thread.sleep(sleep + ERROR_MARGIN);

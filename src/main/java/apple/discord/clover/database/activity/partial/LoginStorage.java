@@ -1,41 +1,74 @@
 package apple.discord.clover.database.activity.partial;
 
 import apple.discord.clover.database.activity.blacklist.BlacklistStorage;
+import apple.discord.clover.database.activity.blacklist.DBlacklist;
+import apple.discord.clover.database.activity.blacklist.query.QDBlacklist;
 import apple.discord.clover.database.activity.partial.query.QDLoginQueue;
+import apple.discord.clover.service.network.ServiceServerList;
+import discord.util.dcf.util.TimeMillis;
+import io.ebean.DB;
+import io.ebean.Model;
+import io.ebean.Transaction;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
 public class LoginStorage {
 
     public static final int FIND_UPDATES_ROW_LIMIT = 100;
     private static final TemporalAmount ONLINE_TOO_LONG = Duration.ofHours(6);
+    private static final int MIN_OFFLINE_COUNT_REQUIRED =
+        (int) (TimeMillis.minToMillis(30) / ServiceServerList.SERVER_LIST_OFFLINE_INTERVAL);
 
     public static void queuePlayers(List<String> players, Instant requestedAt) {
         QDLoginQueue alias = QDLoginQueue.alias();
         new QDLoginQueue().asUpdate().set(alias.isOnline, false).update();
-        for (String player : players) {
-            int didUpdate = new QDLoginQueue().where().player.eq(player).asUpdate().set(alias.isOnline, true).update();
-            if (didUpdate == 0)
-                new DLoginQueue(player, requestedAt).save();
+        try (Transaction transaction = DB.beginTransaction()) {
+            for (String player : players) {
+                int didUpdate = new QDLoginQueue()
+                    .usingTransaction(transaction)
+                    .where().player.eq(player)
+                    .asUpdate()
+                    .set(alias.isOnline, true).update();
+                if (didUpdate == 0)
+                    new DLoginQueue(player, requestedAt).save(transaction);
+            }
+            transaction.commit();
         }
-        new QDLoginQueue().where().isOnline.eq(false).asUpdate().setRaw("offline = offline + 1").setRaw("leave_time = now()").update();
+
+        new QDLoginQueue().where()
+            .isOnline.eq(false)
+            .asUpdate()
+            .setRaw("offline = offline + 1")
+            .setRaw("leave_time = now()").update();
     }
 
-    public static List<DLoginQueue> findUpdates() {
-        List<DLoginQueue> updates = queryNotBlacklist()
+    public static Collection<DLoginQueue> findUpdates() {
+        cleanBlacklist();
+        List<DLoginQueue> updates = queryNextUpdates()
             .joinTime.before(Timestamp.from(getOnlineTooLong()))
             .orderBy().joinTime.asc()
             .setMaxRows(FIND_UPDATES_ROW_LIMIT).findList();
         if (updates.size() == FIND_UPDATES_ROW_LIMIT) return updates;
-        updates.addAll(queryNotBlacklist()
+        updates.addAll(queryNextUpdates()
             .orderBy().offline.desc()
             .setMaxRows(FIND_UPDATES_ROW_LIMIT - updates.size())
             .findList());
-        return updates;
+        return new HashSet<>(updates);
+    }
+
+    private static void cleanBlacklist() {
+        List<DBlacklist> failedInBlacklist = new QDBlacklist().where().failure.ge(BlacklistStorage.getMaxFailures())
+            .findList();
+        List<UUID> loginIds = failedInBlacklist.stream().map(DBlacklist::getLogin).map(DLoginQueue::getId).toList();
+        failedInBlacklist.forEach(Model::delete);
+        new QDLoginQueue().where().id.in(loginIds).delete();
     }
 
     private static Instant getOnlineTooLong() {
@@ -43,12 +76,12 @@ public class LoginStorage {
     }
 
     @NotNull
-    private static QDLoginQueue queryNotBlacklist() {
+    private static QDLoginQueue queryNextUpdates() {
         Timestamp lastAllowedFailure = Timestamp.from(BlacklistStorage.getLastAllowedFailure());
         return new QDLoginQueue()
             .where()
             .and()
-            .offline.gt(0)
+            .offline.ge(MIN_OFFLINE_COUNT_REQUIRED)
             .or()
             .blacklist.isNull()
             .and()
@@ -58,8 +91,8 @@ public class LoginStorage {
     }
 
     public static void success(DLoginQueue login) {
-        login.delete();
         BlacklistStorage.success(login);
+        login.delete();
     }
 
     public static void failure(DLoginQueue login) {

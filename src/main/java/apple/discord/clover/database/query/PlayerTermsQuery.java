@@ -1,5 +1,8 @@
 package apple.discord.clover.database.query;
 
+import static java.util.concurrent.CompletableFuture.allOf;
+import static java.util.concurrent.CompletableFuture.supplyAsync;
+
 import apple.discord.clover.api.player.overview.request.PlayerRequest;
 import apple.discord.clover.api.player.overview.response.PlaySessionTerm;
 import apple.discord.clover.api.player.overview.response.PlayerResponse;
@@ -7,15 +10,21 @@ import apple.discord.clover.database.activity.DPlaySession;
 import apple.discord.clover.database.activity.query.QDPlaySession;
 import io.ebean.DB;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerTermsQuery {
 
     public static PlayerResponse queryPlayerTerms(PlayerRequest request) {
         PlayerResponse response = new PlayerResponse(request.start(), request.end());
-        response.setTerms(queryTerms(request));
-        response.setFirst(queryFirstTerm(request));
-        response.setLast(queryLastTerm(request));
+
+        CompletableFuture<List<PlaySessionTerm>> terms = supplyAsync(() -> queryTerms(request));
+        CompletableFuture<DPlaySession> first = supplyAsync(() -> queryFirstTerm(request));
+        CompletableFuture<DPlaySession> last = supplyAsync(() -> queryLastTerm(request));
+        allOf(terms, first, last).join();
+        response.setTerms(terms.getNow(null));
+        response.setFirst(first.getNow(null));
+        response.setLast(last.getNow(null));
         return response;
     }
 

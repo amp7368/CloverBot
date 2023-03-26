@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="blacklist">
+            <column name="login_id" type="uuid" uniqueOneToOne="uq_blacklist_login_id" references="login_queue.id" foreignKeyName="fk_blacklist_login_id"/>
+        </addColumn>
+    </changeSet>
+    <changeSet type="pendingDrops">
+        <dropColumn columnName="blacklist_username" tableName="login_queue"/>
+    </changeSet>
+</migration>

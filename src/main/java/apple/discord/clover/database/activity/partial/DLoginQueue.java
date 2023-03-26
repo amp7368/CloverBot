@@ -29,11 +29,15 @@ public class DLoginQueue extends Model {
     @Column(nullable = false)
     public boolean isOnline = true;
     @Column
-    @OneToOne
+    @OneToOne(mappedBy = "login")
     public DBlacklist blacklist;
 
     public DLoginQueue(String player, Instant requestedAt) {
         this.joinTime = Timestamp.from(requestedAt);
         this.player = player;
+    }
+
+    public UUID getId() {
+        return this.id;
     }
 }

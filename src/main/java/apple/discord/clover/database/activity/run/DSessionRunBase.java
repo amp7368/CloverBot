@@ -8,8 +8,10 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.UniqueConstraint;
 
 @MappedSuperclass
+@UniqueConstraint(columnNames = {"character_sku", "name"})
 @Index(columnNames = {"character_sku", "name"})
 public abstract class DSessionRunBase extends Model {
 

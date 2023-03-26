@@ -13,8 +13,8 @@ public class PlayerResponse {
      * Sorted by date
      */
     public List<PlaySessionTerm> terms;
-    private PlaySessionSnapshot startingSnapshot;
-    private PlaySessionSnapshot endingSnapshot;
+    public PlaySessionSnapshot startingSnapshot;
+    public PlaySessionSnapshot endingSnapshot;
 
     public PlayerResponse(Instant start, Instant end) {
         this.requestedStart = start;

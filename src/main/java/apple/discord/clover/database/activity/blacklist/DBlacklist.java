@@ -16,7 +16,7 @@ public class DBlacklist extends Model {
 
     @Id
     public String username;
-    @OneToOne(mappedBy = "blacklist")
+    @OneToOne
     public DLoginQueue login;
     @Column
     public int failure = 1;
@@ -27,5 +27,24 @@ public class DBlacklist extends Model {
     public DBlacklist(DLoginQueue login) {
         this.username = login.player;
         this.login = login;
+    }
+
+    public DBlacklist incrementFailure() {
+        this.failure++;
+        return this;
+    }
+
+    public DBlacklist incrementSuccess() {
+        this.success++;
+        return this;
+    }
+
+    public DLoginQueue getLogin() {
+        return this.login;
+    }
+
+    public DBlacklist setLogin(DLoginQueue login) {
+        this.login = login;
+        return this;
     }
 }

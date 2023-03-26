@@ -1,6 +1,5 @@
 package apple.discord.clover.service.player;
 
-import apple.discord.clover.database.activity.blacklist.BlacklistStorage;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.activity.partial.LoginStorage;
 import apple.discord.clover.database.player.PlayerStorage;
@@ -18,6 +17,7 @@ import apple.utilities.util.NumberUtils;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import net.dv8tion.jda.api.exceptions.HttpException;
 import okhttp3.CacheControl;
@@ -37,7 +37,7 @@ public class ServicePlayerStats {
     private static ServicePlayerStats instance;
     private final OkHttpClient http = new OkHttpClient();
     private final RepeatThrottle throttle = new RepeatThrottle(5000);
-    private final List<DLoginQueue> nextPlayers = new ArrayList<DLoginQueue>();
+    private final List<DLoginQueue> nextPlayers = new ArrayList<>();
 
     public ServicePlayerStats() {
         instance = this;
@@ -66,7 +66,7 @@ public class ServicePlayerStats {
         SERVICE.accept(this::call, this::updatePlayer, (e) -> this.logger().error("", e));
     }
 
-    private void updatePlayer(PlaySessionRaw response) {
+    private synchronized void updatePlayer(PlaySessionRaw response) {
         try {
             if (response == null) return;
             WynnPlayer player = response.getPlayer();
@@ -75,8 +75,9 @@ public class ServicePlayerStats {
                 return;
             }
             throttle.incrementSuccess();
-            LoginStorage.success(response.login());
-            PlayerStorage.save(response.login(), player);
+            boolean updated = PlayerStorage.save(response.login(), player);
+            if (updated) LoginStorage.success(response.login());
+            else LoginStorage.failure(response.login());
         } catch (Exception e) {
             this.logger().error("", e);
         }
@@ -86,13 +87,14 @@ public class ServicePlayerStats {
         return ServiceModule.get().logger();
     }
 
-    private PlaySessionRaw call() throws IOException {
-        logger().info("Checking for available players to queue");
+    private synchronized PlaySessionRaw call() throws IOException {
         if (nextPlayers.isEmpty()) {
-            List<DLoginQueue> updates = LoginStorage.findUpdates();
+            logger().info("Caching queue with more players from LoginStorage");
+            Collection<DLoginQueue> updates = LoginStorage.findUpdates();
             if (updates.isEmpty()) return null;
             this.nextPlayers.addAll(updates);
         }
+        logger().info("Players left in cached queue: {}", nextPlayers.size());
         DLoginQueue nextPlayer = this.nextPlayers.remove(0);
         logger().info("Downloading " + nextPlayer.player);
         Call call = http.newCall(new Builder().url(WynncraftApi.playerStats(nextPlayer.player))
@@ -104,7 +106,7 @@ public class ServicePlayerStats {
                 if (code == Status.TOO_MANY_REQUESTS) {
                     throw new HttpException("Rate limit reached: %d error(s) in a row".formatted(throttle.getErrorCount()));
                 } else if (NumberUtils.between(400, code, 500)) {
-                    BlacklistStorage.failure(nextPlayer);
+                    LoginStorage.failure(nextPlayer);
                 }
                 ResponseBody body = httpResponse.body();
                 throw new HttpException("Response code: %d, Body: %s".formatted(code, body.string()));

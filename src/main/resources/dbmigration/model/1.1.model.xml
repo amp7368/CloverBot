@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addUniqueConstraint constraintName="uq_dungeon_run_character_sku_name" tableName="dungeon_run" columnNames="character_sku,name" oneToOne="false" nullableColumns="character_sku,name"/>
+        <addUniqueConstraint constraintName="uq_levelup_run_character_sku_name" tableName="levelup_run" columnNames="character_sku,name" oneToOne="false" nullableColumns="character_sku,name"/>
+        <addUniqueConstraint constraintName="uq_raid_run_character_sku_name" tableName="raid_run" columnNames="character_sku,name" oneToOne="false" nullableColumns="character_sku,name"/>
+    </changeSet>
+</migration>
