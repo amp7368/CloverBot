@@ -8,8 +8,10 @@ import java.util.UUID;
 public class PlayerRaidCharactersSnapshot {
 
     public Map<UUID, RaidSnapshot> characters = new HashMap<>();
+    public RaidSnapshot total = new RaidSnapshot(0);
 
     public void setCharacter(UUID characterId, RaidSnapshot raidSnapshot) {
+        this.total.add(raidSnapshot);
         this.characters.put(characterId, raidSnapshot);
     }
 

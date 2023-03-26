@@ -1,5 +1,5 @@
 SELECT player_count,
-       ('{Sun,Mon,Tue,Wed,Thu,Fri,Sat}'::TEXT[])[EXTRACT(ISODOW FROM retrieved) + 1] day_of_week,
+       ('{Mon,Tue,Wed,Thu,Fri,Sat,Sun}'::TEXT[])[EXTRACT(ISODOW FROM retrieved)] day_of_week,
        retrieved
 FROM (
      SELECT DATE_TRUNC('DAY', retrieved_time) retrieved,

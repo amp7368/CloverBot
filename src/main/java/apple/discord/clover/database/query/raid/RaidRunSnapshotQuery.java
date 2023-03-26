@@ -70,6 +70,9 @@ public class RaidRunSnapshotQuery {
         List<RaidRunRaw> results = queries.stream().map(q -> q.getNow(null)).toList();
         for (RaidRunRaw result : results) {
             if (result == null) continue;
+
+            response.add(result.runsSnapshotAt(snapShotAt));
+
             PlayerRaidCharactersSnapshot raid = response.getOrCreateRaid(result.raid);
             raid.setCharacter(result.characterId, result.runsSnapshotAt(snapShotAt));
         }
