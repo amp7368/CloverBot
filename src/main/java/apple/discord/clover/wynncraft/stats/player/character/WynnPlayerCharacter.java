@@ -13,7 +13,7 @@ public class WynnPlayerCharacter {
     public int level;
     public int itemsIdentified;
     public int mobsKilled;
-    public int blocksWalked;
+    public long blocksWalked;
     public int logins;
     public int deaths;
     public long playtime;

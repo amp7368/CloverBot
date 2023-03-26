@@ -26,4 +26,8 @@ public class IncrementalInt {
     public static <T> IncrementalInt create(T last, Function<T, IncrementalInt> fn, int next) {
         return new IncrementalInt(last == null ? null : fn.apply(last), next);
     }
+
+    public int beforeSnapshot() {
+        return this.snapshot - this.delta;
+    }
 }

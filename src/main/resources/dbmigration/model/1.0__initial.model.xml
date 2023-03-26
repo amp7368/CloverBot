@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="blacklist" identityType="external" pkName="pk_blacklist">
+            <column name="username" type="varchar" primaryKey="true"/>
+            <column name="failure" type="integer" notnull="true"/>
+            <column name="success" type="integer" notnull="true"/>
+            <column name="last_failure" type="timestamp"/>
+        </createTable>
+        <createTable name="player_character" identityType="external" pkName="pk_player_character">
+            <column name="sku" type="uuid" primaryKey="true" identity="true"/>
+            <column name="character_id" type="uuid"/>
+            <column name="session_id" type="uuid" references="play_session.id" foreignKeyName="fk_player_character_session_id" foreignKeyIndex="ix_player_character_session_id"/>
+            <column name="type" type="varchar"/>
+            <column name="items_identified_snapshot" type="integer"/>
+            <column name="items_identified_delta" type="integer"/>
+            <column name="mobs_killed_snapshot" type="integer"/>
+            <column name="mobs_killed_delta" type="integer"/>
+            <column name="blocks_walked_snapshot" type="bigint"/>
+            <column name="blocks_walked_delta" type="bigint"/>
+            <column name="logins_snapshot" type="integer"/>
+            <column name="logins_delta" type="integer"/>
+            <column name="deaths_snapshot" type="integer"/>
+            <column name="deaths_delta" type="integer"/>
+            <column name="playtime_snapshot" type="bigint"/>
+            <column name="playtime_delta" type="bigint"/>
+        </createTable>
+        <createTable name="dungeon_run" identityType="external" pkName="pk_dungeon_run">
+            <column name="run_id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="character_sku" type="uuid" references="player_character.sku" foreignKeyName="fk_dungeon_run_character_sku" foreignKeyIndex="ix_dungeon_run_character_sku"/>
+            <column name="name" type="varchar"/>
+            <column name="runs_snapshot" type="integer"/>
+            <column name="runs_delta" type="integer"/>
+        </createTable>
+        <createTable name="guild" identityType="external" pkName="pk_guild">
+            <column name="name" type="varchar" primaryKey="true"/>
+            <column name="tag" type="varchar"/>
+            <column name="created" type="timestamp"/>
+        </createTable>
+        <createTable name="levelup_run" identityType="external" pkName="pk_levelup_run">
+            <column name="run_id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="character_sku" type="uuid" references="player_character.sku" foreignKeyName="fk_levelup_run_character_sku" foreignKeyIndex="ix_levelup_run_character_sku"/>
+            <column name="name" type="varchar"/>
+            <column name="level_snapshot" type="float"/>
+            <column name="level_delta" type="float"/>
+        </createTable>
+        <createTable name="login_queue" identityType="external" pkName="pk_login_queue">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="player" type="varchar" notnull="true" unique="uq_login_queue_player"/>
+            <column name="join_time" type="timestamp" notnull="true"/>
+            <column name="leave_time" type="timestamp"/>
+            <column name="offline" type="integer" notnull="true"/>
+            <column name="is_online" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="blacklist_username" type="varchar" uniqueOneToOne="uq_login_queue_blacklist_username" references="blacklist.username" foreignKeyName="fk_login_queue_blacklist_username"/>
+        </createTable>
+        <createTable name="play_session" identityType="external" pkName="pk_play_session">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="player_uuid" type="uuid" references="player.uuid" foreignKeyName="fk_play_session_player_uuid" foreignKeyIndex="ix_play_session_player_uuid"/>
+            <column name="join_time" type="timestamp"/>
+            <column name="retrieved_time" type="timestamp"/>
+            <column name="guild_name" type="varchar" references="guild.name" foreignKeyName="fk_play_session_guild_name" foreignKeyIndex="ix_play_session_guild_name"/>
+            <column name="playtime_snapshot" type="bigint"/>
+            <column name="playtime_delta" type="bigint"/>
+            <column name="items_identified_snapshot" type="bigint"/>
+            <column name="items_identified_delta" type="bigint"/>
+            <column name="mobs_killed_snapshot" type="bigint"/>
+            <column name="mobs_killed_delta" type="bigint"/>
+            <column name="combat_snapshot" type="integer"/>
+            <column name="combat_delta" type="integer"/>
+            <column name="prof_snapshot" type="integer"/>
+            <column name="prof_delta" type="integer"/>
+            <uniqueConstraint name="uq_play_session_player_uuid_join_time" columnNames="player_uuid,join_time" oneToOne="false" nullableColumns="player_uuid,join_time"/>
+        </createTable>
+        <createTable name="player" identityType="external" pkName="pk_player">
+            <column name="uuid" type="uuid" primaryKey="true" identity="true"/>
+            <column name="username" type="varchar"/>
+        </createTable>
+        <createTable name="raid_run" identityType="external" pkName="pk_raid_run">
+            <column name="run_id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="character_sku" type="uuid" references="player_character.sku" foreignKeyName="fk_raid_run_character_sku" foreignKeyIndex="ix_raid_run_character_sku"/>
+            <column name="name" type="varchar"/>
+            <column name="runs_snapshot" type="integer"/>
+            <column name="runs_delta" type="integer"/>
+        </createTable>
+        <createIndex indexName="ix_player_character_character_id_session_id" tableName="player_character" columns="character_id,session_id"/>
+        <createIndex indexName="ix_dungeon_run_character_sku_name" tableName="dungeon_run" columns="character_sku,name"/>
+        <createIndex indexName="ix_levelup_run_character_sku_name" tableName="levelup_run" columns="character_sku,name"/>
+        <createIndex indexName="ix_play_session_player_uuid_join_time" tableName="play_session" columns="player_uuid,join_time"/>
+        <createIndex indexName="ix_raid_run_character_sku_name" tableName="raid_run" columns="character_sku,name"/>
+    </changeSet>
+</migration>

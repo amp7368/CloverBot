@@ -16,11 +16,10 @@ public class RepeatThrottle {
         this.errors++;
     }
 
-    public boolean doSleepBuffer() throws InterruptedException {
-        if (errors == 0) return false;
-        long sleep = failureBuffer.multiply(BigInteger.TWO.pow(errors)).longValue();
-        Thread.sleep(sleep);
-        return true;
+    public long getSleepBuffer(long minSleep) {
+        if (errors == 0) return minSleep;
+        long sleep = failureBuffer.multiply(BigInteger.TWO.pow(errors - 1)).longValue();
+        return Math.max(sleep, minSleep);
     }
 
     public void incrementSuccess() {

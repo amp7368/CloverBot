@@ -11,13 +11,14 @@ import apple.discord.clover.database.player.query.QDPlayer;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
 import io.ebean.DB;
+import io.ebean.DuplicateKeyException;
 import io.ebean.Transaction;
 import java.util.Map.Entry;
 import java.util.UUID;
 
 public class PlayerStorage {
 
-    public static void save(DLoginQueue login, WynnPlayer currentValue) {
+    public static boolean save(DLoginQueue login, WynnPlayer currentValue) {
         DPlaySession lastSession = new QDPlaySession().where().player.uuid.eq(currentValue.uuid).orderBy().joinTime.desc()
             .setMaxRows(1)
             .findOne();
@@ -27,12 +28,15 @@ public class PlayerStorage {
             playerInDB = new DPlayer(currentValue.uuid, currentValue.username);
             playerInDB.insert();
         } else {
-            playerInDB.setUsername(currentValue.username);
-            playerInDB.save();
+            playerInDB.setUsername(currentValue.username).save();
         }
         try (Transaction transaction = DB.beginTransaction()) {
             DPlaySession session = new DPlaySession(playerInDB, lastSession, login, currentValue);
-            session.insert(transaction);
+            try {
+                session.insert(transaction);
+            } catch (DuplicateKeyException e) {
+                return false;
+            }
 
             for (Entry<UUID, WynnPlayerCharacter> dataChar : currentValue.characters.entrySet()) {
                 DCharacter lastChar = lastSession == null ? null : lastSession.getCharacter(dataChar.getKey());
@@ -52,6 +56,7 @@ public class PlayerStorage {
             }
             transaction.commit();
         }
+        return true;
     }
 
 }

@@ -1,6 +1,7 @@
 package apple.discord.clover.api.base;
 
 import apple.utilities.json.gson.serialize.JsonSerializing;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -10,6 +11,10 @@ import java.lang.reflect.Type;
 import java.time.Instant;
 
 public class InstantSerializer implements JsonSerializing<Instant> {
+
+    public static GsonBuilder registerGson(GsonBuilder gson) {
+        return gson.registerTypeAdapter(Instant.class, new InstantSerializer());
+    }
 
     @Override
     public Instant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

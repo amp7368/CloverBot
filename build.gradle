@@ -31,11 +31,15 @@ dependencies {
     // sql
     annotationProcessor "io.ebean:ebean-querybean:${ebean_version}"
     annotationProcessor "io.ebean:querybean-generator:${ebean_version}"
-    implementation "io.ebean:ebean-ddl-generator:${ebean_version}"
     implementation "io.ebean:ebean-querybean:${ebean_version}"
     implementation "io.ebean:ebean-postgres:${ebean_version}"
     // sql driver
     implementation 'org.postgresql:postgresql:42.5.4'
+
+    // migration
+    implementation "io.ebean:ebean-ddl-generator:${ebean_version}"
+    implementation 'io.ebean:ebean-migration:13.7.0'
+    testImplementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 
     //json
     implementation "io.ebean:ebean-jackson-mapper:${ebean_version}"

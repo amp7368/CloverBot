@@ -23,7 +23,8 @@ public class DPlayer extends Model {
         this.username = username;
     }
 
-    public void setUsername(String username) {
+    public DPlayer setUsername(String username) {
         this.username = username;
+        return this;
     }
 }
