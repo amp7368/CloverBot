@@ -1,6 +1,5 @@
 package apple.discord.clover.wynncraft;
 
-import apple.discord.clover.api.base.InstantSerializer;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
@@ -8,8 +7,6 @@ import apple.utilities.request.AppleJsonFromURL;
 import apple.utilities.threading.service.priority.AsyncTaskPriority;
 import apple.utilities.threading.service.priority.TaskHandlerPriority;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import discord.util.dcf.util.TimeMillis;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
@@ -55,24 +52,18 @@ public class WynncraftRatelimit {
         return new TaskHandlerPriority(tasks, time, time / tasks);
     }
 
-    @NotNull
-    public static Gson gson() {
-        GsonBuilder gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-        return InstantSerializer.registerGson(gson).create();
-    }
-
 
     // todo
     public static void queueGuild(TaskPriorityCommon priority, String guild, Consumer<WynnGuild> runAfter) {
         AppleJsonFromURL<WynnGuild> task = new AppleJsonFromURL<>(String.format(WynncraftApi.GUILD_STATS, guild), WynnGuild.class,
-            gson());
+            WynncraftModule.gson());
         getGuild().taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess(runAfter);
     }
 
     // todo
     public static void queuePlayer(TaskPriorityCommon priority, String guildMember, Consumer<@Nullable WynnPlayer> runAfter) {
         String link = String.format(WynncraftApi.PLAYER_STATS, guildMember);
-        AppleJsonFromURL<WynnPlayerResponse> task = new AppleJsonFromURL<>(link, WynnPlayerResponse.class, gson());
+        AppleJsonFromURL<WynnPlayerResponse> task = new AppleJsonFromURL<>(link, WynnPlayerResponse.class, WynncraftModule.gson());
         Consumer<WynnPlayerResponse> consumeResponse = (res) -> {
             if (res == null) {
                 runAfter.accept(null);

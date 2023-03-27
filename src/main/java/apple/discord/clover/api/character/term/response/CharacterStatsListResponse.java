@@ -1,4 +1,4 @@
-package apple.discord.clover.api.character.response;
+package apple.discord.clover.api.character.term.response;
 
 import java.time.Instant;
 import java.util.ArrayList;

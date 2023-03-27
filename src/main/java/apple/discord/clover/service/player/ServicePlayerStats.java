@@ -6,6 +6,7 @@ import apple.discord.clover.database.player.PlayerStorage;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
+import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.WynncraftRatelimit;
 import apple.discord.clover.wynncraft.response.RepeatThrottle;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
@@ -16,6 +17,7 @@ import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import apple.utilities.util.NumberUtils;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -34,8 +36,9 @@ public class ServicePlayerStats {
         .taskCreator(new AsyncTaskPriority(TaskPriorityCommon.LOW));
     private static final int REQUESTS = 750;
     private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(30) / REQUESTS;
+    private static final Duration CALL_TIMEOUT = Duration.ofSeconds(5);
     private static ServicePlayerStats instance;
-    private final OkHttpClient http = new OkHttpClient();
+    private final OkHttpClient http = new OkHttpClient.Builder().callTimeout(CALL_TIMEOUT).build();
     private final RepeatThrottle throttle = new RepeatThrottle(5000);
     private final List<DLoginQueue> nextPlayers = new ArrayList<>();
 
@@ -51,8 +54,10 @@ public class ServicePlayerStats {
     private void run() {
         while (true) {
             try {
+                long start = System.currentTimeMillis();
                 this.daemon();
-                long sleep = throttle.getSleepBuffer(REPEAT_INTERVAL);
+                long timeTaken = System.currentTimeMillis() - start;
+                long sleep = throttle.getSleepBuffer(REPEAT_INTERVAL - timeTaken);
                 logger().info("Sleeping for %d millis".formatted(sleep));
                 //noinspection BusyWait
                 Thread.sleep(sleep);
@@ -63,7 +68,14 @@ public class ServicePlayerStats {
     }
 
     private void daemon() {
-        SERVICE.accept(this::call, this::updatePlayer, (e) -> this.logger().error("", e));
+        PlaySessionRaw response;
+        try {
+            response = this.call();
+        } catch (IOException e) {
+            this.logger().error("", e);
+            return;
+        }
+        this.updatePlayer(response);
     }
 
     private synchronized void updatePlayer(PlaySessionRaw response) {
@@ -112,7 +124,7 @@ public class ServicePlayerStats {
                 throw new HttpException("Response code: %d, Body: %s".formatted(code, body.string()));
             }
             ResponseBody body = httpResponse.body();
-            WynnPlayerResponse response = WynncraftRatelimit.gson().fromJson(body.charStream(), WynnPlayerResponse.class);
+            WynnPlayerResponse response = WynncraftModule.gson().fromJson(body.charStream(), WynnPlayerResponse.class);
             return new PlaySessionRaw(nextPlayer, response);
         }
     }

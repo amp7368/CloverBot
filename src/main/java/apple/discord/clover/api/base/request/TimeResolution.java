@@ -2,6 +2,7 @@ package apple.discord.clover.api.base.request;
 
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.Arrays;
 
 public enum TimeResolution {
     HOUR(ChronoUnit.HOURS),
@@ -13,6 +14,10 @@ public enum TimeResolution {
 
     TimeResolution(TemporalUnit unit) {
         this.unit = unit;
+    }
+
+    public static String errorMessage() {
+        return "{0} must be one of %s".formatted(Arrays.toString(values()));
     }
 
     public TemporalUnit unit() {

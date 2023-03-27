@@ -54,6 +54,8 @@ dependencies {
     // http
     implementation 'io.javalin:javalin:5.4.2'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
+    // validation
+    implementation 'am.ik.yavi:yavi:0.12.1'
 
     // apple
     implementation 'apple.utilities:AppleUtilities:1.3-SNAPSHOT'

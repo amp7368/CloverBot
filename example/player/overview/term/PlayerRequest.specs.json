@@ -1,0 +1,32 @@
+{
+  "timeResolution": {
+    "type": "string",
+    "restrictions": [
+      "\"HOUR\" | \"DAY\" | \"WEEK\" | \"MONTH\""
+    ],
+    "description": "Split up response into hour time chunks",
+    "example": "DAY"
+  },
+  "player": {
+    "type": "string",
+    "restrictions": [
+      "Valid UUID of a player"
+    ],
+    "description": "UUID of the requested player",
+    "example": "8228b4cb-d7dd-49bd-a0ec-c7fe4f160e3a"
+  },
+  "start": {
+    "type": "date",
+    "restrictions": [
+      "Less than the current date"
+    ],
+    "description": "Date requested to start the ",
+    "example": "2023-03-19T19:51:32Z"
+  },
+  "termsAfter": {
+    "type": "number",
+    "restrictions": [
+      "Less than or equal to 150"
+    ]
+  }
+}

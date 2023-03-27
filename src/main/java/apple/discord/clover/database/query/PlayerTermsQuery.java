@@ -64,7 +64,7 @@ public class PlayerTermsQuery {
                 GROUP BY retrieved
                 ORDER BY retrieved
                 """)
-            .setParameter("resolution", request.timeResolution.sql())
+            .setParameter("resolution", request.getTimeResolution().sql())
             .setParameter("player", request.player)
             .setParameter("start", request.startSql())
             .setParameter("end", request.endSql()).findList();
