@@ -4,6 +4,7 @@ import apple.discord.clover.database.activity.partial.LoginStorage;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
+import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.WynncraftRatelimit;
 import apple.discord.clover.wynncraft.network.ServerListResponse;
 import apple.discord.clover.wynncraft.network.ServerListResponseTimestamp;
@@ -16,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +32,12 @@ import org.apache.logging.log4j.Logger;
 public class ServiceServerList {
 
     public static final long SERVER_LIST_OFFLINE_INTERVAL = TimeMillis.minToMillis(5);
-    private static final Builder SERVER_LIST_REQUEST = new Builder().url(WynncraftApi.SERVER_LIST)
+    private static final Builder SERVER_LIST_REQUEST = new Builder().get().url(WynncraftApi.SERVER_LIST)
         .cacheControl(CacheControl.FORCE_NETWORK);
     private static final AsyncTaskQueueStart<AsyncTaskPriority> SERVICE = WynncraftRatelimit.getNetwork()
         .taskCreator(new AsyncTaskPriority(TaskPriorityCommon.LOW));
-    private final static long ERROR_MARGIN = 100;
-    private final OkHttpClient http = new OkHttpClient();
+    private static final Duration CALL_TIMEOUT = Duration.ofSeconds(20);
+    private final OkHttpClient http = new OkHttpClient.Builder().callTimeout(CALL_TIMEOUT).build();
     private final RepeatThrottle throttle = new RepeatThrottle(5000);
 
     public ServiceServerList() {
@@ -51,17 +53,30 @@ public class ServiceServerList {
                 ServiceServerListConfig.updateLastQuery();
                 long timeTaken = System.currentTimeMillis() - start;
                 long sleep = throttle.getSleepBuffer(SERVER_LIST_OFFLINE_INTERVAL - timeTaken);
-                logger().info("Sleeping for %d millis".formatted(sleep));
+                logger().info("ServerList sleeping for %d millis".formatted(sleep));
                 //noinspection BusyWait
-                Thread.sleep(sleep + ERROR_MARGIN);
+                Thread.sleep(sleep);
             } catch (Exception e) {
+                throttle.incrementError();
                 logger().error("==ServiceServerList==", e);
             }
         }
     }
 
     private void daemon() {
-        SERVICE.accept(this::call, this::queuePlayers, (e) -> this.logger().error(e));
+        ServerListResponse response;
+        try {
+            response = this.call();
+        } catch (Exception e) {
+            this.logger().error("", e);
+            return;
+        }
+        try {
+            this.queuePlayers(response);
+        } catch (Exception e) {
+            throttle.incrementError();
+            this.logger().error("", e);
+        }
     }
 
     private void queuePlayers(ServerListResponse response) {
@@ -76,7 +91,7 @@ public class ServiceServerList {
     }
 
     private ServerListResponse call() throws IOException {
-        Call call = http.newCall(SERVER_LIST_REQUEST.get().build());
+        Call call = http.newCall(SERVER_LIST_REQUEST.build());
         try (Response response = call.execute()) {
             if (!response.isSuccessful()) {
                 throttle.incrementError();
@@ -89,13 +104,13 @@ public class ServiceServerList {
                 }
                 return null;
             }
-            JsonObject json = WynncraftRatelimit.gson().fromJson(response.body().charStream(), JsonObject.class);
+            JsonObject json = WynncraftModule.gson().fromJson(response.body().charStream(), JsonObject.class);
             List<String> players = new ArrayList<>();
             ServerListResponseTimestamp responseMeta = null;
             for (String worldName : json.keySet()) {
                 JsonElement jsonValue = json.get(worldName);
                 if (worldName.equals("request")) {
-                    responseMeta = WynncraftRatelimit.gson().fromJson(jsonValue,
+                    responseMeta = WynncraftModule.gson().fromJson(jsonValue,
                         ServerListResponseTimestamp.class);
                     continue;
                 }

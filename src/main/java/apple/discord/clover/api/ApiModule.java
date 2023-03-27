@@ -1,11 +1,13 @@
 package apple.discord.clover.api;
 
+import apple.discord.clover.api.base.ApiController;
 import apple.discord.clover.api.character.CharacterController;
 import apple.discord.clover.api.meta.ping.PingController;
 import apple.discord.clover.api.player.overview.PlayerController;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import io.javalin.Javalin;
+import io.javalin.json.JavalinGson;
 import java.util.List;
 
 public class ApiModule extends AppleModule {
@@ -23,7 +25,10 @@ public class ApiModule extends AppleModule {
 
     @Override
     public void onEnable() {
-        app = Javalin.create(ApiConfig.get()::commonConfig);
+        app = Javalin.create(cfg -> {
+            ApiConfig.get().commonConfig(cfg);
+            cfg.jsonMapper(new JavalinGson(ApiController.apiGson()));
+        });
 
         registerControllers(app);
 

@@ -8,13 +8,13 @@ public class PlayerRaidTerm {
 
     public Instant retrieved;
 
-    public Map<String, PlayerRaidCharactersTerm> terms = new HashMap<>();
+    public Map<String, PlayerRaidCharactersTerm> raids = new HashMap<>();
 
     public PlayerRaidTerm(Instant retrieved) {
         this.retrieved = retrieved;
     }
 
     public PlayerRaidCharactersTerm getOrCreateRaid(String raid) {
-        return terms.computeIfAbsent(raid, r -> new PlayerRaidCharactersTerm());
+        return raids.computeIfAbsent(raid, r -> new PlayerRaidCharactersTerm());
     }
 }

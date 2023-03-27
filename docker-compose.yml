@@ -1,34 +1,39 @@
 version: '3.8'
 services:
-    clover:
-        restart: unless-stopped
-        container_name: ${COMPOSE_NAME}.${IMAGE_NAME}
-        image: ${COMPOSE_NAME}/${IMAGE_NAME}
-        build:
-            context: .
-            args:
-                - JAVA_VERSION=${JAVA_VERSION}
-                - JAR_FILE=${JAR_FILE}
-                - WORKINGDIR=${WORKINGDIR}
-        environment:
-            - JAR_FILE=${JAR_FILE}
-            - WORKINGDIR=${WORKINGDIR}
-        volumes:
-            - '${MOUNT_DIR}/java:${WORKINGDIR}/data'
-        networks:
-            - 'cloverbot'
-    postgres:
-        image: ${POSTGRES_VERSION}
-        container_name: ${COMPOSE_NAME}.${DATABASE_IMAGE}
-        environment:
-            - POSTGRES_USER_FILE=/secrets/${POSTGRES_USER_FILE}
-            - POSTGRES_PASSWORD_FILE=/secrets/${POSTGRES_PASSWORD_FILE}
-            - POSTGRES_DB=${POSTGRES_DB}
-        networks:
-            - 'cloverbot'
-        volumes:
-            - ${MOUNT_DIR}/database:/var/lib/postgresql/data
-            - ${MOUNT_DIR}/secrets:/secrets
+  clover:
+    restart: unless-stopped
+    container_name: ${COMPOSE_NAME}.${JAVA_IMAGE}
+    image: ${COMPOSE_NAME}/${JAVA_IMAGE}
+    build:
+      context: .
+      args:
+        - JAVA_VERSION=${JAVA_VERSION}
+        - JAR_FILE=${JAR_FILE}
+        - WORKINGDIR=${WORKINGDIR}
+    environment:
+      - JAR_FILE=${JAR_FILE}
+      - WORKINGDIR=${WORKINGDIR}
+    volumes:
+      - '${MOUNT_DIR}/java:${WORKINGDIR}'
+    networks:
+      - 'wynncloud'
+      - 'cloverbot'
+  postgres:
+    image: ${POSTGRES_VERSION}
+    container_name: ${COMPOSE_NAME}.${DATABASE_IMAGE}
+    environment:
+      - POSTGRES_USER_FILE=/secrets/${POSTGRES_USER_FILE}
+      - POSTGRES_PASSWORD_FILE=/secrets/${POSTGRES_PASSWORD_FILE}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - 'cloverbot'
+    ports:
+      - '5431:5432'
+    volumes:
+      - ${MOUNT_DIR}/database:/var/lib/postgresql/data
+      - ${MOUNT_DIR}/secrets:/secrets
 networks:
-    clover:
-        name: 'clover'
+  cloverbot:
+    name: 'cloverbot'
+  wynncloud:
+    name: 'wynncloud'

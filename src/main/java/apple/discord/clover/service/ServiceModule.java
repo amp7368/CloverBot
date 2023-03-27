@@ -4,7 +4,7 @@ import apple.discord.clover.service.guild.GuildService;
 import apple.discord.clover.service.network.ServiceServerList;
 import apple.discord.clover.service.network.ServiceServerListConfig;
 import apple.discord.clover.service.player.ServicePlayerStats;
-import apple.discord.clover.wynncraft.WynncraftRatelimit;
+import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.data.config.AppleConfig.Builder;
 import apple.lib.modules.configs.factory.AppleConfigLike;
@@ -24,6 +24,7 @@ public class ServiceModule extends AppleModule {
 
     @Override
     public void onEnable() {
+        if (!ServiceModuleConfig.get().shouldEnable()) return;
         GuildService.load();
         new ServicePlayerStats();
         new ServiceServerList();
@@ -32,9 +33,9 @@ public class ServiceModule extends AppleModule {
     @Override
     public List<AppleConfigLike> getConfigs() {
         Builder<ServiceServerListConfig> serverList = configJson(ServiceServerListConfig.class, "ServerList.config")
-            .asJson(WynncraftRatelimit.gson());
+            .asJson(WynncraftModule.gson());
         ServiceServerListConfig.config = serverList.getConfig();
-        return List.of(serverList);
+        return List.of(serverList, configJson(ServiceModuleConfig.class, "ServiceModule.config"));
     }
 
     @Override

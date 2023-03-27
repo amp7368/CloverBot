@@ -1,7 +1,7 @@
 package apple.discord.clover.database.query.character;
 
-import apple.discord.clover.api.character.request.CharacterRequest;
-import apple.discord.clover.api.character.response.CharacterTerm;
+import apple.discord.clover.api.character.term.request.CharacterRequest;
+import apple.discord.clover.api.character.term.response.CharacterTerm;
 import io.ebean.DB;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +36,7 @@ public class CharacterTermsQuery {
 
     public static List<CharacterTerm> queryCharacterTerms(CharacterRequest request, UUID id) {
         return DB.findDto(CharacterTerm.class, CHARACTER_TERMS_QUERY)
-            .setParameter("resolution", request.timeResolution.sql())
+            .setParameter("resolution", request.getTimeResolution().sql())
             .setParameter("character", id)
             .setParameter("start", request.startSql())
             .setParameter("end", request.endSql()).findList();
