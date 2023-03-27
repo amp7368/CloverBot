@@ -17,9 +17,9 @@ public class RepeatThrottle {
     }
 
     public long getSleepBuffer(long minSleep) {
-        if (errors == 0) return minSleep;
+        if (errors == 0) return Math.max(1, minSleep);
         long sleep = failureBuffer.multiply(BigInteger.TWO.pow(errors - 1)).longValue();
-        return Math.max(sleep, minSleep);
+        return Math.max(1, Math.max(sleep, minSleep));
     }
 
     public void incrementSuccess() {

@@ -62,6 +62,7 @@ public class ServicePlayerStats {
                 //noinspection BusyWait
                 Thread.sleep(sleep);
             } catch (Exception e) {
+                throttle.incrementError();
                 logger().error("==ServicePlayerStats==", e);
             }
         }
@@ -71,11 +72,16 @@ public class ServicePlayerStats {
         PlaySessionRaw response;
         try {
             response = this.call();
-        } catch (IOException e) {
+        } catch (Exception e) {
             this.logger().error("", e);
             return;
         }
-        this.updatePlayer(response);
+        try {
+            this.updatePlayer(response);
+        } catch (Exception e) {
+            throttle.incrementError();
+            this.logger().error("", e);
+        }
     }
 
     private synchronized void updatePlayer(PlaySessionRaw response) {

@@ -57,6 +57,7 @@ public class ServiceServerList {
                 //noinspection BusyWait
                 Thread.sleep(sleep);
             } catch (Exception e) {
+                throttle.incrementError();
                 logger().error("==ServiceServerList==", e);
             }
         }
@@ -66,11 +67,16 @@ public class ServiceServerList {
         ServerListResponse response;
         try {
             response = this.call();
-        } catch (IOException e) {
+        } catch (Exception e) {
             this.logger().error("", e);
             return;
         }
-        this.queuePlayers(response);
+        try {
+            this.queuePlayers(response);
+        } catch (Exception e) {
+            throttle.incrementError();
+            this.logger().error("", e);
+        }
     }
 
     private void queuePlayers(ServerListResponse response) {

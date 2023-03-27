@@ -27,6 +27,8 @@
     "type": "number",
     "restrictions": [
       "Less than or equal to 150"
-    ]
+    ],
+    "description": "The number of {timeResolution}'s to check after {start}",
+    "example": 150
   }
 }

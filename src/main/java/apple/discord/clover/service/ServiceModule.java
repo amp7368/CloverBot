@@ -24,6 +24,7 @@ public class ServiceModule extends AppleModule {
 
     @Override
     public void onEnable() {
+        if (!ServiceModuleConfig.get().shouldEnable()) return;
         GuildService.load();
         new ServicePlayerStats();
         new ServiceServerList();
@@ -34,7 +35,7 @@ public class ServiceModule extends AppleModule {
         Builder<ServiceServerListConfig> serverList = configJson(ServiceServerListConfig.class, "ServerList.config")
             .asJson(WynncraftModule.gson());
         ServiceServerListConfig.config = serverList.getConfig();
-        return List.of(serverList);
+        return List.of(serverList, configJson(ServiceModuleConfig.class, "ServiceModule.config"));
     }
 
     @Override
