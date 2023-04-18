@@ -20,6 +20,7 @@ import apple.lib.modules.configs.data.config.AppleConfig.Builder;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import io.ebean.DatabaseFactory;
 import io.ebean.config.DatabaseConfig;
+import io.ebean.config.dbplatform.DatabasePlatform;
 import io.ebean.datasource.DataSourceConfig;
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CloverDatabase extends AppleModule {
 
+    public static DatabasePlatform DATABASE_PLATFORM;
     private File databaseConfigFile;
 
     private static List<Class<?>> getEntities() {
@@ -72,6 +74,7 @@ public class CloverDatabase extends AppleModule {
         DataSourceConfig dataSourceConfig = configureDataSource(CloverDatabaseConfig.get());
         DatabaseConfig dbConfig = configureDatabase(dataSourceConfig);
         DatabaseFactory.createWithContextClassLoader(dbConfig, CloverBot.class.getClassLoader());
+        DATABASE_PLATFORM = dbConfig.getDatabasePlatform();
         logger().info("Successfully created database");
     }
 

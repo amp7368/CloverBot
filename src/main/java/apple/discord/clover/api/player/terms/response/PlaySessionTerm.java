@@ -1,4 +1,4 @@
-package apple.discord.clover.api.player.overview.response;
+package apple.discord.clover.api.player.terms.response;
 
 import java.sql.Timestamp;
 import java.time.Instant;

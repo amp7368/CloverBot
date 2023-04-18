@@ -1,0 +1,840 @@
+{
+   // The startDate specified in the request
+   "requestedStart": "2023-03-24T19:51:32Z",
+
+   // the endDate specified in the request by "start" + ("count" * "timeResolution")
+   "requestedEnd": "2023-03-28T00:00:00Z",
+   "characters": [
+        {
+            "id": "0a54b38b-f9b4-4a81-8679-e449fb22bff5",
+            "type": "ninja",
+            // Starting at "requestedStart",
+            // each "timeResolution" (ie. HOUR) afterwards,
+            // the term will find the delta (change in value)
+            //    from the start of that "timeResolution" to the end of that "timeResolution"
+            // If there was a delta of 0 for all statistics in the entry, the entry is excluded from this list.
+            // The "terms" are sorted by date from earliest to latest
+            // Currently, the first term is truncated to the "timeResolution" by UTC
+            "terms": [],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "id": "1fba2948-d139-4477-86e2-874e20f81a65",
+            "type": "ASSASSIN",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 4633,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 48453,
+                    "blocksWalkedDelta": 275139301,
+                    "loginsDelta": 2316,
+                    "deathsDelta": 127
+                },
+                {
+                    "retrieved": "2023-03-21T21:00:00Z",
+                    "playtimeDelta": 3,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 2,
+                    "blocksWalkedDelta": 353,
+                    "loginsDelta": 4,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-22T19:00:00Z",
+                    "playtimeDelta": 3,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 6,
+                    "blocksWalkedDelta": 897,
+                    "loginsDelta": 6,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-22T21:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 5,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T17:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 2,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 4639,
+                "itemsIdentified": 0,
+                "mobsKilled": 48461,
+                "blocksWalked": 275140551,
+                "logins": 2334,
+                "deaths": 127
+            }
+        },
+        {
+            "id": "334d68ad-4d55-4ce8-9466-84807d29b11a",
+            "type": "MAGE",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 12281,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 190904,
+                    "blocksWalkedDelta": -2049789167,
+                    "loginsDelta": 7195,
+                    "deathsDelta": 288
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 2154266,
+                    "loginsDelta": 4,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-25T03:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 12313,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 12283,
+                "itemsIdentified": 0,
+                "mobsKilled": 190904,
+                "blocksWalked": -2047622588,
+                "logins": 7200,
+                "deaths": 288
+            }
+        },
+        {
+            "id": "3ae09245-19ec-45c8-a9cd-d5fae319381e",
+            "type": "WARRIOR",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 13843,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 179291,
+                    "blocksWalkedDelta": 2039502624,
+                    "loginsDelta": 8050,
+                    "deathsDelta": 97
+                },
+                {
+                    "retrieved": "2023-03-21T03:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-21T21:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-22T19:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 50,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-23T02:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 2383,
+                    "loginsDelta": 5,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T17:00:00Z",
+                    "playtimeDelta": 2,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 53,
+                    "loginsDelta": 2,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 3,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-25T03:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 13847,
+                "itemsIdentified": 0,
+                "mobsKilled": 179291,
+                "blocksWalked": 2039505110,
+                "logins": 8064,
+                "deaths": 97
+            }
+        },
+        {
+            "id": "4cff773a-02dc-4366-b2fb-19b8c489eaff",
+            "type": "SKYSEER",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 2377,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 119061,
+                    "blocksWalkedDelta": 1643439187,
+                    "loginsDelta": 1410,
+                    "deathsDelta": 36
+                },
+                {
+                    "retrieved": "2023-03-21T03:00:00Z",
+                    "playtimeDelta": 12,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 689,
+                    "blocksWalkedDelta": 11187087,
+                    "loginsDelta": 4,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T17:00:00Z",
+                    "playtimeDelta": 2,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 27911775,
+                    "loginsDelta": 2,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 2391,
+                "itemsIdentified": 0,
+                "mobsKilled": 119750,
+                "blocksWalked": 1682538049,
+                "logins": 1417,
+                "deaths": 36
+            }
+        },
+        {
+            "id": "626d0f0d-6838-4c9d-929b-93116a6c3ece",
+            "type": "KNIGHT",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 2567,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 38625,
+                    "blocksWalkedDelta": -690714349,
+                    "loginsDelta": 1948,
+                    "deathsDelta": 56
+                },
+                {
+                    "retrieved": "2023-03-24T17:00:00Z",
+                    "playtimeDelta": 3,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 38,
+                    "blocksWalkedDelta": 1032,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 2570,
+                "itemsIdentified": 0,
+                "mobsKilled": 38663,
+                "blocksWalked": -690713317,
+                "logins": 1949,
+                "deaths": 56
+            }
+        },
+        {
+            "id": "63219adc-ca24-4aa5-9f1d-4d879ae19608",
+            "type": "ARCHER",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 10399,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 252915,
+                    "blocksWalkedDelta": -104224103,
+                    "loginsDelta": 6083,
+                    "deathsDelta": 306
+                },
+                {
+                    "retrieved": "2023-03-21T03:00:00Z",
+                    "playtimeDelta": 7,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 8,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-22T19:00:00Z",
+                    "playtimeDelta": 18,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 1383,
+                    "loginsDelta": 3,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-22T21:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 20,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-23T06:00:00Z",
+                    "playtimeDelta": 13,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 186,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-23T22:00:00Z",
+                    "playtimeDelta": 17,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 1573,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T03:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 2,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 2,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T17:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 1,
+                    "blocksWalkedDelta": 51,
+                    "loginsDelta": 2,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 15,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 9,
+                    "blocksWalkedDelta": 50651890,
+                    "loginsDelta": 7,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-25T01:00:00Z",
+                    "playtimeDelta": 6,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 35,
+                    "blocksWalkedDelta": 32111,
+                    "loginsDelta": 4,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-25T03:00:00Z",
+                    "playtimeDelta": 9,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 6892,
+                    "loginsDelta": 7,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 10486,
+                "itemsIdentified": 0,
+                "mobsKilled": 252962,
+                "blocksWalked": -53529989,
+                "logins": 6112,
+                "deaths": 306
+            }
+        },
+        {
+            "id": "a4701577-ef2c-42c5-b274-f8dc41d0f72f",
+            "type": "SHAMAN",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 1372,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 190354,
+                    "blocksWalkedDelta": 883042526,
+                    "loginsDelta": 609,
+                    "deathsDelta": 92
+                },
+                {
+                    "retrieved": "2023-03-21T21:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 3,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 1372,
+                "itemsIdentified": 0,
+                "mobsKilled": 190357,
+                "blocksWalked": 883042526,
+                "logins": 610,
+                "deaths": 92
+            }
+        },
+        {
+            "id": "ad9e466b-677c-492d-95db-2a08ea734684",
+            "type": "SHAMAN",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 4718,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 242178,
+                    "blocksWalkedDelta": 319477168,
+                    "loginsDelta": 2841,
+                    "deathsDelta": 140
+                },
+                {
+                    "retrieved": "2023-03-24T03:00:00Z",
+                    "playtimeDelta": 3,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 39,
+                    "blocksWalkedDelta": 7899,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T17:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 2,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 4721,
+                "itemsIdentified": 0,
+                "mobsKilled": 242217,
+                "blocksWalked": 319485067,
+                "logins": 2845,
+                "deaths": 140
+            }
+        },
+        {
+            "id": "c2fb322e-7296-43d9-b499-8d60e201ae9f",
+            "type": "DARKWIZARD",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 801,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 17209,
+                    "blocksWalkedDelta": 204343138,
+                    "loginsDelta": 220,
+                    "deathsDelta": 23
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 2,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 802,
+                "itemsIdentified": 0,
+                "mobsKilled": 17209,
+                "blocksWalked": 204343140,
+                "logins": 221,
+                "deaths": 23
+            }
+        },
+        {
+            "id": "c982383f-c476-4dd5-ae8b-f5551ac0281a",
+            "type": "HUNTER",
+            "terms": [
+                {
+                    "retrieved": "2023-03-22T19:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "id": "ce32d13c-e04b-47c0-9090-f42d651202d9",
+            "type": "HUNTER",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 2102,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 43577,
+                    "blocksWalkedDelta": 1960871084,
+                    "loginsDelta": 1542,
+                    "deathsDelta": 60
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 2102,
+                "itemsIdentified": 0,
+                "mobsKilled": 43577,
+                "blocksWalked": 1960871084,
+                "logins": 1543,
+                "deaths": 60
+            }
+        },
+        {
+            "id": "d99c7b78-6be5-4e7c-95b8-a02a5da7c783",
+            "type": "KNIGHT",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "id": "f4923774-7fe6-4254-bd07-92ef2f4ec9d6",
+            "type": "DARKWIZARD",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 3447,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 41070,
+                    "blocksWalkedDelta": -2104577930,
+                    "loginsDelta": 2956,
+                    "deathsDelta": 27
+                },
+                {
+                    "retrieved": "2023-03-21T21:00:00Z",
+                    "playtimeDelta": 1,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 11,
+                    "blocksWalkedDelta": 546,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-22T19:00:00Z",
+                    "playtimeDelta": 2,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 517,
+                    "loginsDelta": 2,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-22T21:00:00Z",
+                    "playtimeDelta": 2,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 1,
+                    "blocksWalkedDelta": 296,
+                    "loginsDelta": 3,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-23T02:00:00Z",
+                    "playtimeDelta": 7,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 289,
+                    "blocksWalkedDelta": 2441,
+                    "loginsDelta": 19,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 3,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 17,
+                    "blocksWalkedDelta": 926,
+                    "loginsDelta": 3,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 3462,
+                "itemsIdentified": 0,
+                "mobsKilled": 41388,
+                "blocksWalked": -2104573204,
+                "logins": 2984,
+                "deaths": 27
+            }
+        },
+        {
+            "id": "feb79161-befe-4c87-a68d-42c15c23eea7",
+            "type": "NINJA",
+            "terms": [
+                {
+                    "retrieved": "2023-03-21T02:00:00Z",
+                    "playtimeDelta": 1818,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 25364,
+                    "blocksWalkedDelta": 1729977471,
+                    "loginsDelta": 1081,
+                    "deathsDelta": 33
+                },
+                {
+                    "retrieved": "2023-03-22T19:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                },
+                {
+                    "retrieved": "2023-03-24T20:00:00Z",
+                    "playtimeDelta": 0,
+                    "itemsIdentifiedDelta": 0,
+                    "mobsKilledDelta": 0,
+                    "blocksWalkedDelta": 0,
+                    "loginsDelta": 1,
+                    "deathsDelta": 0
+                }
+            ],
+            "startingSnapshot": {
+                "playtime": 0,
+                "itemsIdentified": 0,
+                "mobsKilled": 0,
+                "blocksWalked": 0,
+                "logins": 0,
+                "deaths": 0
+            },
+            "endingSnapshot": {
+                "playtime": 1818,
+                "itemsIdentified": 0,
+                "mobsKilled": 25364,
+                "blocksWalked": 1729977471,
+                "logins": 1083,
+                "deaths": 33
+            }
+        }
+    ]
+}

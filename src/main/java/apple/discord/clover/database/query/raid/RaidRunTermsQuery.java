@@ -33,7 +33,7 @@ public class RaidRunTermsQuery {
     public static List<PlayerRaidTerm> raidRunQueryTerms(CharacterRaidRequest request) {
         List<RaidRunRaw> query = DB.findDto(RaidRunRaw.class, RAID_TERMS_QUERY)
             .setParameter("resolution", request.getTimeResolution().sql())
-            .setParameter("player", request.player)
+            .setParameter("player", request.getPlayer().uuid())
             .setParameter("start", request.startSql())
             .setParameter("end", request.endSql()).findList();
         List<PlayerRaidTerm> terms = new ArrayList<>();

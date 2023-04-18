@@ -8,7 +8,7 @@ import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.WynncraftRatelimit;
-import apple.discord.clover.wynncraft.response.RepeatThrottle;
+import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
 import apple.utilities.threading.service.base.create.AsyncTaskQueueStart;

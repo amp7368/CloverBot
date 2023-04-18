@@ -1,0 +1,53 @@
+{
+  // The startDate specified in the request
+  "requestedStart": "2023-03-24T19:51:32Z",
+
+  // the endDate specified in the request by "start" + ("count" * "timeResolution")
+  "requestedEnd": "2023-03-28T00:00:00Z",
+  // Starting at "requestedStart",
+  // each "timeResolution" (ie. HOUR) afterwards,
+  // the term will find the delta (change in value)
+  //    from the start of that "timeResolution" to the end of that "timeResolution"
+  // If there was a delta of 0 for all statistics in the entry, the entry is excluded from this list.
+  // The "terms" are sorted by date from earliest to latest
+  // Currently, the first term is truncated to the "timeResolution" by UTC
+  "terms": [
+    {
+      // The time that this particular "term" starts from
+      // the end of the term is implied as "retrieved" + (1 * "timeResolution")
+      "retrieved": "2023-03-24T18:00:00Z",
+      // the change in __statistic__ from the last mentioned value
+      "playtimeDelta": 32744,
+      "combatDelta": 1282,
+      "itemsIdentifiedDelta": 0,
+      "mobsKilledDelta": 4594,
+      "totalProfLevelDelta": 424
+    },
+    {
+      "retrieved": "2023-03-24T19:00:00Z",
+      "playtimeDelta": 14,
+      "combatDelta": 0,
+      "itemsIdentifiedDelta": 0,
+      "mobsKilledDelta": 0,
+      "totalProfLevelDelta": 0
+    }
+  ],
+  // the value of __statistics__ before the first term has been applied
+  "startingSnapshot": {
+    "playtime": 32758,
+    "combat": 1282,
+    "itemsIdentified": 0,
+    "mobsKilled": 4594,
+    "totalProfLevel": 424
+  },
+  // the value of __statistics__ after the last term has been applied
+  // "startingSnapshot" + sum("terms") == "endingSnapshot"
+  // For example, "startingSnapshot.playtime" + sum("terms[?].playtimeDelta") == "endingSnapshot.playtime"
+  "endingSnapshot": {
+    "playtime": 33161,
+    "combat": 1282,
+    "itemsIdentified": 0,
+    "mobsKilled": 4594,
+    "totalProfLevel": 424
+  }
+}

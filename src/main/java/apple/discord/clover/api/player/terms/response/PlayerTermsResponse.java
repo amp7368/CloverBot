@@ -1,10 +1,10 @@
-package apple.discord.clover.api.player.overview.response;
+package apple.discord.clover.api.player.terms.response;
 
 import apple.discord.clover.database.activity.DPlaySession;
 import java.time.Instant;
 import java.util.List;
 
-public class PlayerResponse {
+public class PlayerTermsResponse {
 
     public Instant requestedStart;
     public Instant requestedEnd;
@@ -16,7 +16,7 @@ public class PlayerResponse {
     public PlaySessionSnapshot startingSnapshot;
     public PlaySessionSnapshot endingSnapshot;
 
-    public PlayerResponse(Instant start, Instant end) {
+    public PlayerTermsResponse(Instant start, Instant end) {
         this.requestedStart = start;
         this.requestedEnd = end;
     }
@@ -25,8 +25,8 @@ public class PlayerResponse {
         this.terms = terms;
     }
 
-    public void setFirst(DPlaySession first) {
-        this.startingSnapshot = new PlaySessionSnapshot(first, true);
+    public void setFirst(DPlaySession first, Instant requestedStart) {
+        this.startingSnapshot = new PlaySessionSnapshot(first, requestedStart.isBefore(first.retrievedTime.toInstant()));
     }
 
     public void setLast(DPlaySession last) {

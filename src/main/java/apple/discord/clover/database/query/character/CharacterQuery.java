@@ -11,7 +11,7 @@ public class CharacterQuery {
 
     public static CharacterStatsListResponse queryCharacters(CharacterRequest request) {
         CharacterStatsListResponse response = new CharacterStatsListResponse(request.start(), request.end());
-        List<UUID> characters = CharacterQuery.queryCharacterIds(request.player);
+        List<UUID> characters = CharacterQuery.queryCharacterIds(request.getPlayer().uuid());
         for (UUID character : characters) {
             response.addCharacter(queryOneCharacter(request, character));
         }

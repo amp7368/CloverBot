@@ -23,8 +23,7 @@ ORDER BY CASE
                  THEN ps.retrieved_time
              ELSE date('3000-03-23') END
        , ps.retrieved_time DESC
-LIMIT 1;
-
+;
 
 SELECT ps.retrieved_time AS retrieved,
        rr.runs_snapshot,

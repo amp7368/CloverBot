@@ -1,4 +1,4 @@
-package apple.discord.clover.wynncraft.response;
+package apple.discord.clover.wynncraft.overview.guild.response;
 
 import java.math.BigInteger;
 

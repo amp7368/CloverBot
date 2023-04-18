@@ -14,7 +14,7 @@ public class RaidRunQuery {
     public static PlayerRaidListResponse raidRunQuery(CharacterRaidRequest request) {
         PlayerRaidListResponse response = new PlayerRaidListResponse(request.start(), request.end());
 
-        List<UUID> characterIds = CharacterQuery.queryCharacterIds(request.player);
+        List<UUID> characterIds = CharacterQuery.queryCharacterIds(request.getPlayer().uuid());
         List<String> raidNames = queryRaidNames();
 
         List<PlayerRaidTerm> terms = RaidRunTermsQuery.raidRunQueryTerms(request);

@@ -39,8 +39,8 @@ public class TermRequest {
 
     public synchronized Instant end() {
         if (endTrunc != null) return endTrunc;
-        endTrunc = start.plus(termsAfter, getTimeResolution().unit());
-        Instant now = Instant.now().truncatedTo(getTimeResolution().unit());
+        endTrunc = start.plus(getTimeResolution().unit().getDuration().multipliedBy(termsAfter));
+        Instant now = Instant.now();
         if (now.isBefore(endTrunc)) endTrunc = now;
         return endTrunc;
     }

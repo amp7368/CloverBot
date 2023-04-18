@@ -1,11 +1,11 @@
-package apple.discord.clover.database.query;
+package apple.discord.clover.database.query.player;
 
 import static java.util.concurrent.CompletableFuture.allOf;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-import apple.discord.clover.api.player.overview.request.PlayerRequest;
-import apple.discord.clover.api.player.overview.response.PlaySessionTerm;
-import apple.discord.clover.api.player.overview.response.PlayerResponse;
+import apple.discord.clover.api.player.terms.request.PlayerTermsRequest;
+import apple.discord.clover.api.player.terms.response.PlaySessionTerm;
+import apple.discord.clover.api.player.terms.response.PlayerTermsResponse;
 import apple.discord.clover.database.activity.DPlaySession;
 import apple.discord.clover.database.activity.query.QDPlaySession;
 import io.ebean.DB;
@@ -15,42 +15,50 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerTermsQuery {
 
-    public static PlayerResponse queryPlayerTerms(PlayerRequest request) {
-        PlayerResponse response = new PlayerResponse(request.start(), request.end());
+    public static PlayerTermsResponse queryPlayerTerms(PlayerTermsRequest request) {
+        PlayerTermsResponse response = new PlayerTermsResponse(request.start(), request.end());
 
         CompletableFuture<List<PlaySessionTerm>> terms = supplyAsync(() -> queryTerms(request));
         CompletableFuture<DPlaySession> first = supplyAsync(() -> queryFirstTerm(request));
         CompletableFuture<DPlaySession> last = supplyAsync(() -> queryLastTerm(request));
         allOf(terms, first, last).join();
         response.setTerms(terms.getNow(null));
-        response.setFirst(first.getNow(null));
+        response.setFirst(first.getNow(null), request.start());
         response.setLast(last.getNow(null));
         return response;
     }
 
-    private static DPlaySession queryFirstTerm(PlayerRequest request) {
+    private static DPlaySession queryFirstTerm(PlayerTermsRequest request) {
         return queryTerm(request)
-            .orderBy().retrievedTime.asc()
+            .alias("ps")
+            .orderBy(
+                """
+                    CASE
+                          WHEN ps.retrieved_time >= date('%s')
+                              THEN ps.retrieved_time
+                          ELSE date('%s') END
+                    , ps.retrieved_time DESC
+                    """.formatted(request.startSql(), request.endSql())
+            )
             .findOne();
     }
 
-    private static DPlaySession queryLastTerm(PlayerRequest request) {
+    private static DPlaySession queryLastTerm(PlayerTermsRequest request) {
         return queryTerm(request)
             .orderBy().retrievedTime.desc()
             .findOne();
     }
 
     @NotNull
-    private static QDPlaySession queryTerm(PlayerRequest request) {
+    private static QDPlaySession queryTerm(PlayerTermsRequest request) {
         return new QDPlaySession().where().and()
-            .player.uuid.eq(request.player)
-            .retrievedTime.between(request.startSql(), request.endSql())
+            .player.uuid.eq(request.getPlayer().uuid())
             .endAnd()
             .setMaxRows(1);
     }
 
     @NotNull
-    private static List<PlaySessionTerm> queryTerms(PlayerRequest request) {
+    private static List<PlaySessionTerm> queryTerms(PlayerTermsRequest request) {
         return DB.findDto(PlaySessionTerm.class, """
                 select DATE_TRUNC(:resolution, retrieved_time)  AS retrieved,
                      SUM(playtime_delta)                  AS playtime_delta,
@@ -65,7 +73,7 @@ public class PlayerTermsQuery {
                 ORDER BY retrieved
                 """)
             .setParameter("resolution", request.getTimeResolution().sql())
-            .setParameter("player", request.player)
+            .setParameter("player", request.getPlayer().uuid())
             .setParameter("start", request.startSql())
             .setParameter("end", request.endSql()).findList();
     }
