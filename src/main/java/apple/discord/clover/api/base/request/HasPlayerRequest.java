@@ -1,14 +1,26 @@
 package apple.discord.clover.api.base.request;
 
 import am.ik.yavi.builder.ValidatorBuilder;
-import am.ik.yavi.core.Constraint;
+import apple.discord.clover.database.player.PlayerStorage;
 import java.util.UUID;
 
 public interface HasPlayerRequest {
 
     static <T extends HasPlayerRequest> ValidatorBuilder<T> hasPlayerValidator(ValidatorBuilder<T> validator) {
-        return validator.constraintOnObject(HasPlayerRequest::getPlayer, "player", Constraint::notNull);
+        return validator.constraint(HasPlayerRequest::getPlayerString, "player", c -> c.notNull().notBlank());
     }
 
-    UUID getPlayer();
+    PlayerNameOrUUID getPlayer();
+
+    String getPlayerString();
+
+    default PlayerNameOrUUID fetchPlayer() {
+        String player = this.getPlayerString();
+        try {
+            UUID uuid = UUID.fromString(player);
+            return getPlayer().set(uuid, PlayerStorage.findPlayer(uuid));
+        } catch (IllegalArgumentException e) {
+            return getPlayer().set(PlayerStorage.findPlayer(player), player);
+        }
+    }
 }

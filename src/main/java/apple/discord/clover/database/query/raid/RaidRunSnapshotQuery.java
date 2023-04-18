@@ -84,7 +84,8 @@ public class RaidRunSnapshotQuery {
             .setParameter("character_id", character)
             .setParameter("raid_name", raid)
             .setParameter("start", request.startSql())
-            .setParameter("end", request.endSql()).findOne();
+            .setParameter("end", request.endSql())
+            .findOne();
     }
 
     private static RaidRunRaw queryOneLast(CharacterRaidRequest request, UUID character, String raid) {

@@ -8,7 +8,7 @@ import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.WynncraftRatelimit;
 import apple.discord.clover.wynncraft.network.ServerListResponse;
 import apple.discord.clover.wynncraft.network.ServerListResponseTimestamp;
-import apple.discord.clover.wynncraft.response.RepeatThrottle;
+import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
 import apple.utilities.threading.service.base.create.AsyncTaskQueueStart;
 import apple.utilities.threading.service.priority.AsyncTaskPriority;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;

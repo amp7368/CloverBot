@@ -25,6 +25,7 @@ public class CharacterController extends ApiController {
     private void characterRaid(Context ctx) {
         CharacterRaidRequest request = this.checkBodyAndGet(ctx, CharacterRaidRequest.class);
         this.checkErrors(ctx, CharacterRaidRequest.VALIDATOR.validator().validate(request));
+        request.fetchPlayer().checkNotNull();
         PlayerRaidListResponse response = RaidRunQuery.raidRunQuery(request);
         ctx.json(response);
     }
@@ -32,6 +33,7 @@ public class CharacterController extends ApiController {
     private void characterTerms(Context ctx) {
         CharacterRequest request = this.checkBodyAndGet(ctx, CharacterRequest.class);
         this.checkErrors(ctx, CharacterRequest.VALIDATOR.validator().validate(request));
+        request.fetchPlayer().checkNotNull();
         CharacterStatsListResponse response = CharacterQuery.queryCharacters(request);
         ctx.json(response);
     }

@@ -8,7 +8,7 @@ public class ApiConfig {
 
     private static ApiConfig instance;
     private final int port = 80;
-    private final boolean cors = false;
+    public boolean cors = false;
 
     public ApiConfig() {
         instance = this;

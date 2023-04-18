@@ -1,5 +1,6 @@
 package apple.discord.clover.database.player;
 
+import apple.discord.clover.database.CloverDatabase;
 import apple.discord.clover.database.activity.DPlaySession;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.activity.query.QDPlaySession;
@@ -13,8 +14,14 @@ import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter
 import io.ebean.DB;
 import io.ebean.DuplicateKeyException;
 import io.ebean.Transaction;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PlayerStorage {
 
@@ -59,4 +66,41 @@ public class PlayerStorage {
         return true;
     }
 
+    @Nullable
+    public static String findPlayer(UUID player) {
+        QDPlayer a = QDPlayer.alias();
+        return new QDPlayer().select(a.username)
+            .where().uuid.eq(player)
+            .findSingleAttribute();
+    }
+
+    @Nullable
+    public static UUID findPlayer(String player) {
+        QDPlayer a = QDPlayer.alias();
+        return new QDPlayer().select(a.uuid)
+            .where().username.ieq(player)
+            .findSingleAttribute();
+    }
+
+    @NotNull
+    public static List<DPlayer> findLikePlayer(String inputPattern, int limit) {
+        if (inputPattern.isBlank()) return Collections.emptyList();
+
+        String escaped = CloverDatabase.DATABASE_PLATFORM.escapeLikeString(inputPattern);
+        StringBuilder outPattern = new StringBuilder("%");
+
+        Matcher matcher = Pattern.compile("\\w").matcher(escaped);
+
+        if (!matcher.find()) return Collections.emptyList(); // no input query
+
+        int start = 0;
+        do {
+            outPattern.append(escaped, start, start = matcher.end())
+                .append("%");
+        } while (matcher.find());
+        return new QDPlayer()
+            .where().username.ilike(outPattern.toString())
+            .setMaxRows(limit)
+            .findList();
+    }
 }
