@@ -1,7 +1,7 @@
 package apple.discord.clover.database.activity.partial;
 
+import apple.discord.clover.api.base.BaseEntity;
 import apple.discord.clover.database.activity.blacklist.DBlacklist;
-import io.ebean.Model;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "login_queue")
-public class DLoginQueue extends Model {
+public class DLoginQueue extends BaseEntity {
 
     @Id
     public UUID id;

@@ -1,6 +1,6 @@
 package apple.discord.clover.database.player;
 
-import io.ebean.Model;
+import apple.discord.clover.api.base.BaseEntity;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "player")
-public class DPlayer extends Model {
+public class DPlayer extends BaseEntity {
 
     @Id
     @Column

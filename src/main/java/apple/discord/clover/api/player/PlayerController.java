@@ -7,6 +7,8 @@ import apple.discord.clover.api.player.terms.request.PlayerTermsRequest;
 import apple.discord.clover.api.player.terms.response.PlayerTermsResponse;
 import apple.discord.clover.api.player.uuid.many.response.PlayerManyUUIDResponse;
 import apple.discord.clover.api.player.uuid.one.response.PlayerOneUUIDResponse;
+import apple.discord.clover.database.auth.ApiSecurity;
+import apple.discord.clover.database.auth.permission.DefaultAuthPermission;
 import apple.discord.clover.database.player.DPlayer;
 import apple.discord.clover.database.player.PlayerStorage;
 import apple.discord.clover.database.query.player.PlayerStatsQuery;
@@ -25,32 +27,32 @@ public class PlayerController extends ApiController {
         super("/player");
     }
 
+
     @Override
     public void register(Javalin app) {
         app.get(this.path("/stats/{player}"), this::stats);
-        app.get(this.path("/uuid/one/{player}"), this::uuid);
-        app.get(this.path("/uuid/many/{player}"), this::uuidMany);
+        app.get(this.path("/uuid/one/{player}"), this::uuid, DefaultAuthPermission.PLAYER_UUID.get());
+        app.get(this.path("/uuid/many/{player}"), this::uuidMany, DefaultAuthPermission.PLAYER_UUID.get());
         app.post(this.path("/term"), this::term);
     }
-
 
     private void stats(Context ctx) {
         PlayerRequest request = new PlayerRequest();
         this.getPlayerFromPath(ctx, request::setPlayer);
         request.fetchPlayer().checkNotNull();
+        ApiSecurity.verifyPlayerDataPermission(ctx, request.getPlayer());
         PlayerStatsResponse response = PlayerStatsQuery.queryPlayerStats(request);
         ctx.json(response);
     }
-
 
     private void term(Context ctx) {
         PlayerTermsRequest request = this.checkBodyAndGet(ctx, PlayerTermsRequest.class);
         this.checkErrors(ctx, PlayerTermsRequest.VALIDATOR.validator().validate(request));
         request.fetchPlayer().checkNotNull();
+        ApiSecurity.verifyPlayerDataPermission(ctx, request.getPlayer());
         PlayerTermsResponse response = PlayerTermsQuery.queryPlayerTerms(request);
         ctx.json(response);
     }
-
 
     private void uuid(Context ctx) {
         PlayerRequest request = new PlayerRequest();

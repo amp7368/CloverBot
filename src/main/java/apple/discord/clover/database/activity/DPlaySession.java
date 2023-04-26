@@ -1,13 +1,13 @@
 package apple.discord.clover.database.activity;
 
+import apple.discord.clover.api.base.BaseEntity;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.character.DCharacter;
-import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.database.player.DPlayer;
+import apple.discord.clover.database.player.guild.DGuild;
 import apple.discord.clover.database.primitive.IncrementalBigInt;
 import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
-import io.ebean.Model;
 import io.ebean.annotation.Index;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -27,7 +27,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "play_session")
 @UniqueConstraint(columnNames = {"player_uuid", "join_time"})
 @Index(columnNames = {"player_uuid", "join_time"})
-public class DPlaySession extends Model {
+public class DPlaySession extends BaseEntity {
 
     @Id
     public UUID id;

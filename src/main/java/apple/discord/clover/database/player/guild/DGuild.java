@@ -1,6 +1,6 @@
-package apple.discord.clover.database.guild;
+package apple.discord.clover.database.player.guild;
 
-import io.ebean.Model;
+import apple.discord.clover.api.base.BaseEntity;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity()
 @Table(name = "guild")
-public class DGuild extends Model {
+public class DGuild extends BaseEntity {
 
     @Id
     private String name;

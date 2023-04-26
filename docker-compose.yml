@@ -18,6 +18,7 @@ services:
       - WORKINGDIR=${WORKINGDIR}
     volumes:
       - '${MOUNT_DIR}/java:${WORKINGDIR}'
+      - '/dev/urandom:/dev/random'
     networks:
       - 'wynncloud'
       - 'cloverbot'

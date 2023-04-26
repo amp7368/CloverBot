@@ -1,6 +1,6 @@
-package apple.discord.clover.database.guild;
+package apple.discord.clover.database.player.guild;
 
-import apple.discord.clover.database.guild.query.QDGuild;
+import apple.discord.clover.database.player.guild.query.QDGuild;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.service.guild.GuildService;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;

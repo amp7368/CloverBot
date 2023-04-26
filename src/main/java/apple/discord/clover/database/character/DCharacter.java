@@ -1,5 +1,6 @@
 package apple.discord.clover.database.character;
 
+import apple.discord.clover.api.base.BaseEntity;
 import apple.discord.clover.database.activity.DPlaySession;
 import apple.discord.clover.database.activity.run.DDungeonRun;
 import apple.discord.clover.database.activity.run.DLevelupRun;
@@ -11,7 +12,6 @@ import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter
 import apple.discord.clover.wynncraft.stats.player.character.dungeon.WynnPlayerDungeon;
 import apple.discord.clover.wynncraft.stats.player.character.raid.WynnPlayerRaid;
 import apple.discord.clover.wynncraft.stats.player.primitive.ProfessionLevel;
-import io.ebean.Model;
 import io.ebean.annotation.Index;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @Entity
 @Index(columnNames = {"character_id", "session_id"})
 @Table(name = "player_character")
-public class DCharacter extends Model {
+public class DCharacter extends BaseEntity {
 
     @Id
     public UUID sku;
