@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="auth_identity" identityType="external" pkName="pk_auth_identity">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+        </createTable>
+        <createTable name="auth_permission" identityType="external" pkName="pk_auth_permission">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="name" type="varchar" unique="uq_auth_permission_name"/>
+        </createTable>
+        <createTable name="auth_role" identityType="external" pkName="pk_auth_role">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="name" type="varchar" notnull="true"/>
+        </createTable>
+        <createTable name="auth_token" identityType="external" pkName="pk_auth_token">
+            <column name="token" type="char(32)" primaryKey="true"/>
+            <column name="authentication_id" type="uuid" notnull="true" uniqueOneToOne="uq_auth_token_authentication_id" references="authentication.id" foreignKeyName="fk_auth_token_authentication_id"/>
+            <column name="last_used" type="timestamp"/>
+        </createTable>
+        <createTable name="authentication" identityType="external" pkName="pk_authentication">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="identity_id" type="uuid" notnull="true" references="auth_identity.id" foreignKeyName="fk_authentication_identity_id" foreignKeyIndex="ix_authentication_identity_id"/>
+        </createTable>
+        <createTable name="didentity_role_bridge" pkName="pk_didentity_role_bridge">
+            <column name="identity_id" type="uuid" references="auth_identity.id" foreignKeyName="fk_didentity_role_bridge_identity_id" foreignKeyIndex="ix_didentity_role_bridge_identity_id"/>
+            <column name="role_id" type="uuid" uniqueOneToOne="uq_didentity_role_bridge_role_id" references="auth_role.id" foreignKeyName="fk_didentity_role_bridge_role_id"/>
+        </createTable>
+        <createTable name="drole_permission_bridge" pkName="pk_drole_permission_bridge">
+            <column name="role_id" type="uuid" notnull="true" references="auth_role.id" foreignKeyName="fk_drole_permission_bridge_role_id" foreignKeyIndex="ix_drole_permission_bridge_role_id"/>
+            <column name="permission_id" type="uuid" notnull="true" uniqueOneToOne="uq_drole_permission_bridge_permission_id" references="auth_permission.id" foreignKeyName="fk_drole_permission_bridge_permission_id"/>
+        </createTable>
+        <createTable name="duser" identityType="external" pkName="pk_duser">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="minecraft_uuid" type="uuid" uniqueOneToOne="uq_duser_minecraft_uuid" references="user_minecraft.uuid" foreignKeyName="fk_duser_minecraft_uuid"/>
+            <column name="discord_id_discord_id" type="bigint" uniqueOneToOne="uq_duser_discord_id_discord_id" references="user_discord.discord_id" foreignKeyName="fk_duser_discord_id_discord_id"/>
+        </createTable>
+        <createTable name="user_basic_credentials" identityType="external" pkName="pk_user_basic_credentials">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="user_id" type="uuid" notnull="true" uniqueOneToOne="uq_user_basic_credentials_user_id" references="duser.id" foreignKeyName="fk_user_basic_credentials_user_id"/>
+            <column name="username" type="varchar" notnull="true" unique="uq_user_basic_credentials_username"/>
+            <column name="password" type="varchar" notnull="true"/>
+            <column name="auth_identity_id" type="uuid" notnull="true" uniqueOneToOne="uq_user_basic_credentials_auth_identity_id" references="auth_identity.id" foreignKeyName="fk_user_basic_credentials_auth_identity_id"/>
+        </createTable>
+        <createTable name="user_discord" pkName="pk_user_discord">
+            <column name="discord_id" type="bigint" primaryKey="true"/>
+            <column name="user_id" type="uuid" uniqueOneToOne="uq_user_discord_user_id" references="duser.id" foreignKeyName="fk_user_discord_user_id"/>
+        </createTable>
+        <createTable name="user_minecraft" identityType="external" pkName="pk_user_minecraft">
+            <column name="uuid" type="uuid" primaryKey="true" identity="true"/>
+            <column name="user_id" type="uuid" uniqueOneToOne="uq_user_minecraft_user_id" references="duser.id" foreignKeyName="fk_user_minecraft_user_id"/>
+        </createTable>
+    </changeSet>
+</migration>

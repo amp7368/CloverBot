@@ -1,7 +1,7 @@
 package apple.discord.clover.wynncraft.stats.player;
 
-import apple.discord.clover.database.guild.DGuild;
-import apple.discord.clover.database.guild.GuildStorage;
+import apple.discord.clover.database.player.guild.DGuild;
+import apple.discord.clover.database.player.guild.GuildStorage;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
 import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
 import apple.discord.clover.wynncraft.stats.player.global.WynnPlayerGlobalData;

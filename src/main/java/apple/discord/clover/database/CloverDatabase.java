@@ -1,6 +1,7 @@
 package apple.discord.clover.database;
 
 import apple.discord.clover.CloverBot;
+import apple.discord.clover.api.base.BaseEntity;
 import apple.discord.clover.database.activity.DPlaySession;
 import apple.discord.clover.database.activity.blacklist.DBlacklist;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
@@ -8,13 +9,25 @@ import apple.discord.clover.database.activity.run.DDungeonRun;
 import apple.discord.clover.database.activity.run.DLevelupRun;
 import apple.discord.clover.database.activity.run.DRaidRun;
 import apple.discord.clover.database.activity.run.DSessionRunBase;
+import apple.discord.clover.database.auth.authentication.DAuthentication;
+import apple.discord.clover.database.auth.authentication.token.DAuthToken;
+import apple.discord.clover.database.auth.identity.DAuthIdentity;
+import apple.discord.clover.database.auth.identity.DIdentityRoleBridge;
+import apple.discord.clover.database.auth.identity.DUserBasicCredentials;
+import apple.discord.clover.database.auth.permission.DAuthPermission;
+import apple.discord.clover.database.auth.role.DAuthRole;
+import apple.discord.clover.database.auth.role.DRolePermissionBridge;
+import apple.discord.clover.database.benchmark.PasswordBenchmark;
 import apple.discord.clover.database.character.DCharacter;
-import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.database.player.DPlayer;
+import apple.discord.clover.database.player.guild.DGuild;
 import apple.discord.clover.database.primitive.IncrementalBigInt;
 import apple.discord.clover.database.primitive.IncrementalFloat;
 import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.database.primitive.IncrementalString;
+import apple.discord.clover.database.user.DUser;
+import apple.discord.clover.database.user.DUserDiscord;
+import apple.discord.clover.database.user.DUserMinecraft;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.data.config.AppleConfig.Builder;
 import apple.lib.modules.configs.factory.AppleConfigLike;
@@ -35,13 +48,23 @@ public class CloverDatabase extends AppleModule {
     private static List<Class<?>> getEntities() {
         List<Class<?>> entities = new ArrayList<>();
         // superclass
+        entities.add(BaseEntity.class);
         entities.add(DSessionRunBase.class);
         // embedded
         entities.addAll(List.of(IncrementalInt.class, IncrementalBigInt.class, IncrementalFloat.class, IncrementalString.class));
-        // entities
+        // wynn entities
         entities.addAll(List.of(DGuild.class, DCharacter.class, DPlayer.class));
         entities.addAll(List.of(DBlacklist.class, DLoginQueue.class, DPlaySession.class));
         entities.addAll(List.of(DLevelupRun.class, DDungeonRun.class, DRaidRun.class));
+
+        // user entities
+        entities.addAll(List.of(DUser.class, DUserMinecraft.class, DUserDiscord.class));
+
+        // web entities
+        entities.addAll(List.of(DIdentityRoleBridge.class, DRolePermissionBridge.class, DAuthPermission.class, DAuthRole.class));
+        entities.addAll(List.of(DAuthIdentity.class, DUserBasicCredentials.class));
+        entities.addAll(List.of(DAuthentication.class, DAuthToken.class));
+
         return entities;
     }
 
@@ -67,6 +90,10 @@ public class CloverDatabase extends AppleModule {
 
     @Override
     public void onLoad() {
+        if (CloverDatabaseConfig.get().isRunBenchmark()) {
+            PasswordBenchmark.benchmark(logger());
+            System.exit(1);
+        }
         if (!CloverDatabaseConfig.get().isConfigured()) {
             this.logger().fatal("Please configure " + this.databaseConfigFile.getAbsolutePath());
             System.exit(1);

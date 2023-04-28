@@ -7,11 +7,13 @@ public class CloverDatabaseConfig {
 
     public String username = "${username}";
     public String password = "${password}";
+    public String pepper = "${pepper}";
     public String host = "${host}";
     public String port = "${port}";
     public String database = "add";
     public boolean RUN_MIGRATION = false;
     public boolean CREATE_DATABASE = true;
+    public boolean runBenchmark = false;
 
     public CloverDatabaseConfig() {
         instance = this;
@@ -43,5 +45,9 @@ public class CloverDatabaseConfig {
 
     public boolean getDDLCreateDatabase() {
         return this.CREATE_DATABASE;
+    }
+
+    public boolean isRunBenchmark() {
+        return this.runBenchmark;
     }
 }

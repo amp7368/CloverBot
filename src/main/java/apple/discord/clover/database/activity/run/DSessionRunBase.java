@@ -1,7 +1,7 @@
 package apple.discord.clover.database.activity.run;
 
+import apple.discord.clover.api.base.BaseEntity;
 import apple.discord.clover.database.character.DCharacter;
-import io.ebean.Model;
 import io.ebean.annotation.Index;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -13,7 +13,7 @@ import javax.persistence.UniqueConstraint;
 @MappedSuperclass
 @UniqueConstraint(columnNames = {"character_sku", "name"})
 @Index(columnNames = {"character_sku", "name"})
-public abstract class DSessionRunBase extends Model {
+public abstract class DSessionRunBase extends BaseEntity {
 
     @Id
     public UUID runId;

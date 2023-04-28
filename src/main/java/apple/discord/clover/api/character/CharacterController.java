@@ -5,6 +5,7 @@ import apple.discord.clover.api.character.raid.request.CharacterRaidRequest;
 import apple.discord.clover.api.character.raid.response.PlayerRaidListResponse;
 import apple.discord.clover.api.character.term.request.CharacterRequest;
 import apple.discord.clover.api.character.term.response.CharacterStatsListResponse;
+import apple.discord.clover.database.auth.ApiSecurity;
 import apple.discord.clover.database.query.character.CharacterQuery;
 import apple.discord.clover.database.query.raid.RaidRunQuery;
 import io.javalin.Javalin;
@@ -26,6 +27,7 @@ public class CharacterController extends ApiController {
         CharacterRaidRequest request = this.checkBodyAndGet(ctx, CharacterRaidRequest.class);
         this.checkErrors(ctx, CharacterRaidRequest.VALIDATOR.validator().validate(request));
         request.fetchPlayer().checkNotNull();
+        ApiSecurity.verifyPlayerDataPermission(ctx, request.getPlayer());
         PlayerRaidListResponse response = RaidRunQuery.raidRunQuery(request);
         ctx.json(response);
     }
@@ -34,6 +36,7 @@ public class CharacterController extends ApiController {
         CharacterRequest request = this.checkBodyAndGet(ctx, CharacterRequest.class);
         this.checkErrors(ctx, CharacterRequest.VALIDATOR.validator().validate(request));
         request.fetchPlayer().checkNotNull();
+        ApiSecurity.verifyPlayerDataPermission(ctx, request.getPlayer());
         CharacterStatsListResponse response = CharacterQuery.queryCharacters(request);
         ctx.json(response);
     }

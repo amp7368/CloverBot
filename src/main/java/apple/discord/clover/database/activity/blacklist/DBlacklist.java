@@ -1,7 +1,7 @@
 package apple.discord.clover.database.activity.blacklist;
 
+import apple.discord.clover.api.base.BaseEntity;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
-import io.ebean.Model;
 import java.sql.Timestamp;
 import java.time.Instant;
 import javax.persistence.Column;
@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "blacklist")
-public class DBlacklist extends Model {
+public class DBlacklist extends BaseEntity {
 
     @Id
     public String username;
