@@ -6,6 +6,7 @@ import apple.discord.clover.api.auth.signup.request.SignupRequest;
 import apple.discord.clover.api.base.ApiController;
 import apple.discord.clover.database.auth.AuthQuery;
 import apple.discord.clover.database.auth.authentication.token.DAuthToken;
+import apple.discord.clover.database.auth.permission.DefaultAuthPermission;
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
@@ -23,8 +24,8 @@ public class AuthController extends ApiController {
     public void register(Javalin app) {
         app.post(this.path("/login"), this::login);
         app.post(this.path("/signup"), this::signup);
-        app.post(this.path("/grant"), this::grant);
-        app.post(this.path("/role/create"), this::roleCreate);//, DefaultAuthPermission.GRANT_PERMISSION.get());
+        app.post(this.path("/grant"), this::grant, DefaultAuthPermission.GRANT_PERMISSION.get());
+        app.post(this.path("/role/create"), this::roleCreate, DefaultAuthPermission.GRANT_PERMISSION.get());
     }
 
     private void roleCreate(Context ctx) {
