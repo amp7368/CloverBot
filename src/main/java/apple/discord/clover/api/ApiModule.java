@@ -6,10 +6,12 @@ import apple.discord.clover.api.character.CharacterController;
 import apple.discord.clover.api.meta.ping.PingController;
 import apple.discord.clover.api.player.PlayerController;
 import apple.discord.clover.database.auth.ApiSecurity;
+import apple.discord.clover.database.auth.permission.DefaultAuthPermission;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinGson;
+import java.util.Arrays;
 import java.util.List;
 
 public class ApiModule extends AppleModule {
@@ -33,9 +35,14 @@ public class ApiModule extends AppleModule {
             cfg.jsonMapper(new JavalinGson(ApiController.apiGson()));
         });
 
+        registerPermissions();
         registerControllers(app);
-
+        ExceptionHandlers.registerExceptions(app);
         app.start(getPort());
+    }
+
+    private void registerPermissions() {
+        Arrays.stream(DefaultAuthPermission.values()).forEach(DefaultAuthPermission::get);
     }
 
     private void registerControllers(Javalin app) {

@@ -26,7 +26,7 @@ public class ApiConfig {
             config.plugins.enableCors((cors -> cors.add(CorsPluginConfig::anyHost)));
         config.requestLogger.http((ctx, time) -> {
             Logger logger = ApiModule.get().logger();
-            String message = "(%s) -- %s -- %fms".formatted(ctx.ip(), ctx.path(), time);
+            String message = "(%s) -- %s => %d -- %fms".formatted(ctx.ip(), ctx.path(), ctx.statusCode(), time);
             if (ctx.statusCode() < 300) {
                 logger.info(message);
                 return;

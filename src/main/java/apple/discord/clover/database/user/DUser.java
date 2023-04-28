@@ -2,6 +2,7 @@ package apple.discord.clover.database.user;
 
 import apple.discord.clover.api.base.BaseEntity;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,10 +16,10 @@ public class DUser extends BaseEntity {
 
     @Id
     private UUID id;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @Column
     private DUserMinecraft minecraft;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @Column
     private DUserDiscord discordId;
 

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,11 +24,11 @@ public class DAuthIdentity extends BaseEntity {
     @Id
     private UUID id;
 
-    @OneToMany
     @Column
+    @OneToMany(cascade = CascadeType.ALL)
     private List<DIdentityRoleBridge> roles;
-    @OneToMany
     @Column
+    @OneToMany(cascade = CascadeType.ALL)
     private List<DAuthentication> authentications;
     private transient Set<DAuthPermission> permissionSet;
 
@@ -47,5 +48,9 @@ public class DAuthIdentity extends BaseEntity {
     public boolean hasPermissions(Collection<? extends RouteRole> routeRole) {
         @SuppressWarnings("all") boolean hasAll = this.getPermissionSet().containsAll(routeRole);
         return hasAll;
+    }
+
+    public void grantRole(DIdentityRoleBridge role) {
+        roles.add(role);
     }
 }

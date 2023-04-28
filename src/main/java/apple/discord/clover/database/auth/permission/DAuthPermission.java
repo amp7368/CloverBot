@@ -22,4 +22,8 @@ public class DAuthPermission extends BaseEntity implements RouteRole {
         this.id = id;
         this.name = name;
     }
+
+    public String getName() {
+        return this.name;
+    }
 }

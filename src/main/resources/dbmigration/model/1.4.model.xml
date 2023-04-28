@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="auth_identity_role_bridge" pkName="pk_auth_identity_role_bridge">
+            <column name="identity_id" type="uuid" references="auth_identity.id" foreignKeyName="fk_auth_identity_role_bridge_identity_id" foreignKeyIndex="ix_auth_identity_role_bridge_identity_id"/>
+            <column name="role_id" type="uuid" uniqueOneToOne="uq_auth_identity_role_bridge_role_id" references="auth_role.id" foreignKeyName="fk_auth_identity_role_bridge_role_id"/>
+        </createTable>
+        <createTable name="auth_role_permission_bridge" pkName="pk_auth_role_permission_bridge">
+            <column name="role_id" type="uuid" notnull="true" references="auth_role.id" foreignKeyName="fk_auth_role_permission_bridge_role_id" foreignKeyIndex="ix_auth_role_permission_bridge_role_id"/>
+            <column name="permission_id" type="uuid" notnull="true" uniqueOneToOne="uq_auth_role_permission_bridge_permission_id" references="auth_permission.id" foreignKeyName="fk_auth_role_permission_bridge_permission_id"/>
+        </createTable>
+        <alterForeignKey name="fk_didentity_role_bridge_identity_id" columnNames="DROP FOREIGN KEY" indexName="ix_didentity_role_bridge_identity_id" tableName="didentity_role_bridge"/>
+        <alterForeignKey name="fk_drole_permission_bridge_role_id" columnNames="DROP FOREIGN KEY" indexName="ix_drole_permission_bridge_role_id" tableName="drole_permission_bridge"/>
+    </changeSet>
+    <changeSet type="pendingDrops">
+        <dropTable name="didentity_role_bridge"/>
+        <dropTable name="drole_permission_bridge"/>
+    </changeSet>
+</migration>

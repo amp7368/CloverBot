@@ -4,6 +4,7 @@ import apple.discord.clover.api.base.BaseEntity;
 import apple.discord.clover.database.auth.ApiSecurity;
 import apple.discord.clover.database.user.DUser;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,14 +18,14 @@ public class DUserBasicCredentials extends BaseEntity implements HasAuthIdentity
     @Id
     private UUID id;
     @Column
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     private DUser user;
     @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
     @Column(unique = true)
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     private DAuthIdentity authIdentity;
 
     public DUserBasicCredentials(DUser user, String username, String password, DAuthIdentity authIdentity) {
