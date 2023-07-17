@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "auth_identity_role_bridge")
-@PrimaryKeyJoinColumns({@PrimaryKeyJoinColumn(name = "identity"), @PrimaryKeyJoinColumn(name = "role")})
+@PrimaryKeyJoinColumns({@PrimaryKeyJoinColumn(name = "identity_id"), @PrimaryKeyJoinColumn(name = "role_id")})
 public class DIdentityRoleBridge extends BaseEntity {
 
     @ManyToOne

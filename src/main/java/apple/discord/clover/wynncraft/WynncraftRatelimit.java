@@ -8,6 +8,7 @@ import apple.utilities.threading.service.priority.AsyncTaskPriority;
 import apple.utilities.threading.service.priority.TaskHandlerPriority;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import discord.util.dcf.util.TimeMillis;
+import java.util.UUID;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,9 +62,8 @@ public class WynncraftRatelimit {
     }
 
     // todo
-    public static void queuePlayer(TaskPriorityCommon priority, String guildMember, Consumer<@Nullable WynnPlayer> runAfter) {
+    public static void queuePlayer(TaskPriorityCommon priority, UUID guildMember, Consumer<@Nullable WynnPlayer> runAfter) {
         String link = String.format(WynncraftApi.PLAYER_STATS, guildMember);
-        AppleJsonFromURL<WynnPlayerResponse> task = new AppleJsonFromURL<>(link, WynnPlayerResponse.class, WynncraftModule.gson());
         Consumer<WynnPlayerResponse> consumeResponse = (res) -> {
             if (res == null) {
                 runAfter.accept(null);
@@ -73,6 +73,9 @@ public class WynncraftRatelimit {
             WynnDatabase.get().addMember(player);
             runAfter.accept(player);
         };
-        guild.taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess(consumeResponse);
+        getPlayer()
+            .taskCreator(new AsyncTaskPriority(priority))
+            .accept(new AppleJsonFromURL<>(link, WynnPlayerResponse.class, WynncraftModule.gson()))
+            .onSuccess(consumeResponse);
     }
 }

@@ -4,6 +4,7 @@ public class DiscordConfig {
 
     private static DiscordConfig instance;
     public String token = "YourTokenHere";
+    protected long reportsChannel = 0;
 
     public DiscordConfig() {
         instance = this;

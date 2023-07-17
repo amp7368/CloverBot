@@ -18,9 +18,9 @@ public interface HasPlayerRequest {
         String player = this.getPlayerString();
         try {
             UUID uuid = UUID.fromString(player);
-            return getPlayer().set(uuid, PlayerStorage.findPlayer(uuid));
+            return getPlayer().set(uuid, PlayerStorage.findPlayerName(uuid));
         } catch (IllegalArgumentException e) {
-            return getPlayer().set(PlayerStorage.findPlayer(player), player);
+            return getPlayer().set(PlayerStorage.findPlayerId(player), player);
         }
     }
 }

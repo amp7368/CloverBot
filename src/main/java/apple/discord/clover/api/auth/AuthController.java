@@ -47,13 +47,13 @@ public class AuthController extends ApiController {
         this.checkErrors(ctx, SignupRequest.VALIDATOR.validator().validate(request));
         request.fetchPlayer().checkNotNull();
         @NotNull DAuthToken login = AuthQuery.signup(request);
-        ctx.json(new AuthResponse(login.getUrlToken()));
+        ctx.json(new AuthResponse(login.getUrlToken(), login.getExpiration()));
     }
 
     private void login(Context ctx) {
         BasicAuthCredentials credentials = ctx.basicAuthCredentials();
         if (credentials == null) throw new BadRequestResponse("Login not found in 'Authorization' header");
         @NotNull DAuthToken login = AuthQuery.login(credentials.getUsername(), credentials.getPassword());
-        ctx.json(new AuthResponse(login.getUrlToken()));
+        ctx.json(new AuthResponse(login.getUrlToken(), login.getExpiration()));
     }
 }

@@ -26,7 +26,7 @@ public class WynnDatabase {
 
     private final Set<String> guildsRequestedToBeUpdated = new HashSet<>();
     private final Map<String, WynnPlayer> members = new HashMap<>();
-    private final Map<String, WynnGuildHeader> guilds = new HashMap<>(20000);
+    private final Map<String, WynnGuildHeader> guilds = new HashMap<>();
 
     public static WynnDatabase get() {
         return manager.getInstance();

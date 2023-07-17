@@ -67,7 +67,7 @@ public class PlayerStorage {
     }
 
     @Nullable
-    public static String findPlayer(UUID player) {
+    public static String findPlayerName(UUID player) {
         QDPlayer a = QDPlayer.alias();
         return new QDPlayer().select(a.username)
             .where().uuid.eq(player)
@@ -75,7 +75,7 @@ public class PlayerStorage {
     }
 
     @Nullable
-    public static UUID findPlayer(String player) {
+    public static UUID findPlayerId(String player) {
         QDPlayer a = QDPlayer.alias();
         return new QDPlayer().select(a.uuid)
             .where().username.ieq(player)
@@ -102,5 +102,9 @@ public class PlayerStorage {
             .where().username.ilike(outPattern.toString())
             .setMaxRows(limit)
             .findList();
+    }
+
+    public static DPlayer findPlayer(UUID uuid) {
+        return new QDPlayer().where().uuid.eq(uuid).findOne();
     }
 }

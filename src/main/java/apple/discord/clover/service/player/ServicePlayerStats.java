@@ -7,13 +7,9 @@ import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
 import apple.discord.clover.wynncraft.WynncraftModule;
-import apple.discord.clover.wynncraft.WynncraftRatelimit;
 import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
-import apple.utilities.threading.service.base.create.AsyncTaskQueueStart;
-import apple.utilities.threading.service.priority.AsyncTaskPriority;
-import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import apple.utilities.util.NumberUtils;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
@@ -32,8 +28,6 @@ import org.apache.logging.log4j.Logger;
 
 public class ServicePlayerStats {
 
-    private static final AsyncTaskQueueStart<AsyncTaskPriority> SERVICE = WynncraftRatelimit.getPlayer()
-        .taskCreator(new AsyncTaskPriority(TaskPriorityCommon.LOW));
     private static final int REQUESTS = 750;
     private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(30) / REQUESTS;
     private static final Duration CALL_TIMEOUT = Duration.ofSeconds(5);

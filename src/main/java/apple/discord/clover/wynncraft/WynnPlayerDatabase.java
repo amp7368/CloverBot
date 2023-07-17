@@ -60,7 +60,7 @@ public class WynnPlayerDatabase {
         synchronized (players) {
             WynnInactivePlayer player = players.get(uuid);
             if (player == null) {
-                WynncraftRatelimit.queuePlayer(TaskPriorityCommon.LOWEST, uuid.toString(), p -> {
+                WynncraftRatelimit.queuePlayer(TaskPriorityCommon.LOWEST, uuid, p -> {
                     callback.accept(p == null ? null : p.toWynnInactivePlayer());
                 });
             } else {
@@ -70,7 +70,7 @@ public class WynnPlayerDatabase {
     }
 
     public void updatePlayer(UUID uuid, Consumer<WynnInactivePlayer> callback) {
-        WynncraftRatelimit.queuePlayer(TaskPriorityCommon.LOWEST, uuid.toString(), p -> {
+        WynncraftRatelimit.queuePlayer(TaskPriorityCommon.LOWEST, uuid, p -> {
             callback.accept(p == null ? null : p.toWynnInactivePlayer());
         });
     }

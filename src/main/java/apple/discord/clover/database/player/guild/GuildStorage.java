@@ -5,12 +5,18 @@ import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.service.guild.GuildService;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GuildStorage {
 
     public static DGuild findOrCreate(String name) {
-        DGuild guild = new QDGuild().where().name.eq(name).findOne();
+        DGuild guild = new QDGuild().where()
+            .name.eq(name)
+            .isActive.isTrue()
+            .findOne();
         if (guild != null)
             return guild;
         guild = new DGuild(name);
@@ -20,11 +26,19 @@ public class GuildStorage {
     }
 
     public static List<String> findUnloaded() {
-        return new QDGuild().select(QDGuild.alias().name).where().tag.eq((String) null).findSingleAttributeList();
+        return new QDGuild()
+            .select(QDGuild.alias().name)
+            .where()
+            .tag.isNull()
+            .isActive.isTrue()
+            .findSingleAttributeList();
     }
 
     public static void save(WynnGuild wynnGuild) {
-        DGuild guild = new QDGuild().where().name.eq(wynnGuild.name).findOne();
+        DGuild guild = new QDGuild().where()
+            .name.eq(wynnGuild.name)
+            .isActive.isTrue()
+            .findOne();
         if (guild == null)
             guild = new DGuild(wynnGuild.name);
         guild.setTag(wynnGuild.prefix);
@@ -34,5 +48,50 @@ public class GuildStorage {
         }
         guild.setCreated(Timestamp.from(wynnGuild.created.toInstant()));
         guild.save();
+    }
+
+    public static List<DGuild> find(String guildArg) {
+        List<DGuild> guild = new QDGuild().where()
+            .tag.eq(guildArg)
+            .isActive.isTrue()
+            .findList();
+        if (!guild.isEmpty()) return guild;
+        guild = new QDGuild().where()
+            .tag.ieq(guildArg)
+            .isActive.isTrue()
+            .findList();
+        if (!guild.isEmpty()) return guild;
+        guild = new QDGuild().where()
+            .name.eq(guildArg)
+            .isActive.isTrue()
+            .findList();
+        if (!guild.isEmpty()) return guild;
+        guild = new QDGuild().where()
+            .name.ieq(guildArg)
+            .isActive.isTrue()
+            .findList();
+        return guild;
+    }
+
+    public static void setActiveGuilds(String[] guilds) {
+        QDGuild a = QDGuild.alias();
+        Set<String> toDeactivateGuilds = new HashSet<>(new QDGuild()
+            .select(a.name)
+            .where().isActive.isTrue()
+            .findSingleAttributeList());
+        List<String> toActivateGuilds = new ArrayList<>();
+        for (String guild : List.of(guilds)) {
+            if (!toDeactivateGuilds.remove(guild)) {
+                toActivateGuilds.add(guild);
+            }
+        }
+        toDeactivateGuilds.forEach(guild -> setActive(guild, false));
+        toActivateGuilds.forEach(guild -> setActive(guild, true));
+    }
+
+    private static int setActive(String guild, boolean isActive) {
+        QDGuild a = QDGuild.alias();
+        return new QDGuild().where().name.eq(guild)
+            .asUpdate().set(a.isActive, isActive).update();
     }
 }

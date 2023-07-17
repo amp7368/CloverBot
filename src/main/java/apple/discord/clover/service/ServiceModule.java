@@ -1,5 +1,6 @@
 package apple.discord.clover.service;
 
+import apple.discord.clover.service.guild.GuildListConfig;
 import apple.discord.clover.service.guild.GuildService;
 import apple.discord.clover.service.network.ServiceServerList;
 import apple.discord.clover.service.network.ServiceServerListConfig;
@@ -25,7 +26,7 @@ public class ServiceModule extends AppleModule {
     @Override
     public void onEnable() {
         if (!ServiceModuleConfig.get().shouldEnable()) return;
-        GuildService.load();
+        new GuildService();
         new ServicePlayerStats();
         new ServiceServerList();
     }
@@ -34,8 +35,9 @@ public class ServiceModule extends AppleModule {
     public List<AppleConfigLike> getConfigs() {
         Builder<ServiceServerListConfig> serverList = configJson(ServiceServerListConfig.class, "ServerList.config")
             .asJson(WynncraftModule.gson());
-        ServiceServerListConfig.config = serverList.getConfig();
-        return List.of(serverList, configJson(ServiceModuleConfig.class, "ServiceModule.config"));
+        Builder<GuildListConfig> guildList = configJson(GuildListConfig.class, "GuildList.config")
+            .asJson(WynncraftModule.gson());
+        return List.of(serverList, guildList, configJson(ServiceModuleConfig.class, "ServiceModule.config"));
     }
 
     @Override
