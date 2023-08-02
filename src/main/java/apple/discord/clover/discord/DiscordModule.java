@@ -1,6 +1,6 @@
 package apple.discord.clover.discord;
 
-import apple.discord.clover.discord.command.activity.CommandInactivity;
+import apple.discord.clover.discord.command.activity.CommandActivity;
 import apple.discord.clover.discord.command.help.CommandHelp;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
@@ -23,7 +23,7 @@ public class DiscordModule extends AppleModule {
         JDA client = builder.build();
         client.getPresence().setPresence(Activity.playing("Slash commands!"), false);
         dcf = new DCF(client);
-        dcf.commands().addCommand(new CommandInactivity());
+        dcf.commands().addCommand(new CommandActivity());
         dcf.commands().addCommand(new CommandHelp());
         dcf.commands().updateCommands();
     }

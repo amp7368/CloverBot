@@ -1,4 +1,4 @@
-package apple.discord.clover.discord.command.activity.player;
+package apple.discord.clover.discord.command.activity.base.player;
 
 import apple.discord.clover.database.player.DPlayer;
 import apple.discord.clover.database.query.player.PlayerStatsQuery;
