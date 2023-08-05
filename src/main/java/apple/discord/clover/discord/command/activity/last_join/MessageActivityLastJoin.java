@@ -1,5 +1,6 @@
 package apple.discord.clover.discord.command.activity.last_join;
 
+import apple.discord.clover.api.base.request.TimeResolution;
 import apple.discord.clover.discord.command.activity.GuiInactivity;
 import apple.discord.clover.discord.command.activity.base.MessageActivity;
 import apple.discord.clover.discord.command.activity.base.player.InactivePlayer;
@@ -45,7 +46,11 @@ public class MessageActivityLastJoin extends MessageActivity {
 
     @Override
     protected String value3(InactivePlayer player) {
-        return null;
+        Duration playtime = player.getPlaytime(TimeResolution.WEEK, 1);
+        if (playtime == null) return "??? Hours";
+        long minutes = playtime.toMinutes();
+        double hours = minutes / 60.0;
+        return "%.1f Hours".formatted(hours);
     }
 
 

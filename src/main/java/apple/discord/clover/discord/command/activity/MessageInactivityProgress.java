@@ -5,7 +5,6 @@ import apple.discord.clover.database.player.PlayerStorage;
 import apple.discord.clover.discord.command.activity.base.player.InactiveDPlayer;
 import apple.discord.clover.discord.command.activity.base.player.InactiveNotFoundPlayer;
 import apple.discord.clover.discord.command.activity.base.player.InactivePlayer;
-import apple.discord.clover.discord.command.activity.base.player.InactiveWynnPlayer;
 import apple.discord.clover.util.Pretty;
 import apple.discord.clover.wynncraft.WynncraftRatelimit;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
@@ -38,9 +37,9 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
                 }
                 DPlayer dPlayer = PlayerStorage.findPlayer(guildMember.uuid);
                 if (dPlayer == null) {
-//                    addPlayer(new InactiveNotFoundPlayer(guildMember));
-                    WynncraftRatelimit.queuePlayer(TaskPriorityCommon.HIGHEST, guildMember.uuid,
-                        player -> this.addPlayer(new InactiveWynnPlayer(guildMember, player)));
+                    addPlayer(new InactiveNotFoundPlayer(guildMember));
+//                    WynncraftRatelimit.queuePlayer(TaskPriorityCommon.HIGHEST, guildMember.uuid,
+//                        player -> this.addPlayer(new InactiveWynnPlayer(guildMember, player)));
                 } else {
                     addPlayer(new InactiveDPlayer(guildMember, dPlayer));
                 }

@@ -10,15 +10,24 @@ import java.util.List;
 public class TermRequest {
 
     public static AppValidator<TermRequest> VALIDATOR = new AppValidator<>(List.of(TermRequest::termValidator));
-    private TimeResolution timeResolution;
-    private Instant start;
+    protected TimeResolution timeResolution;
+    protected Instant start;
     /**
      * The number of terms of the resolution duration requested
      */
-    private int termsAfter;
+    protected int termsAfter;
     // transient
     private transient Instant startTrunc;
     private transient Instant endTrunc;
+
+    public TermRequest(TimeResolution timeResolution, Instant start, int termsAfter) {
+        this.timeResolution = timeResolution;
+        this.start = start;
+        this.termsAfter = termsAfter;
+    }
+
+    public TermRequest() {
+    }
 
     protected static <T extends TermRequest> ValidatorBuilder<T> termValidator(ValidatorBuilder<T> validator) {
         return validator.constraintOnObject(TermRequest::getTimeResolution, "timeResolution",
@@ -39,7 +48,7 @@ public class TermRequest {
 
     public synchronized Instant end() {
         if (endTrunc != null) return endTrunc;
-        endTrunc = start.plus(getTimeResolution().unit().getDuration().multipliedBy(termsAfter));
+        endTrunc = start.plus(getTimeResolution().duration(termsAfter));
         Instant now = Instant.now();
         if (now.isBefore(endTrunc)) endTrunc = now;
         return endTrunc;

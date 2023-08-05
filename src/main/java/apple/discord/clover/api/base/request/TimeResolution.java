@@ -1,6 +1,7 @@
 package apple.discord.clover.api.base.request;
 
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 
@@ -26,5 +27,9 @@ public enum TimeResolution {
 
     public String sql() {
         return name();
+    }
+
+    public TemporalAmount duration(int terms) {
+        return this.unit().getDuration().multipliedBy(terms);
     }
 }

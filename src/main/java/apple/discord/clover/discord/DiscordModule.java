@@ -16,6 +16,15 @@ public class DiscordModule extends AppleModule {
     public static DCF dcf;
     public static String INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=616398849803681889&permissions=18496&scope"
         + "=applications.commands%20bot";
+    private static DiscordModule instance;
+
+    public DiscordModule() {
+        instance = this;
+    }
+
+    public static DiscordModule get() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {

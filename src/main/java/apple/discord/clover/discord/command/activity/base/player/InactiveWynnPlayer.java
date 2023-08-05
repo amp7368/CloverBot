@@ -2,6 +2,7 @@ package apple.discord.clover.discord.command.activity.base.player;
 
 import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
+import java.time.Duration;
 import java.time.Instant;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,4 +29,9 @@ public class InactiveWynnPlayer extends InactivePlayer {
         return player.username;
     }
 
+    @Override
+    @Nullable
+    public Duration queryPlaytime(InactivePlayerQueryPlaytime playtime) {
+        return Duration.ZERO;
+    }
 }
