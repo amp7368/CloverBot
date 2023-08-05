@@ -15,6 +15,6 @@ public class HistorySubCommand extends BaseActivitySubCommand {
 
     @Override
     protected void onProgressCompletion(GuiInactivity gui) {
-        throw new RuntimeException("todo");
+        gui.addSubPage(new MessageActivityHistory(gui));
     }
 }

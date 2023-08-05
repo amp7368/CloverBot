@@ -14,7 +14,7 @@ public class MessageActivityLastJoin extends MessageActivity {
         long timeCompared = p1.getLastJoin().compareTo(p2.getLastJoin());
         if (timeCompared > 0) return 1;
         else if (timeCompared == 0) {
-            return p1.getName().compareTo(p2.getName());
+            return p1.getName().compareToIgnoreCase(p2.getName());
         }
         return -1;
     };
@@ -47,13 +47,9 @@ public class MessageActivityLastJoin extends MessageActivity {
     @Override
     protected String value3(InactivePlayer player) {
         Duration playtime = player.getPlaytime(TimeResolution.WEEK, 1);
-        if (playtime == null) return "??? Hours";
-        long minutes = playtime.toMinutes();
-        double hours = minutes / 60.0;
-        return "%.1f Hours".formatted(hours);
+        return displayHours(playtime);
     }
-
-
+    
     @Override
     protected Comparator<InactivePlayer> entriesComparatorDefault() {
         return LAST_JOIN_COMPARATOR;
