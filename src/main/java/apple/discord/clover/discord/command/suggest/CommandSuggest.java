@@ -2,6 +2,7 @@ package apple.discord.clover.discord.command.suggest;
 
 import apple.discord.clover.discord.util.FindOption;
 import discord.util.dcf.slash.DCFSlashCommand;
+import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -19,7 +20,9 @@ public class CommandSuggest extends DCFSlashCommand implements FindOption {
 
     @Override
     public void onCommand(SlashCommandInteractionEvent event) {
-        OptionType description = event.getOption("description", OptionMapping::getType);
+        String description = event.getOption("description", OptionMapping::getAsString);
+        Attachment attachment = event.getOption("description", OptionMapping::getAsAttachment);
+
 
     }
 }

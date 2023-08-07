@@ -65,6 +65,6 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
     @Override
     public MessageCreateData makeMessage() {
         double progress = this.parent.getMembersProgress();
-        return buildCreate(Pretty.getProgress(progress));
+        return buildCreate("Loading...\n" + Pretty.getProgress(progress));
     }
 }

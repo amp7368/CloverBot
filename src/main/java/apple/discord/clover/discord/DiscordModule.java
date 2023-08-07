@@ -1,10 +1,14 @@
 package apple.discord.clover.discord;
 
+import apple.discord.clover.discord.autocomplete.CloverAutoCompleteListener;
 import apple.discord.clover.discord.command.activity.CommandActivity;
+import apple.discord.clover.discord.command.bug.CommandBug;
 import apple.discord.clover.discord.command.help.CommandHelp;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import discord.util.dcf.DCF;
+import discord.util.dcf.DCFCommandManager;
+import discord.util.dcf.DCFModalManager;
 import java.util.List;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -28,13 +32,26 @@ public class DiscordModule extends AppleModule {
 
     @Override
     public void onEnable() {
-        JDABuilder builder = JDABuilder.createLight(DiscordConfig.get().getToken());
-        JDA client = builder.build();
+        JDA client = JDABuilder.createLight(DiscordConfig.get().getToken()).build();
         client.getPresence().setPresence(Activity.playing("Slash commands!"), false);
         dcf = new DCF(client);
-        dcf.commands().addCommand(new CommandActivity());
-        dcf.commands().addCommand(new CommandHelp());
-        dcf.commands().updateCommands();
+
+        DCFCommandManager commands = dcf.commands();
+        commands.addCommand(new CommandActivity());
+        commands.addCommand(new CommandHelp());
+        commands.addCommand(new CommandBug());
+        commands.updateCommands();
+
+        DCFModalManager modals = dcf.modals();
+
+        client.addEventListener(new CloverAutoCompleteListener());
+
+        try {
+            client.awaitReady();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        DiscordConfig.get().load();
     }
 
     @Override

@@ -18,7 +18,10 @@ public interface SendMessage {
     }
 
     default MessageEmbed error(String msg) {
-        return error().setDescription(msg).build();
+        return error()
+            .setTitle("Error \u274C")
+            .setDescription(msg)
+            .build();
     }
 
 }

@@ -30,6 +30,6 @@ public interface FindOption extends SendMessage {
     }
 
     default void missingOption(SlashCommandInteractionEvent event, String option) {
-        event.replyEmbeds(missingOption(option)).queue();
+        event.replyEmbeds(missingOption(option)).setEphemeral(true).queue();
     }
 }

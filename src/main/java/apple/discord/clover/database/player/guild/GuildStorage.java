@@ -6,9 +6,11 @@ import apple.discord.clover.service.guild.GuildService;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.text.similarity.LevenshteinDetailedDistance;
 
 public class GuildStorage {
 
@@ -48,6 +50,26 @@ public class GuildStorage {
         }
         guild.setCreated(Timestamp.from(wynnGuild.created.toInstant()));
         guild.save();
+    }
+
+    public static List<DGuild> findPartial(String guildArg) {
+        List<DGuild> guildsWithTag = new QDGuild().where()
+            .tag.icontains(guildArg)
+            .isActive.isTrue()
+            .findList();
+        List<DGuild> guilds = new ArrayList<>(guildsWithTag);
+        guildsWithTag = new QDGuild().where()
+            .name.icontains(guildArg)
+            .isActive.isTrue()
+            .findList();
+        guilds.addAll(guildsWithTag);
+        guilds.sort(findPartialGuildComparator(guildArg));
+        return guilds;
+    }
+
+    private static Comparator<DGuild> findPartialGuildComparator(String guildArg) {
+        return Comparator.comparing(DGuild::getName, Comparator.comparingInt(
+            (guild) -> LevenshteinDetailedDistance.getDefaultInstance().apply(guildArg, guild).getDistance()));
     }
 
     public static List<DGuild> find(String guildArg) {

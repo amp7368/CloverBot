@@ -29,6 +29,6 @@ public class CloverBot extends ApplePlugin {
 
     @Override
     public List<AppleModule> createModules() {
-        return List.of(new CloverDatabase(), new WynncraftModule(), new ApiModule(), new DiscordModule(), new ServiceModule());
+        return List.of(new CloverDatabase(), new WynncraftModule(), new ApiModule(), new ServiceModule(), new DiscordModule());
     }
 }
