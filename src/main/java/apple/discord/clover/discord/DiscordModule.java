@@ -4,6 +4,7 @@ import apple.discord.clover.discord.autocomplete.CloverAutoCompleteListener;
 import apple.discord.clover.discord.command.activity.CommandActivity;
 import apple.discord.clover.discord.command.bug.CommandBug;
 import apple.discord.clover.discord.command.help.CommandHelp;
+import apple.discord.clover.discord.command.player.CommandPlayerActivity;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import discord.util.dcf.DCF;
@@ -38,6 +39,7 @@ public class DiscordModule extends AppleModule {
 
         DCFCommandManager commands = dcf.commands();
         commands.addCommand(new CommandActivity());
+        commands.addCommand(new CommandPlayerActivity());
         commands.addCommand(new CommandHelp());
         commands.addCommand(new CommandBug());
         commands.updateCommands();

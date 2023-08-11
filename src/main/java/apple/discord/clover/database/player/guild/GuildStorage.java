@@ -4,12 +4,14 @@ import apple.discord.clover.database.player.guild.query.QDGuild;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.service.guild.GuildService;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
+import io.ebean.DB;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.apache.commons.text.similarity.LevenshteinDetailedDistance;
 
 public class GuildStorage {
@@ -115,5 +117,9 @@ public class GuildStorage {
         QDGuild a = QDGuild.alias();
         return new QDGuild().where().name.eq(guild)
             .asUpdate().set(a.isActive, isActive).update();
+    }
+
+    public static DGuild findById(UUID guildId) {
+        return DB.find(DGuild.class, guildId);
     }
 }
