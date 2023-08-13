@@ -5,7 +5,6 @@ import apple.discord.clover.database.query.player.PlayerGuildChange;
 import discord.util.dcf.DCF;
 import discord.util.dcf.gui.base.GuiReplyFirstMessage;
 import discord.util.dcf.gui.base.gui.DCFGui;
-import java.util.Collection;
 import java.util.List;
 
 public class PlayerGuildGui extends DCFGui {
@@ -17,12 +16,12 @@ public class PlayerGuildGui extends DCFGui {
         List<PlayerGuildChange> guildHistory,
         PlayerNameOrUUID player) {
         super(dcf, createFirstMessage);
-        
+
         this.guildHistory = guildHistory;
         this.player = player;
     }
 
-    public Collection<PlayerGuildChange> getGuildHistory() {
+    public List<PlayerGuildChange> getGuildHistory() {
         return guildHistory;
     }
 

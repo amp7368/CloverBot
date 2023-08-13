@@ -3,7 +3,6 @@ package apple.discord.clover.discord.command.player.guild;
 import apple.discord.clover.api.base.request.PlayerNameOrUUID;
 import apple.discord.clover.database.query.player.PlayerGuildChange;
 import apple.discord.clover.database.query.player.PlayerGuildQuery;
-import apple.discord.clover.discord.command.player.PlayerGuildMessage;
 import apple.discord.clover.discord.util.FindOption;
 import discord.util.dcf.slash.DCFSlashSubCommand;
 import java.util.List;

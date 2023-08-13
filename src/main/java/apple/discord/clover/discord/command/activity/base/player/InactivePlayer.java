@@ -35,7 +35,7 @@ public abstract class InactivePlayer {
     }
 
     public String getGuildRank() {
-        return guildMember.rank;
+        return guildMember == null ? "???" : guildMember.rank;
     }
 
     @Nullable
