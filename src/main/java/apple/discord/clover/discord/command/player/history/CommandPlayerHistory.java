@@ -17,7 +17,7 @@ public class CommandPlayerHistory extends DCFSlashSubCommand implements FindOpti
     @Override
     public SubcommandData getData() {
         return new SubcommandData("history", "Create a report of one player's playtime")
-            .addOption(OptionType.STRING, "player", "The player to create a report of");
+            .addOption(OptionType.STRING, "player", "The player to create a report of", true);
     }
 
     @Override

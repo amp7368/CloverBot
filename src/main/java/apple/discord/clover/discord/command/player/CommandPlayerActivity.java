@@ -25,6 +25,4 @@ public class CommandPlayerActivity extends DCFSlashCommand implements FindOption
     @Override
     public void onCommand(SlashCommandInteractionEvent event) {
     }
-
-
 }

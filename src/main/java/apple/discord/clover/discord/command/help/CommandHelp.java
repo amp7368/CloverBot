@@ -24,20 +24,18 @@ public class CommandHelp extends DCFSlashCommand {
         embed.addField("/pactivity guild [player]", "Create a report of one player's guild history", false);
         embed.addField("/pactivity history [player]", "Create a report of one player's playtime", false);
         embed.addField("/bug [description] (attachment)", "Opens a modal to report a bug", false);
-        embed.addField("/suggest", "Opens a modal to add a suggest or comment", false);
         return embed.build();
     }
 
     private static MessageEmbed createContactPage() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Contact");
         embed.setDescription("""
-            Developer's discord: `appleptr16`
-            Discord server: https://discord.gg/ED8GRyHmpB
+            # Contact
+            Developer's Discord: `appleptr16`
+            Support Discord Server: https://discord.gg/ED8GRyHmpB
                         
-            Direct any questions to `appleptr16`
-            Send suggestions using the /suggest command
-            Report bugs using the /bug command
+            Direct any questions or suggestions to `appleptr16`
+            Report bugs using the */bug* command
             """);
         return embed.build();
     }
