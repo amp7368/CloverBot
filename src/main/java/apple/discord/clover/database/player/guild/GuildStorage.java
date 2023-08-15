@@ -38,7 +38,7 @@ public class GuildStorage {
             .findSingleAttributeList();
     }
 
-    public static void save(WynnGuild wynnGuild) {
+    public static synchronized void save(WynnGuild wynnGuild) {
         DGuild guild = new QDGuild().where()
             .name.eq(wynnGuild.name)
             .isActive.isTrue()
@@ -113,9 +113,9 @@ public class GuildStorage {
         toActivateGuilds.forEach(guild -> setActive(guild, true));
     }
 
-    private static int setActive(String guild, boolean isActive) {
+    private static void setActive(String guild, boolean isActive) {
         QDGuild a = QDGuild.alias();
-        return new QDGuild().where().name.eq(guild)
+        new QDGuild().where().name.eq(guild)
             .asUpdate().set(a.isActive, isActive).update();
     }
 

@@ -23,7 +23,7 @@ public class GuildService extends DaemonService<WynncraftGuildListResponse> {
     }
 
     public static void queueGuild(String guild) {
-        WynncraftRatelimit.queueGuild(TaskPriorityCommon.LOW, guild, GuildStorage::save);
+        WynncraftRatelimit.queueGuild(TaskPriorityCommon.LOW, guild, c -> {});
     }
 
 

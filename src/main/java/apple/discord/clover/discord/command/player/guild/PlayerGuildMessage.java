@@ -81,7 +81,7 @@ public class PlayerGuildMessage extends DCFScrollGui<PlayerGuildGui, PlayerGuild
 
     @NotNull
     private String footer() {
-        return "Note that guild changes before May of 2023 are not included"; // todo
+        return "Note that guild changes before April of 2023 are not included";
     }
 
     @Override
