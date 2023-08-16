@@ -16,8 +16,8 @@ public class CloverAutoCompleteListener extends ListenerAdapter {
     }
 
     @NotNull
-    private List<GuildAutoComplete> getAutoCompletes() {
-        return List.of(new GuildAutoComplete());
+    private List<CloverAutoComplete> getAutoCompletes() {
+        return List.of(new GuildAutoComplete(), new PlayerAutoComplete());
     }
 
     @Override
@@ -28,6 +28,6 @@ public class CloverAutoCompleteListener extends ListenerAdapter {
             autoComplete = autoCompletes.get(option);
         }
         if (autoComplete != null)
-            autoComplete.autoComplete(event, option);
+            autoComplete.autoComplete(event, event.getFocusedOption().getValue());
     }
 }

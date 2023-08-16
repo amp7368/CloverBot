@@ -15,7 +15,7 @@ public class CommandPlayerGuild extends DCFSlashSubCommand implements FindOption
     @Override
     public SubcommandData getData() {
         return new SubcommandData("guilds", "Create a report of one player's guild history")
-            .addOption(OptionType.STRING, "player", "The player to create a report of", true);
+            .addOption(OptionType.STRING, "player", "The player to create a report of", true, true);
     }
 
     @Override

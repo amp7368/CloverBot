@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class BaseActivitySubCommand extends DCFSlashSubCommand implements FindOption {
 
     public static final OptionData GUILD_OPTION = new OptionData(OptionType.STRING, "guild",
-        "The guild to create the activity report of", true);
+        "The guild to create the activity report of", true, true);
 
     @Override
     public void onCommand(SlashCommandInteractionEvent event) {
