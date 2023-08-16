@@ -39,7 +39,6 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
                 }
                 DPlayer dPlayer = PlayerStorage.findPlayer(guildMember.uuid);
                 if (dPlayer == null) {
-                    addPlayer(new InactiveNotFoundPlayer(guildMember));
                     WynncraftRatelimit.queuePlayer(TaskPriorityCommon.HIGHEST, guildMember.uuid,
                         player -> this.addPlayer(new InactiveWynnPlayer(guildMember, player)));
                 } else {
