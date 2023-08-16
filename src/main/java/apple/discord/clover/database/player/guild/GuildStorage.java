@@ -5,6 +5,7 @@ import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.service.guild.GuildService;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import io.ebean.DB;
+import io.ebean.Transaction;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,11 +13,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.apache.commons.text.similarity.LevenshteinDetailedDistance;
 
 public class GuildStorage {
 
-    public static DGuild findOrCreate(String name) {
+    public synchronized static DGuild findOrCreate(String name) {
         DGuild guild = new QDGuild().where()
             .name.eq(name)
             .isActive.isTrue()
@@ -103,20 +105,20 @@ public class GuildStorage {
             .select(a.name)
             .where().isActive.isTrue()
             .findSingleAttributeList());
-        List<String> toActivateGuilds = new ArrayList<>();
-        for (String guild : List.of(guilds)) {
-            if (!toDeactivateGuilds.remove(guild)) {
-                toActivateGuilds.add(guild);
-            }
+        Stream.of(guilds).forEach(toDeactivateGuilds::remove);
+        try (Transaction transaction = DB.beginTransaction()) {
+            toDeactivateGuilds.forEach(guild -> setActive(guild, transaction));
+            transaction.commit();
         }
-        toDeactivateGuilds.forEach(guild -> setActive(guild, false));
-        toActivateGuilds.forEach(guild -> setActive(guild, true));
     }
 
-    private static void setActive(String guild, boolean isActive) {
+    private static void setActive(String guild, Transaction transaction) {
         QDGuild a = QDGuild.alias();
-        new QDGuild().where().name.eq(guild)
-            .asUpdate().set(a.isActive, isActive).update();
+        new QDGuild().usingTransaction(transaction)
+            .where()
+            .name.eq(guild)
+            .isActive.isTrue()
+            .asUpdate().set(a.isActive, false).update();
     }
 
     public static DGuild findById(UUID guildId) {

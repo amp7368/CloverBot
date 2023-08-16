@@ -41,7 +41,7 @@ public class GuildService extends DaemonService<WynncraftGuildListResponse> {
 
     @Override
     protected void acceptResponse(WynncraftGuildListResponse response) {
-        if (response == null || response.hasGuilds()) return;
+        if (response == null || !response.hasGuilds()) return;
         throttle.incrementSuccess();
         GuildStorage.setActiveGuilds(response.getGuilds());
     }

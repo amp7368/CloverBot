@@ -14,7 +14,6 @@ public class DBUnique {
     public static void checkUniqueness(Transaction transaction, Object... beans) {
         Map<Object, Set<Property>> invalidProperties = new HashMap<>();
         for (Object bean : beans) {
-            System.out.println(bean.getClass());
             Set<Property> unique = DB.checkUniqueness(bean, transaction);
             if (!unique.isEmpty())
                 invalidProperties.put(bean, unique);
