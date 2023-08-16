@@ -1,12 +1,13 @@
 package apple.discord.clover.wynncraft.stats.guild;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.Date;
+import java.util.UUID;
 
 public class WynnGuildMember {
+
+    public UUID uuid;
     public String name;
-    public String uuid;
     public String rank;
     @SerializedName(value = "contributed")
     public long xpContributed;

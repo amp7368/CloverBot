@@ -1,5 +1,6 @@
 package apple.discord.clover.wynncraft;
 
+import apple.discord.clover.database.player.guild.GuildStorage;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
@@ -7,7 +8,10 @@ import apple.utilities.request.AppleJsonFromURL;
 import apple.utilities.threading.service.priority.AsyncTaskPriority;
 import apple.utilities.threading.service.priority.TaskHandlerPriority;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
+import com.google.common.util.concurrent.Futures;
 import discord.util.dcf.util.TimeMillis;
+import java.util.UUID;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,26 +57,25 @@ public class WynncraftRatelimit {
     }
 
 
-    // todo
     public static void queueGuild(TaskPriorityCommon priority, String guild, Consumer<WynnGuild> runAfter) {
         AppleJsonFromURL<WynnGuild> task = new AppleJsonFromURL<>(String.format(WynncraftApi.GUILD_STATS, guild), WynnGuild.class,
             WynncraftModule.gson());
-        getGuild().taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess(runAfter);
+        getGuild().taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess((g) -> {
+            if (g != null)
+                Futures.submit(() -> GuildStorage.save(g), ForkJoinPool.commonPool());
+            runAfter.accept(g);
+        });
     }
 
-    // todo
-    public static void queuePlayer(TaskPriorityCommon priority, String guildMember, Consumer<@Nullable WynnPlayer> runAfter) {
+    public static void queuePlayer(TaskPriorityCommon priority, UUID guildMember, Consumer<@Nullable WynnPlayer> runAfter) {
         String link = String.format(WynncraftApi.PLAYER_STATS, guildMember);
-        AppleJsonFromURL<WynnPlayerResponse> task = new AppleJsonFromURL<>(link, WynnPlayerResponse.class, WynncraftModule.gson());
         Consumer<WynnPlayerResponse> consumeResponse = (res) -> {
-            if (res == null) {
-                runAfter.accept(null);
-                return;
-            }
-            WynnPlayer player = res.getPlayer();
-            WynnDatabase.get().addMember(player);
+            WynnPlayer player = res == null ? null : res.getPlayer();
             runAfter.accept(player);
         };
-        guild.taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess(consumeResponse);
+        getPlayer()
+            .taskCreator(new AsyncTaskPriority(priority))
+            .accept(new AppleJsonFromURL<>(link, WynnPlayerResponse.class, WynncraftModule.gson()))
+            .onSuccess(consumeResponse);
     }
 }

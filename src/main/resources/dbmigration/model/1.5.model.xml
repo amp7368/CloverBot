@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="guild">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="is_active" type="boolean" defaultValue="true" notnull="true"/>
+        </addColumn>
+        <addColumn tableName="play_session">
+            <column name="guild_id" type="uuid" references="guild.id" foreignKeyName="fk_play_session_guild_id" foreignKeyIndex="ix_play_session_guild_id"/>
+        </addColumn>
+        <addUniqueConstraint constraintName="uq_auth_role_permission_bridge_role_permission" tableName="auth_role_permission_bridge" columnNames="role,permission" oneToOne="false" nullableColumns=""/>
+    </changeSet>
+    <changeSet type="pendingDrops">
+        <dropColumn columnName="guild_name" tableName="play_session"/>
+    </changeSet>
+</migration>

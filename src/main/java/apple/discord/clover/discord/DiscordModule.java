@@ -1,10 +1,14 @@
 package apple.discord.clover.discord;
 
-import apple.discord.clover.discord.command.activity.CommandInactivity;
+import apple.discord.clover.discord.autocomplete.CloverAutoCompleteListener;
+import apple.discord.clover.discord.command.activity.CommandActivity;
+import apple.discord.clover.discord.command.bug.CommandBug;
 import apple.discord.clover.discord.command.help.CommandHelp;
+import apple.discord.clover.discord.command.player.CommandPlayerActivity;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import discord.util.dcf.DCF;
+import discord.util.dcf.DCFCommandManager;
 import java.util.List;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -14,18 +18,39 @@ public class DiscordModule extends AppleModule {
 
 
     public static DCF dcf;
-    public static String INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=616398849803681889&permissions=18496&scope"
-        + "=applications.commands%20bot";
+    public static String INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=616398849803681889&permissions=18496"
+        + "&scope=applications.commands%20bot";
+    private static DiscordModule instance;
+
+    public DiscordModule() {
+        instance = this;
+    }
+
+    public static DiscordModule get() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
-        JDABuilder builder = JDABuilder.createLight(DiscordConfig.get().getToken());
-        JDA client = builder.build();
-        client.getPresence().setPresence(Activity.playing("Slash commands!"), false);
+        JDA client = JDABuilder.createLight(DiscordConfig.get().getToken()).build();
+        client.getPresence().setPresence(Activity.playing("/help - new commands!"), false);
         dcf = new DCF(client);
-        dcf.commands().addCommand(new CommandInactivity());
-        dcf.commands().addCommand(new CommandHelp());
-        dcf.commands().updateCommands();
+
+        DCFCommandManager commands = dcf.commands();
+        commands.addCommand(new CommandActivity());
+        commands.addCommand(new CommandPlayerActivity());
+        commands.addCommand(new CommandHelp());
+        commands.addCommand(new CommandBug());
+        commands.updateCommands();
+
+        client.addEventListener(new CloverAutoCompleteListener());
+
+        try {
+            client.awaitReady();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        DiscordConfig.get().load();
     }
 
     @Override

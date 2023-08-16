@@ -1,10 +1,13 @@
 package apple.discord.clover.database.player;
 
 import apple.discord.clover.api.base.BaseEntity;
+import apple.discord.clover.database.activity.DPlaySession;
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +20,9 @@ public class DPlayer extends BaseEntity {
 
     @Column
     public String username;
+
+    @OneToMany
+    private List<DPlaySession> sessions;
 
     public DPlayer(UUID player, String username) {
         this.uuid = player;

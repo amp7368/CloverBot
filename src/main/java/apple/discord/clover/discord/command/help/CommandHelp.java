@@ -15,24 +15,27 @@ public class CommandHelp extends DCFSlashCommand {
 
     private static MessageEmbed createHomePage() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Overview");
-        embed.setDescription("CloverBot is a guild activity monitoring bot.");
-        embed.addField("/activity basic [guild_name]", "Create a simple report of when player's last logged in", false);
-        embed.addField("/activity history [guild_name]", "Create a simple report of when player's last logged in", false);
-        embed.addField("/pactivity history [guild_name]", "Create a simple report of when player's last logged in", false);
-        embed.addField("/bug", "Opens a modal to report a bug", false);
-        embed.addField("/suggest", "Opens a modal to add a suggest or comment", false);
+        embed.setDescription("""
+            # Overview
+            ### CloverBot is a activity reporting bot for Wynncraft.
+            """);
+        embed.addField("/activity last_join [guild]", "Create a report of when players in the guild last logged in", false);
+        embed.addField("/activity history [guild]", "Create a report of playtime of players in the guild", false);
+        embed.addField("/pactivity guild [player]", "Create a report of one player's guild history", false);
+        embed.addField("/pactivity history [player]", "Create a report of one player's playtime", false);
+        embed.addField("/bug [description] (attachment)", "Opens a modal to report a bug", false);
         return embed.build();
     }
 
     private static MessageEmbed createContactPage() {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Contact");
         embed.setDescription("""
-            Developer contact: appleptr16#5054
-            Discord server: https://discord.gg/ED8GRyHmpB
-            Send any suggestions directly to appleptr16#5054 or using the /suggest command
-            Report any bugs using the /bug command
+            # Contact
+            Developer's Discord: `appleptr16`
+            Support Discord Server: https://discord.gg/ED8GRyHmpB
+                        
+            Direct any questions or suggestions to `appleptr16`
+            Report bugs using the */bug* command
             """);
         return embed.build();
     }

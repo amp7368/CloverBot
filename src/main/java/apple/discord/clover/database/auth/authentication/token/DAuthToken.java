@@ -46,7 +46,7 @@ public class DAuthToken extends BaseEntity implements IsAuthentication {
     }
 
     public boolean isExpired() {
-        return lastUsed.toInstant().plus(TIME_TO_EXPIRE).isBefore(Instant.now());
+        return getExpiration().isBefore(Instant.now());
     }
 
     @Override
@@ -56,5 +56,9 @@ public class DAuthToken extends BaseEntity implements IsAuthentication {
 
     public String getUrlToken() {
         return encodeUrlToken(this.token);
+    }
+
+    public Instant getExpiration() {
+        return this.lastUsed.toInstant().plus(TIME_TO_EXPIRE);
     }
 }

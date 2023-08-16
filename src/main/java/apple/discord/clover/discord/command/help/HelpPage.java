@@ -5,8 +5,8 @@ import discord.util.dcf.gui.base.gui.DCFGui;
 import discord.util.dcf.gui.base.page.DCFGuiPage;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 public class HelpPage extends DCFGuiPage<DCFGui> {
@@ -20,13 +20,12 @@ public class HelpPage extends DCFGuiPage<DCFGui> {
 
     @Override
     public MessageCreateData makeMessage() {
-        MessageCreateBuilder builder = new MessageCreateBuilder();
         EmbedBuilder embed = new EmbedBuilder(pageData);
-        embed.setAuthor("(Page %d)".formatted(getPageNum() + 1));
-        embed.setAuthor("", DiscordModule.INVITE_LINK, DiscordModule.dcf.jda().getSelfUser().getEffectiveAvatarUrl());
+        embed.setTitle("(Page %d)".formatted(getPageNum() + 1));
+        embed.setThumbnail(DiscordModule.dcf.jda().getSelfUser().getEffectiveAvatarUrl());
 
-        builder.setEmbeds(embed.build());
-        builder.setActionRow(btnFirst(), btnLast(), btnNext(), Button.link(DiscordModule.INVITE_LINK, "Invite"));
-        return builder.build();
+        Button btnInvite = Button.link(DiscordModule.INVITE_LINK, "Invite");
+        ActionRow navRow = ActionRow.of(btnPrev(), btnNext(), btnInvite);
+        return buildCreate(embed.build(), navRow);
     }
 }

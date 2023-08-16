@@ -22,7 +22,7 @@ public class PlayerNameOrUUID {
         return username;
     }
 
-    public void checkNotNull() {
+    public void checkNotNull() throws NotFoundResponse {
         boolean uuidIsNull = this.uuid == null;
         boolean isNull = this.username == null || uuidIsNull;
         if (isNull) {

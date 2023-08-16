@@ -1,7 +1,10 @@
 package apple.discord.clover.database.player.guild;
 
 import apple.discord.clover.api.base.BaseEntity;
+import io.ebean.annotation.DbDefault;
+import io.ebean.config.dbplatform.DbDefaultValue;
 import java.sql.Timestamp;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,11 +15,17 @@ import javax.persistence.Table;
 public class DGuild extends BaseEntity {
 
     @Id
+    private UUID id;
+    @Column
     private String name;
     @Column
     private String tag;
     @Column
     private Timestamp created;
+
+    @Column
+    @DbDefault(value = DbDefaultValue.TRUE)
+    private boolean isActive = true;
 
     public DGuild(String name) {
         this.name = name;
@@ -40,6 +49,15 @@ public class DGuild extends BaseEntity {
 
     public DGuild setCreated(Timestamp created) {
         this.created = created;
+        return this;
+    }
+
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    public DGuild setInactive() {
+        this.isActive = false;
         return this;
     }
 }
