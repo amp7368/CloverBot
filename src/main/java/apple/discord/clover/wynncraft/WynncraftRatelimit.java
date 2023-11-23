@@ -58,7 +58,8 @@ public class WynncraftRatelimit {
 
 
     public static void queueGuild(TaskPriorityCommon priority, String guild, Consumer<WynnGuild> runAfter) {
-        AppleJsonFromURL<WynnGuild> task = new AppleJsonFromURL<>(String.format(WynncraftApi.GUILD_STATS, guild), WynnGuild.class,
+        String link = WynncraftApi.guild(guild);
+        AppleJsonFromURL<WynnGuild> task = new AppleJsonFromURL<>(link, WynnGuild.class,
             WynncraftModule.gson());
         getGuild().taskCreator(new AsyncTaskPriority(priority)).accept(task).onSuccess((g) -> {
             if (g != null)
@@ -68,7 +69,7 @@ public class WynncraftRatelimit {
     }
 
     public static void queuePlayer(TaskPriorityCommon priority, UUID guildMember, Consumer<@Nullable WynnPlayer> runAfter) {
-        String link = String.format(WynncraftApi.PLAYER_STATS, guildMember);
+        String link = WynncraftApi.playerStats(guildMember);
         Consumer<WynnPlayerResponse> consumeResponse = (res) -> {
             WynnPlayer player = res == null ? null : res.getPlayer();
             runAfter.accept(player);

@@ -14,7 +14,8 @@ import okhttp3.Response;
 
 public class GuildService extends DaemonService<WynncraftGuildListResponse> {
 
-    private static final Builder GUILD_LIST_REQUEST = new Builder().get().url(WynncraftApi.GUILD_LIST)
+    private static final Builder GUILD_LIST_REQUEST = new Builder().get()
+        .url(WynncraftApi.GUILD_LIST)
         .cacheControl(CacheControl.FORCE_NETWORK);
 
 

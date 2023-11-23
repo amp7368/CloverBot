@@ -87,9 +87,9 @@ public class PlayerGuildMessage extends DCFScrollGui<PlayerGuildGui, PlayerGuild
     @Override
     public MessageCreateData makeMessage() {
         List<DCFEntry<PlayerGuildDuration>> currentPageEntries = getCurrentPageEntries();
-        if (currentPageEntries.isEmpty()) {
+        if (currentPageEntries.isEmpty())
             return noChangesMessage();
-        }
+
         String desc = currentPageEntries.stream()
             .map(DCFEntry::entry)
             .map(PlayerGuildDuration::guildMsg)

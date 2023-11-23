@@ -14,4 +14,14 @@ public class WynnGuild {
     public WynnGuildHeader toHeader() {
         return new WynnGuildHeader(name, prefix);
     }
+
+    @Override
+    public String toString() {
+        return "WynnGuild{" +
+            "name='" + name + '\'' +
+            ", prefix='" + prefix + '\'' +
+            ", level=" + level +
+            ", created=" + created +
+            '}';
+    }
 }

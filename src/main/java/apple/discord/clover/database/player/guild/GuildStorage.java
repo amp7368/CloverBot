@@ -1,5 +1,6 @@
 package apple.discord.clover.database.player.guild;
 
+import apple.discord.clover.database.CloverDatabase;
 import apple.discord.clover.database.player.guild.query.QDGuild;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.service.guild.GuildService;
@@ -13,22 +14,31 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.apache.commons.text.similarity.LevenshteinDetailedDistance;
 
 public class GuildStorage {
 
+    private static final String SAVE_GUILD_UNIQUE_NAME = """
+        INSERT INTO guild(created, name, tag, id, is_active)
+        SELECT NULL, :guild_name, NULL, gen_random_uuid(), TRUE
+        WHERE NOT EXISTS(SELECT * FROM guild WHERE name = :guild_name AND is_active IS TRUE);
+        """;
+
     public synchronized static DGuild findOrCreate(String name) {
-        DGuild guild = new QDGuild().where()
+        List<DGuild> guilds = new QDGuild().where()
             .name.eq(name)
             .isActive.isTrue()
-            .findOne();
-        if (guild != null)
-            return guild;
-        guild = new DGuild(name);
-        guild.save();
-        GuildService.queueGuild(name);
-        return guild;
+            .findList();
+        if (guilds.isEmpty()) {
+            GuildService.queueGuild(name);
+            return null;
+        }
+        if (guilds.size() > 1) {
+            CloverDatabase.get().logger().error("DGuild {} has multiple active guild entries", name);
+        }
+        return guilds.get(0);
     }
 
     public static List<String> findUnloaded() {
@@ -99,20 +109,29 @@ public class GuildStorage {
         return guild;
     }
 
-    public static void setActiveGuilds(String[] guilds) {
+    public synchronized static void setActiveGuilds(String[] guilds) {
         QDGuild a = QDGuild.alias();
         Set<String> toDeactivateGuilds = new HashSet<>(new QDGuild()
             .select(a.name)
             .where().isActive.isTrue()
             .findSingleAttributeList());
-        Stream.of(guilds).forEach(toDeactivateGuilds::remove);
+
         try (Transaction transaction = DB.beginTransaction()) {
-            toDeactivateGuilds.forEach(guild -> setActive(guild, transaction));
+            List<String> toActivate = Stream.of(guilds)
+                .filter(Predicate.not(toDeactivateGuilds::remove))
+                .toList();
+            toDeactivateGuilds.forEach(guild -> setInactive(guild, transaction));
             transaction.commit();
+            toActivate.forEach(GuildStorage::saveGuild);
         }
     }
 
-    private static void setActive(String guild, Transaction transaction) {
+    private static void saveGuild(String name) {
+        DB.sqlUpdate(SAVE_GUILD_UNIQUE_NAME).setParameter("guild_name", name).executeNow();
+        GuildService.queueGuild(name);
+    }
+
+    private static void setInactive(String guild, Transaction transaction) {
         QDGuild a = QDGuild.alias();
         new QDGuild().usingTransaction(transaction)
             .where()

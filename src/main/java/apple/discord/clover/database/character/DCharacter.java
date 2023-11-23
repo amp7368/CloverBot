@@ -6,6 +6,7 @@ import apple.discord.clover.database.activity.run.DDungeonRun;
 import apple.discord.clover.database.activity.run.DLevelupRun;
 import apple.discord.clover.database.activity.run.DRaidRun;
 import apple.discord.clover.database.activity.run.DSessionRunBase;
+import apple.discord.clover.database.player.LastSessionInvalidException;
 import apple.discord.clover.database.primitive.IncrementalBigInt;
 import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
@@ -86,7 +87,7 @@ public class DCharacter extends BaseEntity {
         return null;
     }
 
-    public void addRuns(WynnPlayerCharacter character, DPlaySession lastSession) {
+    public void addRuns(WynnPlayerCharacter character, DPlaySession lastSession) throws LastSessionInvalidException {
         DCharacter lastCharacter = lastSession == null ? null : lastSession.getCharacter(this.characterId);
         this.levelRuns = new ArrayList<>();
         for (Entry<String, ProfessionLevel> prof : character.professions.entrySet()) {
@@ -115,4 +116,19 @@ public class DCharacter extends BaseEntity {
     }
 
 
+    public DPlaySession getSession() {
+        return this.session;
+    }
+
+    public List<DLevelupRun> getLevelRuns() {
+        return levelRuns == null ? List.of() : levelRuns;
+    }
+
+    public List<DDungeonRun> getDungeonRuns() {
+        return dungeonRuns == null ? List.of() : dungeonRuns;
+    }
+
+    public List<DRaidRun> getRaidRuns() {
+        return raidRuns == null ? List.of() : raidRuns;
+    }
 }

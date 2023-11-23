@@ -26,7 +26,7 @@
   "termsAfter": {
     "type": "number",
     "restrictions": [
-      "Less than or equal to 150"
+      "Less than or equal to 1095"
     ],
     "description": "The number of {timeResolution}'s to check after {start}",
     "example": 150

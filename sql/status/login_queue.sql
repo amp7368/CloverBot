@@ -27,5 +27,36 @@ ORDER BY CASE
 ;
 SELECT *
 FROM play_session ps
-WHERE (ps.player_uuid = 'fee05d22-06b2-4479-9ca5-6fd4db985227')
+WHERE (ps.player_uuid = 'fee05d22-06b2-4479-9ca5-6fd4db985227');
 
+SELECT id, COUNT(*)
+FROM login_queue
+GROUP BY id
+HAVING COUNT(*) > 1;
+
+SELECT *
+FROM login_queue;
+
+SELECT *
+FROM play_session ps
+         LEFT JOIN player_character pc ON ps.id = pc.session_id
+WHERE ps.player_uuid = '42644be8-5c39-4566-8e74-0874bdcb5eb0'
+  AND NOT EXISTS((
+                 SELECT name
+                 FROM levelup_run
+                 WHERE pc.sku = character_sku))
+ORDER BY retrieved_time DESC;
+
+
+SELECT *
+FROM play_session ps
+         LEFT JOIN player_character pc ON ps.id = pc.session_id
+         LEFT JOIN levelup_run l ON pc.sku = l.character_sku
+WHERE ps.player_uuid = '42644be8-5c39-4566-8e74-0874bdcb5eb0'
+ORDER BY retrieved_time DESC;
+
+
+
+SELECT *
+FROM player
+WHERE username = 'Shadow_loll'

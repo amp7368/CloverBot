@@ -100,4 +100,8 @@ public class DPlaySession extends BaseEntity {
         if (this.characters == null) this.characters = new ArrayList<>();
         this.characters.add(character);
     }
+
+    public List<DCharacter> getCharacters() {
+        return this.characters;
+    }
 }

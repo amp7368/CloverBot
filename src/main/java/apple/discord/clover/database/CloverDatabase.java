@@ -43,7 +43,16 @@ import org.jetbrains.annotations.NotNull;
 public class CloverDatabase extends AppleModule {
 
     public static DatabasePlatform DATABASE_PLATFORM;
+    private static CloverDatabase instance;
     private File databaseConfigFile;
+
+    public CloverDatabase() {
+        instance = this;
+    }
+
+    public static CloverDatabase get() {
+        return instance;
+    }
 
     private static List<Class<?>> getEntities() {
         List<Class<?>> entities = new ArrayList<>();

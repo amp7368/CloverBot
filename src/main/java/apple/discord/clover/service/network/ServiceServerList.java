@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 public class ServiceServerList extends DaemonService<ServerListResponse> {
 
     public static final long SERVER_LIST_OFFLINE_INTERVAL = TimeMillis.minToMillis(5);
-    private static final Builder SERVER_LIST_REQUEST = new Builder().get().url(WynncraftApi.SERVER_LIST)
+    private static final Builder SERVER_LIST_REQUEST = new Builder().get()
+        .url(WynncraftApi.SERVER_LIST)
         .cacheControl(CacheControl.FORCE_NETWORK);
 
     public ServiceServerList() {

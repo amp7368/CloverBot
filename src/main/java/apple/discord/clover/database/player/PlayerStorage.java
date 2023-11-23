@@ -42,15 +42,24 @@ public class PlayerStorage {
             try {
                 session.insert(transaction);
             } catch (DuplicateKeyException e) {
+                transaction.rollback();
                 return false;
             }
-
             for (Entry<UUID, WynnPlayerCharacter> dataChar : currentValue.characters.entrySet()) {
                 DCharacter lastChar = lastSession == null ? null : lastSession.getCharacter(dataChar.getKey());
                 DCharacter character = new DCharacter(dataChar.getKey(), session, dataChar.getValue(), lastChar);
-                character.insert();
-
-                character.addRuns(dataChar.getValue(), lastSession);
+                character.insert(transaction);
+                try {
+                    character.addRuns(dataChar.getValue(), lastSession);
+                } catch (LastSessionInvalidException e) {
+                    transaction.rollback();
+                    if (lastChar == null) {
+                        throw new RuntimeException("lastChar is null!!", e);
+                    } else {
+                        fixCorruptionDeleteSession(lastChar.getSession());
+                    }
+                    return false;
+                }
                 for (DRaidRun raid : character.raidRuns) {
                     raid.insert(transaction);
                 }
@@ -64,6 +73,21 @@ public class PlayerStorage {
             transaction.commit();
         }
         return true;
+    }
+
+    private static void fixCorruptionDeleteSession(DPlaySession session) {
+        CloverDatabase.get().logger().info("Fixing corruption of session= {}", session.id);
+        try (Transaction transaction = DB.beginTransaction()) {
+            session.getCharacters().forEach(character -> {
+                character.getDungeonRuns().forEach(d -> d.delete(transaction));
+                character.getLevelRuns().forEach(d -> d.delete(transaction));
+                character.getRaidRuns().forEach(d -> d.delete(transaction));
+                character.delete(transaction);
+            });
+            session.delete(transaction);
+            transaction.commit();
+        }
+
     }
 
     @Nullable

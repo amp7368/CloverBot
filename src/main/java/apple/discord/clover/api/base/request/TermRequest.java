@@ -33,7 +33,7 @@ public class TermRequest {
         return validator.constraintOnObject(TermRequest::getTimeResolution, "timeResolution",
                 c -> c.notNull().message(TimeResolution.errorMessage()))
             .constraint(TermRequest::getStart, "start", c -> c.notNull().predicate(InstantBeforeNowConstraint.INSTANCE))
-            .constraint(TermRequest::getTermsAfter, "termsAfter", c -> c.notNull().lessThanOrEqual(150).greaterThan(0));
+            .constraint(TermRequest::getTermsAfter, "termsAfter", c -> c.notNull().lessThanOrEqual(1095).greaterThan(0));
     }
 
     public synchronized Instant start() {
