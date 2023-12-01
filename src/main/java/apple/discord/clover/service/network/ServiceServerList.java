@@ -2,17 +2,12 @@ package apple.discord.clover.service.network;
 
 import apple.discord.clover.database.activity.partial.LoginStorage;
 import apple.discord.clover.service.base.DaemonService;
+import apple.discord.clover.wynncraft.WynnResponse;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.network.ServerListResponse;
-import apple.discord.clover.wynncraft.network.ServerListResponseTimestamp;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import discord.util.dcf.util.TimeMillis;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import okhttp3.CacheControl;
 import okhttp3.Request.Builder;
 import okhttp3.Response;
@@ -37,36 +32,26 @@ public class ServiceServerList extends DaemonService<ServerListResponse> {
     }
 
     @Override
+    protected String name() {
+        return "ServerListService";
+    }
+
+    @Override
     protected void updateLastQuery() {
         ServiceServerListConfig.get().updateLastQuery();
     }
 
     @Override
-    protected void acceptResponse(ServerListResponse response) {
-        if (response == null) return;
-        throttle.incrementSuccess();
-        Instant requestedAt = Instant.ofEpochSecond(response.request.timestamp);
-        new Thread(() -> LoginStorage.queuePlayers(response.players, requestedAt)).start();
+    protected boolean acceptResponse(WynnResponse<ServerListResponse> response) {
+        if (response.data() == null || response.data().getPlayers() == null) return false;
+        ForkJoinPool.commonPool().execute(
+            () -> LoginStorage.queuePlayers(response.data().getPlayers(), response.retrieved()));
+        return true;
     }
 
     @NotNull
     protected ServerListResponse deserialize(Response response) {
-        JsonObject json = WynncraftModule.gson().fromJson(response.body().charStream(), JsonObject.class);
-        List<String> players = new ArrayList<>();
-        ServerListResponseTimestamp responseMeta = null;
-        for (String worldName : json.keySet()) {
-            JsonElement jsonValue = json.get(worldName);
-            if (worldName.equals("request")) {
-                responseMeta = WynncraftModule.gson().fromJson(jsonValue,
-                    ServerListResponseTimestamp.class);
-                continue;
-            }
-            JsonArray array = jsonValue.getAsJsonArray();
-            for (JsonElement player : array) {
-                players.add(player.getAsString());
-            }
-        }
-        return new ServerListResponse(players, responseMeta);
+        return WynncraftModule.gson().fromJson(response.body().charStream(), ServerListResponse.class);
     }
 
     @Override

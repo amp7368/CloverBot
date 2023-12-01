@@ -4,8 +4,7 @@ import apple.discord.clover.database.activity.blacklist.BlacklistStorage;
 import apple.discord.clover.database.activity.blacklist.DBlacklist;
 import apple.discord.clover.database.activity.blacklist.query.QDBlacklist;
 import apple.discord.clover.database.activity.partial.query.QDLoginQueue;
-import apple.discord.clover.service.network.ServiceServerList;
-import discord.util.dcf.util.TimeMillis;
+import apple.discord.clover.service.ServiceModule;
 import io.ebean.DB;
 import io.ebean.Model;
 import io.ebean.Transaction;
@@ -23,8 +22,7 @@ public class LoginStorage {
 
     public static final int FIND_UPDATES_ROW_LIMIT = 100;
     private static final TemporalAmount ONLINE_TOO_LONG = Duration.ofHours(6);
-    private static final int MIN_OFFLINE_COUNT_REQUIRED =
-        (int) (TimeMillis.minToMillis(30) / ServiceServerList.SERVER_LIST_OFFLINE_INTERVAL);
+    private static final int MIN_OFFLINE_COUNT_REQUIRED = 1;
 
     public static void queuePlayers(List<String> players, Instant requestedAt) {
         QDLoginQueue alias = QDLoginQueue.alias();
@@ -57,6 +55,7 @@ public class LoginStorage {
             .setMaxRows(FIND_UPDATES_ROW_LIMIT).findList();
         if (updates.size() == FIND_UPDATES_ROW_LIMIT) return updates;
         updates.addAll(queryNextUpdates()
+            .offline.ge(MIN_OFFLINE_COUNT_REQUIRED)
             .orderBy().offline.desc()
             .setMaxRows(FIND_UPDATES_ROW_LIMIT - updates.size())
             .findList());
@@ -80,14 +79,12 @@ public class LoginStorage {
         Timestamp lastAllowedFailure = Timestamp.from(BlacklistStorage.getLastAllowedFailure());
         return new QDLoginQueue()
             .where()
-            .and()
-            .offline.ge(MIN_OFFLINE_COUNT_REQUIRED)
             .or()
             .blacklist.isNull()
             .and()
             .blacklist.isNotNull()
             .blacklist.lastFailure.before(lastAllowedFailure)
-            .endAnd().endOr().endAnd();
+            .endAnd().endOr();
     }
 
     public static void success(DLoginQueue login) {
@@ -96,6 +93,7 @@ public class LoginStorage {
     }
 
     public static void failure(DLoginQueue login) {
+        ServiceModule.get().logger().info("Incrementing blacklist on %s".formatted(login.player));
         BlacklistStorage.failure(login);
     }
 }

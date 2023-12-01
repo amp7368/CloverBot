@@ -10,7 +10,6 @@ import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import io.ebean.annotation.Index;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -71,18 +70,20 @@ public class DPlaySession extends BaseEntity {
     public DPlaySession(DPlayer playerInDB, DPlaySession lastSession, DLoginQueue login, WynnPlayer currentValue) {
         this.player = playerInDB;
         this.joinTime = login.joinTime;
-        this.retrievedTime = Timestamp.from(Instant.ofEpochMilli(currentValue.timeRetrieved));
+        this.retrievedTime = Timestamp.from(currentValue.retrieved());
         this.guild = currentValue.dGuild();
 
-        long playtime = currentValue.meta.playtime;
+        long playtime = currentValue.playtime;
         this.playtime = IncrementalBigInt.create(lastSession, s -> s.playtime, playtime);
-        long itemsIdentified = currentValue.global.itemsIdentified;
+
+        long itemsIdentified = currentValue.globalData.itemsIdentified();
         this.itemsIdentified = IncrementalBigInt.create(lastSession, s -> s.itemsIdentified, itemsIdentified);
-        long mobsKilled = currentValue.global.mobsKilled;
+        long mobsKilled = currentValue.globalData.killedMobs;
         this.mobsKilled = IncrementalBigInt.create(lastSession, s -> s.mobsKilled, mobsKilled);
-        int combatLevel = currentValue.global.totalLevel.combat;
+
+        int combatLevel = currentValue.totalCombatLevel();
         this.combatLevel = IncrementalInt.create(lastSession, l -> l.combatLevel, combatLevel);
-        int profLevel = currentValue.global.totalLevel.profession;
+        int profLevel = currentValue.totalProfLevel();
         this.profLevel = IncrementalInt.create(lastSession, l -> l.profLevel, profLevel);
 
     }

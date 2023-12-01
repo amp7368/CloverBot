@@ -4,12 +4,12 @@ import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.activity.partial.LoginStorage;
 import apple.discord.clover.database.player.PlayerStorage;
 import apple.discord.clover.service.ServiceModule;
+import apple.discord.clover.wynncraft.WynnHeaders;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
-import apple.discord.clover.wynncraft.stats.player.WynnPlayerResponse;
 import apple.utilities.util.NumberUtils;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
@@ -25,12 +25,13 @@ import okhttp3.Request.Builder;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public class ServicePlayerStats {
 
-    private static final int REQUESTS = 750;
-    private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(30) / REQUESTS;
-    private static final Duration CALL_TIMEOUT = Duration.ofSeconds(5);
+    private static final int REQUESTS = 250;
+    private static final long REPEAT_INTERVAL = TimeMillis.minToMillis(5) / REQUESTS;
+    private static final Duration CALL_TIMEOUT = Duration.ofSeconds(30);
     private static ServicePlayerStats instance;
     private final OkHttpClient http = new OkHttpClient.Builder().callTimeout(CALL_TIMEOUT).build();
     private final RepeatThrottle throttle = new RepeatThrottle(5000);
@@ -109,24 +110,40 @@ public class ServicePlayerStats {
         logger().info("Players left in cached queue: {}", nextPlayers.size());
         DLoginQueue nextPlayer = this.nextPlayers.remove(0);
         logger().info("Downloading " + nextPlayer.player);
-        Call call = http.newCall(new Builder().url(WynncraftApi.playerStats(nextPlayer.player))
-            .cacheControl(CacheControl.FORCE_NETWORK).get().build());
+        Call call = http.newCall(request(nextPlayer.player).build());
         try (Response httpResponse = call.execute()) {
             if (!httpResponse.isSuccessful()) {
-                throttle.incrementError();
                 int code = httpResponse.code();
+                if (code == 500) {
+                    // https://api.wynncraft.com/v3/player/FakeUsername
+                    // When they fix this error response, remove this code
+                    LoginStorage.failure(nextPlayer);
+                    return null;
+                }
+                throttle.incrementError();
                 if (code == Status.TOO_MANY_REQUESTS) {
                     throw new HttpException("Rate limit reached: %d error(s) in a row".formatted(throttle.getErrorCount()));
                 } else if (NumberUtils.between(400, code, 500)) {
                     LoginStorage.failure(nextPlayer);
+                    return null;
                 }
+                // unexpected errors
+
                 ResponseBody body = httpResponse.body();
+                System.err.println(call.request());
                 throw new HttpException("Response code: %d, Body: %s".formatted(code, body.string()));
             }
             ResponseBody body = httpResponse.body();
-            WynnPlayerResponse response = WynncraftModule.gson().fromJson(body.charStream(), WynnPlayerResponse.class);
+            WynnPlayer response = WynncraftModule.gson().fromJson(body.charStream(), WynnPlayer.class);
+            response.setRetrieved(WynnHeaders.date(httpResponse));
             return new PlaySessionRaw(nextPlayer, response);
         }
+    }
+
+    @NotNull
+    private Builder request(String nextPlayer) {
+        return new Builder().url(WynncraftApi.playerStats(nextPlayer))
+            .cacheControl(CacheControl.FORCE_NETWORK).get();
     }
 
 }
