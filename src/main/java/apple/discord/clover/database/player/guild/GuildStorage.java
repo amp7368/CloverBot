@@ -3,9 +3,11 @@ package apple.discord.clover.database.player.guild;
 import apple.discord.clover.database.CloverDatabase;
 import apple.discord.clover.database.player.guild.query.QDGuild;
 import apple.discord.clover.service.ServiceModule;
-import apple.discord.clover.service.guild.GuildService;
+import apple.discord.clover.service.guild.GuildListService;
+import apple.discord.clover.wynncraft.overview.guild.WynncraftGuildListEntry;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import io.ebean.DB;
+import io.ebean.SqlUpdate;
 import io.ebean.Transaction;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class GuildStorage {
 
     private static final String SAVE_GUILD_UNIQUE_NAME = """
         INSERT INTO guild(created, name, tag, id, is_active)
-        SELECT NULL, :guild_name, NULL, gen_random_uuid(), TRUE
+        SELECT NULL, :guild_name, :guild_tag, gen_random_uuid(), TRUE
         WHERE NOT EXISTS(SELECT * FROM guild WHERE name = :guild_name AND is_active IS TRUE);
         """;
 
@@ -32,7 +34,7 @@ public class GuildStorage {
             .isActive.isTrue()
             .findList();
         if (guilds.isEmpty()) {
-            GuildService.queueGuild(name);
+            GuildListService.queueGuild(name);
             return null;
         }
         if (guilds.size() > 1) {
@@ -109,33 +111,49 @@ public class GuildStorage {
         return guild;
     }
 
-    public synchronized static void setActiveGuilds(String[] guilds) {
+    public synchronized static void setActiveGuilds(WynncraftGuildListEntry[] currentlyActive) {
         QDGuild a = QDGuild.alias();
-        Set<String> toDeactivateGuilds = new HashSet<>(new QDGuild()
-            .select(a.name)
+        Set<WynncraftGuildListEntry> toDeactivateGuilds = new HashSet<>(new QDGuild()
+            .select(a.name, a.tag)
             .where().isActive.isTrue()
-            .findSingleAttributeList());
+            .findStream()
+            .map(WynncraftGuildListEntry::new)
+            .toList());
 
         try (Transaction transaction = DB.beginTransaction()) {
-            List<String> toActivate = Stream.of(guilds)
+            transaction.setBatchMode(true);
+            transaction.setBatchSize(toDeactivateGuilds.size() * 2);
+
+            List<WynncraftGuildListEntry> toActivate = Stream.of(currentlyActive)
                 .filter(Predicate.not(toDeactivateGuilds::remove))
                 .toList();
-            toDeactivateGuilds.forEach(guild -> setInactive(guild, transaction));
+            toDeactivateGuilds.forEach(guild -> setInactive(guild.getName(), transaction));
+
+            if (!toActivate.isEmpty()) {
+                SqlUpdate saveGuildUpdate = DB.sqlUpdate(SAVE_GUILD_UNIQUE_NAME);
+                for (WynncraftGuildListEntry wynncraftGuildListEntry : toActivate) {
+                    saveGuild(saveGuildUpdate, wynncraftGuildListEntry);
+                }
+
+                saveGuildUpdate.executeBatch();
+            }
             transaction.commit();
-            toActivate.forEach(GuildStorage::saveGuild);
         }
     }
 
-    private static void saveGuild(String name) {
-        DB.sqlUpdate(SAVE_GUILD_UNIQUE_NAME).setParameter("guild_name", name).executeNow();
-        GuildService.queueGuild(name);
+    private static void saveGuild(SqlUpdate saveGuildUpdate, WynncraftGuildListEntry guild) {
+        saveGuildUpdate
+            .setParameter("guild_name", guild.getName())
+            .setParameter("guild_tag", guild.getTag())
+            .addBatch();
+        GuildListService.queueGuild(guild.getName());
     }
 
-    private static void setInactive(String guild, Transaction transaction) {
+    private static void setInactive(String guildName, Transaction transaction) {
         QDGuild a = QDGuild.alias();
         new QDGuild().usingTransaction(transaction)
             .where()
-            .name.eq(guild)
+            .name.eq(guildName)
             .isActive.isTrue()
             .asUpdate().set(a.isActive, false).update();
     }

@@ -4,10 +4,14 @@ import java.util.Arrays;
 
 public class WynncraftGuildListResponse {
 
-    protected String[] guilds;
+    protected WynncraftGuildListEntry[] guilds;
 
-    public String[] getGuilds() {
-        return Arrays.stream(guilds).toArray(String[]::new);
+    public WynncraftGuildListResponse(WynncraftGuildListEntry[] guilds) {
+        this.guilds = guilds;
+    }
+
+    public WynncraftGuildListEntry[] getGuilds() {
+        return Arrays.copyOf(guilds, guilds.length);
     }
 
     public boolean hasGuilds() {

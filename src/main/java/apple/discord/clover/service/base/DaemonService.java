@@ -1,8 +1,10 @@
 package apple.discord.clover.service.base;
 
 import apple.discord.clover.service.ServiceModule;
+import apple.discord.clover.wynncraft.WynnResponse;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
 import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
+import com.google.gson.Gson;
 import java.time.Duration;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -38,42 +40,53 @@ public abstract class DaemonService<Res> implements Runnable {
                 this.updateLastQuery();
                 long timeTaken = System.currentTimeMillis() - start;
                 long sleep = throttle.getSleepBuffer(normalInterval() - timeTaken);
-                logger().info("ServerList sleeping for %d millis".formatted(sleep));
+                logger().info("%s sleeping for %d millis".formatted(name(), sleep));
                 //noinspection BusyWait
                 Thread.sleep(sleep);
             } catch (Exception e) {
                 throttle.incrementError();
-                logger().error("==ServiceServerList==", e);
+                logger().error("", e);
             }
         }
     }
+
+    protected abstract String name();
 
     protected abstract void updateLastQuery();
 
 
     protected void daemon() {
-        Res response;
+        WynnResponse<Res> response;
         try {
             response = this.call();
         } catch (Exception e) {
+            throttle.incrementError();
             logger().error("", e);
             return;
         }
         try {
-            this.acceptResponse(response);
+            boolean success = this.acceptResponse(response);
+            if (!success) {
+                String responseJson = new Gson().toJson(response.data());
+                String errorMsg = "Wynn gave a bad response in %s. Returned %s".formatted(this.getClass(), responseJson);
+                throw new IllegalArgumentException(errorMsg);
+            }
         } catch (Exception e) {
             throttle.incrementError();
             logger().error("", e);
         }
     }
 
-    protected abstract void acceptResponse(Res response);
+    /**
+     * @param response the response received from the WynnApi
+     * @return true if response is valid and successful
+     */
+    protected abstract boolean acceptResponse(WynnResponse<Res> response);
 
-    protected Res call() throws Exception {
+    protected WynnResponse<Res> call() throws Exception {
         Call call = http.newCall(request().build());
         try (Response response = call.execute()) {
             if (!response.isSuccessful()) {
-                throttle.incrementError();
                 if (response.code() == Status.TOO_MANY_REQUESTS) {
                     logger().warn("Rate limit reached: %d error(s) in a row".formatted(throttle.getErrorCount()));
                 } else {
@@ -81,9 +94,9 @@ public abstract class DaemonService<Res> implements Runnable {
                     String message = body.string();
                     logger().error("Response code: %d, Body: %s".formatted(response.code(), message));
                 }
-                return null;
+                return WynnResponse.createError(response);
             }
-            return deserialize(response);
+            return WynnResponse.createSuccess(response, deserialize(response));
         }
     }
 

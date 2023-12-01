@@ -18,9 +18,8 @@ public class DDungeonRun extends DSessionRunBase {
 
     public DDungeonRun(WynnPlayerDungeon dungeon, DCharacter character, DCharacter lastCharacter) {
         super(dungeon.name, character);
-        int snapshot = dungeon.completed;
         if (lastCharacter == null) {
-            this.runs = new IncrementalInt(null, snapshot);
+            this.runs = new IncrementalInt(null, dungeon.completed);
             return;
         }
         DDungeonRun last = lastCharacter.getDungeon(dungeon.name, character.characterId);

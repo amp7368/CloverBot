@@ -5,10 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class WynncraftApi {
 
-    public static final String GUILD_LIST = "https://api.wynncraft.com/public_api.php?action=guildList";
-    public static final String PLAYER_STATS = "https://api.wynncraft.com/v2/player/%s/stats";
-    public static final String GUILD_STATS = "https://api.wynncraft.com/public_api.php?action=guildStats&command=%s";
-    public static final String SERVER_LIST = "https://api.wynncraft.com/public_api.php?action=onlinePlayers";
+    public static final String PLAYER_STATS = "https://api.wynncraft.com/v3/player/%s?fullResult=True";
+    public static final String GUILD_STATS = "https://api.wynncraft.com/v3/guild/%s?identifier=uuid";
+    public static final String GUILD_LIST = "https://api.wynncraft.com/v3/guild/list/guild";
+    public static final String SERVER_LIST = "https://api.wynncraft.com/v3/player";
 
     public static String playerStats(String player) {
         return PLAYER_STATS.formatted(normalize(player));

@@ -19,7 +19,7 @@ public class InactiveNotFoundPlayer extends InactivePlayer {
     @Override
     public String getName() {
         if (guildMember == null) return "???";
-        else return guildMember.name;
+        else return guildMember.username;
     }
 
     @Override

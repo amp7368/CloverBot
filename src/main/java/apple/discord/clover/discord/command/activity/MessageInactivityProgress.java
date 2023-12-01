@@ -13,7 +13,6 @@ import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import discord.util.dcf.gui.base.page.DCFGuiPage;
 import discord.util.dcf.util.IMessageBuilder;
-import java.util.List;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> implements IMessageBuilder {
@@ -32,7 +31,7 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
                 checkIsFinished();
                 return;
             }
-            for (WynnGuildMember guildMember : List.of(wynnGuild.members)) {
+            for (WynnGuildMember guildMember : wynnGuild.getMembers()) {
                 if (guildMember == null) {
                     addPlayer(new InactiveNotFoundPlayer(null));
                     continue;

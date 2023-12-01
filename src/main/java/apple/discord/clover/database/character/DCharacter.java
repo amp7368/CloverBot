@@ -94,11 +94,11 @@ public class DCharacter extends BaseEntity {
             this.levelRuns.add(new DLevelupRun(prof.getKey(), prof.getValue(), this, lastCharacter));
         }
         this.dungeonRuns = new ArrayList<>();
-        for (WynnPlayerDungeon dungeon : character.dungeons.list) {
+        for (WynnPlayerDungeon dungeon : character.dungeons()) {
             this.dungeonRuns.add(new DDungeonRun(dungeon, this, lastCharacter));
         }
         this.raidRuns = new ArrayList<>();
-        for (WynnPlayerRaid raid : character.raids.list) {
+        for (WynnPlayerRaid raid : character.raids()) {
             this.raidRuns.add(new DRaidRun(raid, this, lastCharacter));
         }
     }

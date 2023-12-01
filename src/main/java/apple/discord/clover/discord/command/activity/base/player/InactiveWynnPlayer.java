@@ -20,12 +20,12 @@ public class InactiveWynnPlayer extends InactivePlayer {
     @Nullable
     public Instant getLastJoin() {
         if (player == null) return null;
-        return player.meta.lastJoin.toInstant();
+        return player.getLastJoin();
     }
 
     @Override
     public String getName() {
-        if (player == null) return guildMember.name;
+        if (player == null) return guildMember.username;
         return player.username;
     }
 

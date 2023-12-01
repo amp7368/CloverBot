@@ -20,7 +20,7 @@ public class WynncraftModule extends AppleModule {
 
     @NotNull
     public static Gson gson() {
-        GsonBuilder gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        GsonBuilder gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm");
         return InstantGsonSerializing.registerGson(gson).create();
     }
 

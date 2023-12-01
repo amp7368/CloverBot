@@ -35,7 +35,7 @@ public class GuiInactivity extends DCFGui {
     public boolean isGuildMembersPresent() {
         synchronized (this) {
             int membersThere = this.members.size();
-            int membersRequired = this.guild == null ? 0 : this.guild.members.length;
+            int membersRequired = this.guild == null ? 0 : this.guild.getMembers().size();
             return membersThere >= membersRequired;
         }
     }
@@ -49,7 +49,7 @@ public class GuiInactivity extends DCFGui {
     public double getMembersProgress() {
         synchronized (this) {
             int membersThere = this.members.size();
-            int membersRequired = this.guild == null ? 1 : this.guild.members.length;
+            int membersRequired = this.guild == null ? 1 : this.guild.getMembers().size();
             return membersThere / (double) membersRequired;
         }
     }

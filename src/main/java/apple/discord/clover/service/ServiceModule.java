@@ -1,7 +1,7 @@
 package apple.discord.clover.service;
 
 import apple.discord.clover.service.guild.GuildListConfig;
-import apple.discord.clover.service.guild.GuildService;
+import apple.discord.clover.service.guild.GuildListService;
 import apple.discord.clover.service.network.ServiceServerList;
 import apple.discord.clover.service.network.ServiceServerListConfig;
 import apple.discord.clover.service.player.ServicePlayerStats;
@@ -26,7 +26,7 @@ public class ServiceModule extends AppleModule {
     @Override
     public void onEnable() {
         if (!ServiceModuleConfig.get().shouldEnable()) return;
-        new GuildService();
+        new GuildListService();
         new ServicePlayerStats();
         new ServiceServerList();
     }
