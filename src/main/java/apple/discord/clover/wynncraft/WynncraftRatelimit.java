@@ -1,6 +1,7 @@
 package apple.discord.clover.wynncraft;
 
 import apple.discord.clover.database.player.guild.GuildStorage;
+import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.utilities.request.AppleJsonFromURL;
@@ -22,14 +23,13 @@ public class WynncraftRatelimit {
         AppleJsonFromURL<WynnGuild> task = new AppleJsonFromURL<>(link, WynnGuild.class,
             WynncraftModule.gson());
         api.taskCreator(new AsyncTaskPriority(priority))
-            .accept(task)
-            .onSuccess((g) -> {
+            .accept(task, (g) -> {
                 if (g != null) {
                     g.initialize();
                     Futures.submit(() -> GuildStorage.save(g), ForkJoinPool.commonPool());
                 }
                 runAfter.accept(g);
-            });
+            }, f -> ServiceModule.get().logger().error(f));
     }
 
     public static void queuePlayer(TaskPriorityCommon priority, UUID guildMember, Consumer<@Nullable WynnPlayer> runAfter) {
