@@ -7,10 +7,10 @@ import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynnHeaders;
 import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftApi.Status;
+import apple.discord.clover.wynncraft.WynncraftErrorResponse;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
-import apple.utilities.util.NumberUtils;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
 import java.time.Duration;
@@ -120,17 +120,18 @@ public class ServicePlayerStats {
                     LoginStorage.failure(nextPlayer);
                     return null;
                 }
+                WynncraftErrorResponse error = WynncraftErrorResponse.readError(httpResponse.body().charStream());
+                switch (error.toError()) {
+                    case PLAYER_NOT_FOUND:
+                        return null;
+                }
                 throttle.incrementError();
                 if (code == Status.TOO_MANY_REQUESTS) {
                     throw new HttpException("Rate limit reached: %d error(s) in a row".formatted(throttle.getErrorCount()));
-                } else if (NumberUtils.between(400, code, 500)) {
-                    LoginStorage.failure(nextPlayer);
-                    return null;
                 }
                 // unexpected errors
-
                 ResponseBody body = httpResponse.body();
-                System.err.println(call.request());
+                logger().error(call.request());
                 throw new HttpException("Response code: %d, Body: %s".formatted(code, body.string()));
             }
             ResponseBody body = httpResponse.body();
