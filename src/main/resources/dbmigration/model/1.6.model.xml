@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="play_session">
+            <column name="api_version_id" type="smallint" references="api_version.id" foreignKeyName="fk_play_session_api_version_id" foreignKeyIndex="ix_play_session_api_version_id"/>
+        </addColumn>
+        <createTable name="api_version" pkName="pk_api_version">
+            <column name="id" type="smallint" primaryKey="true"/>
+            <column name="name" type="varchar(20)" unique="uq_api_version_name"/>
+        </createTable>
+    </changeSet>
+</migration>
