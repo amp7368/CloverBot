@@ -13,8 +13,9 @@ public class WynnPlayerCharacter {
 
     public String type;
     public int level;
+    public float xpPercent;
     public int wars;
-    public int playtime;
+    public double playtime;
     public int mobsKilled;
     public int chestsFound;
     public long blocksWalked;
@@ -35,8 +36,16 @@ public class WynnPlayerCharacter {
         else return dungeons.dungeons();
     }
 
+    public ProfessionLevel combatLevel() {
+        return new ProfessionLevel(this.level, this.xpPercent);
+    }
+
     public List<WynnPlayerRaid> raids() {
         if (raids == null) return List.of();
         else return raids.raids();
+    }
+
+    public long playtime() {
+        return (long) (playtime * 60);
     }
 }

@@ -2,10 +2,10 @@ package apple.discord.clover.service.network;
 
 import apple.discord.clover.database.activity.partial.LoginStorage;
 import apple.discord.clover.service.base.DaemonService;
-import apple.discord.clover.wynncraft.WynnResponse;
-import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftModule;
+import apple.discord.clover.wynncraft.WynncraftUrls;
 import apple.discord.clover.wynncraft.network.ServerListResponse;
+import apple.discord.clover.wynncraft.response.WynnResponse;
 import discord.util.dcf.util.TimeMillis;
 import java.util.concurrent.ForkJoinPool;
 import okhttp3.CacheControl;
@@ -17,7 +17,7 @@ public class ServiceServerList extends DaemonService<ServerListResponse> {
 
     public static final long SERVER_LIST_OFFLINE_INTERVAL = TimeMillis.minToMillis(5);
     private static final Builder SERVER_LIST_REQUEST = new Builder().get()
-        .url(WynncraftApi.SERVER_LIST)
+        .url(WynncraftUrls.SERVER_LIST)
         .cacheControl(CacheControl.FORCE_NETWORK);
 
     public ServiceServerList() {

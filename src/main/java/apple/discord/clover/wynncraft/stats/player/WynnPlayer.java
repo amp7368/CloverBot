@@ -1,5 +1,6 @@
 package apple.discord.clover.wynncraft.stats.player;
 
+import apple.discord.clover.database.DVersion;
 import apple.discord.clover.database.player.guild.DGuild;
 import apple.discord.clover.database.player.guild.GuildStorage;
 import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
@@ -20,13 +21,14 @@ public class WynnPlayer {
     public String rank;
     public Date firstJoin;
     public Date lastJoin;
-    public int playtime;
+    public double playtime;
     public WynnPlayerGuildData guild;
     public WynnPlayerGlobalData globalData;
 
     public Map<UUID, WynnPlayerCharacter> characters;
     public WynnPlayerRanking ranking;
     private Instant retrieved;
+    private String version;
 
     public long inactivityMillis() {
         return Duration.between(Instant.now(), getLastJoin()).toMillis();
@@ -62,5 +64,26 @@ public class WynnPlayer {
 
     public void setRetrieved(Instant retrieved) {
         this.retrieved = retrieved;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public DVersion version() {
+        return DVersion.version(version);
+    }
+
+    public boolean isNullData() {
+        return this.username == null ||
+            this.uuid == null ||
+            this.lastJoin == null ||
+            this.globalData == null ||
+            this.characters == null ||
+            this.characters.isEmpty();
+    }
+
+    public long playtime() {
+        return (long) (this.playtime * 60);
     }
 }

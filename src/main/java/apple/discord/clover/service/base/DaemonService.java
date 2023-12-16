@@ -1,9 +1,9 @@
 package apple.discord.clover.service.base;
 
 import apple.discord.clover.service.ServiceModule;
-import apple.discord.clover.wynncraft.WynnResponse;
-import apple.discord.clover.wynncraft.WynncraftApi.Status;
+import apple.discord.clover.wynncraft.WynncraftUrls.Status;
 import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
+import apple.discord.clover.wynncraft.response.WynnResponse;
 import com.google.gson.Gson;
 import java.time.Duration;
 import okhttp3.Call;
@@ -15,8 +15,12 @@ import org.apache.logging.log4j.Logger;
 
 public abstract class DaemonService<Res> implements Runnable {
 
-    protected static final Duration CALL_TIMEOUT = Duration.ofSeconds(20);
-    protected final OkHttpClient http = new OkHttpClient.Builder().callTimeout(CALL_TIMEOUT).build();
+    protected static final Duration CALL_TIMEOUT = Duration.ofSeconds(60);
+    protected final OkHttpClient http = new OkHttpClient.Builder()
+        .callTimeout(CALL_TIMEOUT)
+        .readTimeout(CALL_TIMEOUT)
+        .writeTimeout(CALL_TIMEOUT)
+        .build();
     protected final RepeatThrottle throttle = new RepeatThrottle(5000);
 
     protected Logger logger() {

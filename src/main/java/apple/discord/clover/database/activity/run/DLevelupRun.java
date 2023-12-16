@@ -3,6 +3,7 @@ package apple.discord.clover.database.activity.run;
 import apple.discord.clover.database.character.DCharacter;
 import apple.discord.clover.database.player.LastSessionInvalidException;
 import apple.discord.clover.database.primitive.IncrementalFloat;
+import apple.discord.clover.database.query.run.RunStorage;
 import apple.discord.clover.wynncraft.stats.player.primitive.ProfessionLevel;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -16,21 +17,20 @@ public class DLevelupRun extends DSessionRunBase {
 
     @Column
     @Embedded(prefix = "level_")
-    private IncrementalFloat level;
+    protected IncrementalFloat level;
 
     public DLevelupRun(String name, ProfessionLevel level, DCharacter character, @Nullable DCharacter lastCharacter)
         throws LastSessionInvalidException {
         super(name, character);
+        DLevelupRun lastLevelUp = RunStorage.findRecentLevelRun(character.characterId, name);
+        IncrementalFloat lastLevel = lastLevelUp == null ? null : lastLevelUp.level;
         float snapshot = level.full();
-        if (lastCharacter == null) {
-            this.level = new IncrementalFloat(null, snapshot);
-            return;
-        }
-        DLevelupRun lastLevelUp = lastCharacter.getLevelup(name, character.characterId);
-        if (lastLevelUp == null) {
-            throw new LastSessionInvalidException(
-                "Last Session Invalid: %s - lastCharacter_id=%s".formatted(name, lastCharacter.characterId));
-        }
-        this.level = new IncrementalFloat(lastLevelUp.level, snapshot);
+        this.level = new IncrementalFloat(lastLevel, snapshot);
     }
+
+    public float getDelta() {
+        return this.level.delta;
+    }
+
+   
 }

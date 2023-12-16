@@ -8,7 +8,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class WynncraftModule extends AppleModule {
 
+    private static final GsonBuilder GSON_BUILDER = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm");
     private static WynncraftModule instance;
+
+    static {
+        InstantGsonSerializing.registerGson(GSON_BUILDER);
+    }
 
     public WynncraftModule() {
         instance = this;
@@ -20,8 +25,7 @@ public class WynncraftModule extends AppleModule {
 
     @NotNull
     public static Gson gson() {
-        GsonBuilder gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm");
-        return InstantGsonSerializing.registerGson(gson).create();
+        return GSON_BUILDER.create();
     }
 
     @Override

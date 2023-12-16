@@ -62,6 +62,7 @@ public class CloverDatabase extends AppleModule {
         // embedded
         entities.addAll(List.of(IncrementalInt.class, IncrementalBigInt.class, IncrementalFloat.class, IncrementalString.class));
         // wynn entities
+        entities.add(DVersion.class);
         entities.addAll(List.of(DGuild.class, DCharacter.class, DPlayer.class));
         entities.addAll(List.of(DBlacklist.class, DLoginQueue.class, DPlaySession.class));
         entities.addAll(List.of(DLevelupRun.class, DDungeonRun.class, DRaidRun.class));

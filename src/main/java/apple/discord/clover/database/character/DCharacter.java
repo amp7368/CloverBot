@@ -27,12 +27,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Index(columnNames = {"character_id", "session_id"})
 @Table(name = "player_character")
 public class DCharacter extends BaseEntity {
 
     @Id
     public UUID sku;
+    @Index
     @Column
     public UUID characterId;
 
@@ -75,7 +75,7 @@ public class DCharacter extends BaseEntity {
         this.blocksWalked = IncrementalBigInt.create(last, l -> l.blocksWalked, current.blocksWalked);
         this.logins = IncrementalInt.create(last, l -> l.logins, current.logins);
         this.deaths = IncrementalInt.create(last, l -> l.deaths, current.deaths);
-        this.playtime = IncrementalBigInt.create(last, l -> l.playtime, current.playtime);
+        this.playtime = IncrementalBigInt.create(last, l -> l.playtime, current.playtime());
     }
 
     private static <T extends DSessionRunBase> T getRun(List<T> runs, String name, UUID character) {
@@ -91,8 +91,12 @@ public class DCharacter extends BaseEntity {
         DCharacter lastCharacter = lastSession == null ? null : lastSession.getCharacter(this.characterId);
         this.levelRuns = new ArrayList<>();
         for (Entry<String, ProfessionLevel> prof : character.professions.entrySet()) {
-            this.levelRuns.add(new DLevelupRun(prof.getKey(), prof.getValue(), this, lastCharacter));
+            DLevelupRun run = new DLevelupRun(prof.getKey(), prof.getValue(), this, lastCharacter);
+            if (run.getDelta() != 0) this.levelRuns.add(run);
         }
+        DLevelupRun run = new DLevelupRun("combat", character.combatLevel(), this, lastCharacter);
+        if (run.getDelta() != 0) this.levelRuns.add(run);
+
         this.dungeonRuns = new ArrayList<>();
         for (WynnPlayerDungeon dungeon : character.dungeons()) {
             this.dungeonRuns.add(new DDungeonRun(dungeon, this, lastCharacter));
@@ -101,10 +105,6 @@ public class DCharacter extends BaseEntity {
         for (WynnPlayerRaid raid : character.raids()) {
             this.raidRuns.add(new DRaidRun(raid, this, lastCharacter));
         }
-    }
-
-    public DLevelupRun getLevelup(String name, UUID character) {
-        return getRun(this.levelRuns, name, character);
     }
 
     public DDungeonRun getDungeon(String name, UUID character) {

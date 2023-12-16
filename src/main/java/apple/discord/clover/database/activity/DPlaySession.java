@@ -1,6 +1,7 @@
 package apple.discord.clover.database.activity;
 
 import apple.discord.clover.api.base.BaseEntity;
+import apple.discord.clover.database.DVersion;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
 import apple.discord.clover.database.character.DCharacter;
 import apple.discord.clover.database.player.DPlayer;
@@ -25,17 +26,20 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "play_session")
 @UniqueConstraint(columnNames = {"player_uuid", "join_time"})
-@Index(columnNames = {"player_uuid", "join_time"})
 public class DPlaySession extends BaseEntity {
 
     @Id
     public UUID id;
+
+    @ManyToOne
+    public DVersion apiVersion;
 
     // unique
     @ManyToOne
     public DPlayer player;
     @Column
     public Timestamp joinTime;
+    @Index
     @Column
     public Timestamp retrievedTime;
 
@@ -72,8 +76,9 @@ public class DPlaySession extends BaseEntity {
         this.joinTime = login.joinTime;
         this.retrievedTime = Timestamp.from(currentValue.retrieved());
         this.guild = currentValue.dGuild();
+        this.apiVersion = currentValue.version();
 
-        long playtime = currentValue.playtime;
+        long playtime = currentValue.playtime();
         this.playtime = IncrementalBigInt.create(lastSession, s -> s.playtime, playtime);
 
         long itemsIdentified = currentValue.globalData.itemsIdentified();

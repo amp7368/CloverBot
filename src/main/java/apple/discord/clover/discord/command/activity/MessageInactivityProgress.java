@@ -8,7 +8,7 @@ import apple.discord.clover.discord.command.activity.base.player.InactivePlayer;
 import apple.discord.clover.discord.command.activity.base.player.InactiveWynnPlayer;
 import apple.discord.clover.discord.util.EditOnTimer;
 import apple.discord.clover.util.Pretty;
-import apple.discord.clover.wynncraft.WynncraftRatelimit;
+import apple.discord.clover.wynncraft.run.WynncraftOldRatelimit;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuildMember;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import discord.util.dcf.gui.base.page.DCFGuiPage;
@@ -24,7 +24,7 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
         super(parent);
         this.onFinished = onFinished;
         this.editMessage = new EditOnTimer(this::editMessage, 1500);
-        WynncraftRatelimit.queueGuild(TaskPriorityCommon.HIGH, parent.getGuildName(), wynnGuild -> {
+        WynncraftOldRatelimit.queueGuild(TaskPriorityCommon.HIGH, parent.getGuildName(), wynnGuild -> {
             this.parent.setGuild(wynnGuild);
             this.editMessage.tryRun();
             if (wynnGuild == null) {
@@ -38,7 +38,7 @@ public class MessageInactivityProgress extends DCFGuiPage<GuiInactivity> impleme
                 }
                 DPlayer dPlayer = PlayerStorage.findPlayer(guildMember.uuid);
                 if (dPlayer == null) {
-                    WynncraftRatelimit.queuePlayer(TaskPriorityCommon.HIGHEST, guildMember.uuid,
+                    WynncraftOldRatelimit.queuePlayer(TaskPriorityCommon.HIGHEST, guildMember.uuid,
                         player -> this.addPlayer(new InactiveWynnPlayer(guildMember, player)));
                 } else {
                     addPlayer(new InactiveDPlayer(guildMember, dPlayer));

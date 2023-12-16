@@ -2,12 +2,12 @@ package apple.discord.clover.service.guild;
 
 import apple.discord.clover.database.player.guild.GuildStorage;
 import apple.discord.clover.service.base.DaemonService;
-import apple.discord.clover.wynncraft.WynnResponse;
-import apple.discord.clover.wynncraft.WynncraftApi;
 import apple.discord.clover.wynncraft.WynncraftModule;
-import apple.discord.clover.wynncraft.WynncraftRatelimit;
+import apple.discord.clover.wynncraft.WynncraftUrls;
 import apple.discord.clover.wynncraft.overview.guild.WynncraftGuildListEntry;
 import apple.discord.clover.wynncraft.overview.guild.WynncraftGuildListResponse;
+import apple.discord.clover.wynncraft.response.WynnResponse;
+import apple.discord.clover.wynncraft.run.WynncraftOldRatelimit;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
 import discord.util.dcf.util.TimeMillis;
 import okhttp3.CacheControl;
@@ -17,7 +17,7 @@ import okhttp3.Response;
 public class GuildListService extends DaemonService<WynncraftGuildListResponse> {
 
     private static final Builder GUILD_LIST_REQUEST = new Builder().get()
-        .url(WynncraftApi.GUILD_LIST)
+        .url(WynncraftUrls.GUILD_LIST)
         .cacheControl(CacheControl.FORCE_NETWORK);
 
 
@@ -26,7 +26,7 @@ public class GuildListService extends DaemonService<WynncraftGuildListResponse> 
     }
 
     public static void queueGuild(String guild) {
-        WynncraftRatelimit.queueGuild(TaskPriorityCommon.HIGH, guild, c -> {});
+        WynncraftOldRatelimit.queueGuild(TaskPriorityCommon.HIGH, guild, c -> {});
     }
 
 
