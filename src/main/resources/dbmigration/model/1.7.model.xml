@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createIndex indexName="ix_player_character_character_id" tableName="player_character" columns="character_id"/>
+        <createIndex indexName="ix_play_session_retrieved_time" tableName="play_session" columns="retrieved_time"/>
+        <dropIndex indexName="ix_player_character_character_id_session_id" tableName="player_character"/>
+        <dropIndex indexName="ix_play_session_player_uuid_join_time" tableName="play_session"/>
+    </changeSet>
+</migration>
