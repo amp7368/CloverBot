@@ -1,23 +1,23 @@
+SET LOCK_TIMEOUT = 0;
 UPDATE play_session pso
 SET playtime_delta =
         pso.playtime_snapshot -
         (
-        SELECT (CASE WHEN ps.playtime_snapshot IS NULL THEN 0 ELSE ps.playtime_snapshot END)
-        FROM play_session ps
-        WHERE q1.player_uuid = ps.player_uuid
-          AND retrieved_time < '2023-12-01 05:41:54.000000 +00:00'
-        ORDER BY retrieved_time DESC
-        LIMIT 1)
+        SELECT COALESCE(
+                       (
+                       SELECT ps.playtime_snapshot
+                       FROM play_session ps
+                       WHERE q1.player_uuid = ps.player_uuid
+                         AND retrieved_time < q1.retrieved_time
+                       ORDER BY retrieved_time DESC
+                       LIMIT 1), 0))
 FROM (
-     SELECT player_uuid, MIN(retrieved_time) min_time
-     FROM play_session
-     WHERE retrieved_time BETWEEN '2023-12-01 05:41:54.000000 +00:00' AND '2023-12-05 09:35:47.000000 +00:00'
-     GROUP BY player_uuid) q1
-         LEFT JOIN
-     play_session ps ON q1.player_uuid = ps.player_uuid AND q1.min_time = ps.retrieved_time
-WHERE pso.id = ps.id;
-
-SET LOCK_TIMEOUT = 0;
+     SELECT ps.player_uuid, ps.id, retrieved_time
+     FROM player_character pc
+              LEFT JOIN play_session ps ON ps.id = pc.session_id
+     WHERE pc.playtime_delta < 0
+        OR pc.playtime_delta IS NULL) q1
+WHERE pso.id = q1.id;
 
 
 
@@ -29,7 +29,6 @@ FROM (
      GROUP BY player_uuid) q1
          LEFT JOIN
      play_session ps ON q1.player_uuid = ps.player_uuid AND q1.max_time = ps.retrieved_time;
-
 
 SELECT ps.playtime_snapshot, ps.playtime_delta, retrieved_time, ps.id, player_uuid
 FROM play_session ps

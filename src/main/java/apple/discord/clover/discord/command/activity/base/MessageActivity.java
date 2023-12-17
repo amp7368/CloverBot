@@ -104,8 +104,8 @@ public abstract class MessageActivity extends DCFScrollGui<GuiInactivity, Inacti
     }
 
     private String header() {
-        String guildName = this.parent.getGuildName() + " Members";
-        return String.format("```ml\n|%5s %-23s| %-17s| %-17s| %-17s|\n", "", guildName, header1(), header2(), header3());
+        String guildName = Pretty.limit(this.parent.getGuildName(), 23 - " Members".length());
+        return String.format("```ml\n|%5s %-23s| %-17s| %-17s| %-17s|\n", "", guildName + " Members", header1(), header2(), header3());
     }
 
     @NotNull

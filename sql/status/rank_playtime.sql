@@ -1,6 +1,6 @@
 DROP TABLE tmp_tbl;
 SELECT ps2.id
-INTO tmp_tbl
+INTO TEMPORARY TABLE tmp_tbl
 FROM play_session ps2
          JOIN (
               SELECT ps1.player_uuid, MIN(ps1.join_time) join_time
@@ -41,9 +41,9 @@ FROM (
                  q1.session_count,
                  q1.player_uuid
           FROM (
-               SELECT DATE_TRUNC('MONTH', retrieved_time) AS      month,
-                      COUNT(id)                                   session_count,
-                      ROUND(SUM(pc.playtime_delta) * 4.7 / 60, 2) hours_playtime,
+               SELECT DATE_TRUNC('MONTH', retrieved_time) AS month,
+                      COUNT(id)                              session_count,
+                      ROUND(SUM(pc.playtime_delta) / 60, 2)  hours_playtime,
                       player_uuid
                FROM play_session ps
                         LEFT JOIN player_character pc ON pc.session_id = ps.id
@@ -101,5 +101,6 @@ FROM play_session ps
 GROUP BY ps.player_uuid, player.username
 HAVING MAX(ps.playtime_snapshot) > 10.916 * 60 / 5.0
    AND MAX(retrieved_time) > '12-10-01'
-ORDER BY MAX(ps.playtime_snapshot)
-;
+ORDER BY MAX(ps.playtime_snapshot);
+
+DROP TABLE IF EXISTS tmp_tbl;

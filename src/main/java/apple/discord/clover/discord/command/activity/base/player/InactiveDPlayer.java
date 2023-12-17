@@ -1,6 +1,5 @@
 package apple.discord.clover.discord.command.activity.base.player;
 
-import apple.discord.clover.api.base.WynnMath;
 import apple.discord.clover.api.player.terms.request.PlayerTermsRequest;
 import apple.discord.clover.api.player.terms.response.PlayerTermsResponse;
 import apple.discord.clover.database.player.DPlayer;
@@ -31,7 +30,7 @@ public class InactiveDPlayer extends InactivePlayer {
         PlayerTermsRequest request = new PlayerTermsRequest(query.resolution(), start, query.termsAfter(), this.player);
         PlayerTermsResponse response = PlayerTermsQuery.queryPlayerTerms(request);
         long playtime = response.playtime();
-        return Duration.ofMinutes(WynnMath.playtime(playtime));
+        return Duration.ofMinutes(playtime);
     }
 
     @Override
