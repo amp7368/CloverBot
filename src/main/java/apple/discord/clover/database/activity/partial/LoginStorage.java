@@ -24,14 +24,14 @@ public class LoginStorage {
     private static final TemporalAmount ONLINE_TOO_LONG = Duration.ofHours(6);
     private static final int MIN_OFFLINE_COUNT_REQUIRED = 1;
 
-    public static void queuePlayers(List<String> players, Instant requestedAt) {
+    public static void queuePlayers(List<UUID> players, Instant requestedAt) {
         QDLoginQueue alias = QDLoginQueue.alias();
         new QDLoginQueue().asUpdate().set(alias.isOnline, false).update();
         try (Transaction transaction = DB.beginTransaction()) {
-            for (String player : players) {
+            for (UUID player : players) {
                 int didUpdate = new QDLoginQueue()
                     .usingTransaction(transaction)
-                    .where().player.eq(player)
+                    .where().player.eq(player.toString())
                     .asUpdate()
                     .set(alias.isOnline, true).update();
                 if (didUpdate == 0)

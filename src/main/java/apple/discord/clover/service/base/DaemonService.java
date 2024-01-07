@@ -21,7 +21,7 @@ public abstract class DaemonService<Res> implements Runnable {
         .readTimeout(CALL_TIMEOUT)
         .writeTimeout(CALL_TIMEOUT)
         .build();
-    protected final RepeatThrottle throttle = new RepeatThrottle(5000);
+    protected final RepeatThrottle throttle = new RepeatThrottle(250);
 
     protected Logger logger() {
         return ServiceModule.get().logger();
@@ -42,6 +42,7 @@ public abstract class DaemonService<Res> implements Runnable {
                 long start = System.currentTimeMillis();
                 this.daemon();
                 this.updateLastQuery();
+                throttle.incrementSuccess();
                 long timeTaken = System.currentTimeMillis() - start;
                 long sleep = throttle.getSleepBuffer(normalInterval() - timeTaken);
                 logger().info("%s sleeping for %d millis".formatted(name(), sleep));
