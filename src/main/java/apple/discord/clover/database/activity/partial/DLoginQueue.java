@@ -37,6 +37,10 @@ public class DLoginQueue extends BaseEntity {
         this.player = player;
     }
 
+    public DLoginQueue(UUID player, Instant requestedAt) {
+        this(player.toString(), requestedAt);
+    }
+
     public UUID getId() {
         return this.id;
     }
