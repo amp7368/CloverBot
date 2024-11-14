@@ -5,10 +5,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class WynncraftUrls {
 
-    public static final String PLAYER_STATS = "https://api.wynncraft.com/v3/player/%s?fullResult=True";
-    public static final String GUILD_STATS = "https://api.wynncraft.com/v3/guild/%s?identifier=uuid";
-    public static final String GUILD_LIST = "https://api.wynncraft.com/v3/guild/list/guild";
-    public static final String SERVER_LIST = "https://api.wynncraft.com/v3/player?identifier=uuid";
+    private static final String baseURL = "https://api.wynncraft.com/v3";
+    public static final String PLAYER_STATS = baseURL + "/player/%s?fullResult=True";
+    public static final String GUILD_STATS = baseURL + "/guild/%s?identifier=uuid";
+    public static final String GUILD_LIST = baseURL + "/guild/list/guild?identifier=uuid";
+    public static final String SERVER_LIST = baseURL + "/player?identifier=uuid";
 
     public static String playerStats(String player) {
         return PLAYER_STATS.formatted(normalize(player));

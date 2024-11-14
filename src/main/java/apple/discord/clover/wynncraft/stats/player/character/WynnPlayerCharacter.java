@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class WynnPlayerCharacter {
 
+    public String reskinned;
     public String type;
     public int level;
     public float xpPercent;
@@ -47,5 +48,10 @@ public class WynnPlayerCharacter {
 
     public long playtime() {
         return (long) (playtime * 60);
+    }
+
+    public String getTypeReskinned() {
+        if (this.reskinned != null) return reskinned;
+        return type;
     }
 }

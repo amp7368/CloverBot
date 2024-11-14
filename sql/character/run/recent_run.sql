@@ -3,8 +3,7 @@ FROM play_session ps
          LEFT JOIN (
                    SELECT *
                    FROM player_character
-                   WHERE character_id = :character_id) pc
-                   ON ps.id = pc.session_id
+                   WHERE character_id = :character_id) pc ON ps.id = pc.session_id
          LEFT JOIN (
                    SELECT *
                    FROM levelup_run

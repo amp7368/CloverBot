@@ -63,9 +63,13 @@ public class LoginStorage {
     }
 
     private static void cleanBlacklist() {
-        List<DBlacklist> failedInBlacklist = new QDBlacklist().where().failure.ge(BlacklistStorage.getMaxFailures())
+        List<DBlacklist> failedInBlacklist = new QDBlacklist().where()
+            .failure.ge(BlacklistStorage.getMaxFailures())
             .findList();
-        List<UUID> loginIds = failedInBlacklist.stream().map(DBlacklist::getLogin).map(DLoginQueue::getId).toList();
+        List<UUID> loginIds = failedInBlacklist.stream()
+            .map(DBlacklist::getLogin)
+            .map(DLoginQueue::getId)
+            .toList();
         failedInBlacklist.forEach(Model::delete);
         new QDLoginQueue().where().id.in(loginIds).delete();
     }

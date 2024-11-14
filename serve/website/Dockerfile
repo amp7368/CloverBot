@@ -1,6 +1,6 @@
 ARG NGINX_VERSION
 
-FROM ${NGINX_VERSION} as servestage
+FROM ${NGINX_VERSION} AS servestage
 COPY ./dist/apps/website /dist/apps/website
 COPY ./serve/website/files  /dist/apps/website
 

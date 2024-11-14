@@ -39,6 +39,7 @@ services:
     restart: unless-stopped
     image: ${POSTGRES_VERSION}
     container_name: ${COMPOSE_NAME}.${DATABASE_IMAGE}
+    shm_size: 1gb
     environment:
       - POSTGRES_USER_FILE=/secrets/${POSTGRES_USER_FILE}
       - POSTGRES_PASSWORD_FILE=/secrets/${POSTGRES_PASSWORD_FILE}

@@ -15,7 +15,9 @@ public class WynncraftErrorResponse {
     }
 
     public WynncraftErrorType toError() {
-        if (this.Error != null && Error.equalsIgnoreCase("No player found with that username.")) {
+        if (this.Error != null && Error.equalsIgnoreCase("No player found with that UUID.")) {
+            return WynncraftErrorType.PLAYER_NOT_FOUND;
+        } else if (this.Error != null && Error.equalsIgnoreCase("No player found with that username.")) {
             return WynncraftErrorType.PLAYER_NOT_FOUND;
         } else {
             return WynncraftErrorType.UNKNOWN;

@@ -29,7 +29,7 @@ public class DVersion extends BaseEntity {
 
         currentVersion = new QDVersion().where().name.ieq(version).findOne();
         if (currentVersion != null) return currentVersion;
-        System.out.println(version);
+
         currentVersion = new DVersion(version);
         currentVersion.save();
         return currentVersion;

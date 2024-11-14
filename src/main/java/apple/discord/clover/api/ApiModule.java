@@ -31,9 +31,9 @@ public class ApiModule extends AppleModule {
     public void onEnable() {
         app = Javalin.create(cfg -> {
             ApiConfig.get().commonConfig(cfg);
-            cfg.accessManager(new ApiSecurity());
-            cfg.jsonMapper(new JavalinGson(ApiController.apiGson()));
+            cfg.jsonMapper(new JavalinGson(ApiController.apiGson(), false));
         });
+        app.beforeMatched(new ApiSecurity()::manage);
 
         registerPermissions();
         registerControllers(app);

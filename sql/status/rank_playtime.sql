@@ -10,16 +10,16 @@ FROM play_session ps2
               ON ps1.player_uuid = ps2.player_uuid AND
                  timestamptz_eq(ps1.join_time, ps2.join_time);
 
-SELECT DATE_TRUNC('MONTH', retrieved_time) AS           month,
-       COUNT(id)                                        session_count,
-       ROUND(SUM(pc.playtime_delta) * 4.7 / 60 / 60, 2) hours_playtime
+SELECT DATE_TRUNC('MONTH', retrieved_time) AS     month,
+       COUNT(id)                                  session_count,
+       ROUND(SUM(pc.playtime_delta) / 60 / 60, 2) hours_playtime
 FROM play_session ps
          LEFT JOIN player_character pc ON pc.session_id = ps.id
 WHERE NOT EXISTS(
                 SELECT 1
                 FROM tmp_tbl
                 WHERE tmp_tbl.id = pc.session_id)
-  AND AGE(retrieved_time, date('2023-11-1'))
+  AND AGE(retrieved_time, date('2024-04-1'))
     BETWEEN INTERVAL '0 MONTH' AND INTERVAL '1 MONTH'
 GROUP BY ps.player_uuid,
          DATE_TRUNC('MONTH', retrieved_time);
@@ -47,7 +47,7 @@ FROM (
                       player_uuid
                FROM play_session ps
                         LEFT JOIN player_character pc ON pc.session_id = ps.id
-               WHERE AGE(ps.retrieved_time, date('2023-10-1'))
+               WHERE AGE(ps.retrieved_time, date('2024-04-1'))
                    BETWEEN INTERVAL '0 MONTH' AND INTERVAL '1 MONTH'
                  AND NOT EXISTS(
                                SELECT 1

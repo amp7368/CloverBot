@@ -19,6 +19,7 @@ import apple.discord.clover.database.auth.role.DAuthRole;
 import apple.discord.clover.database.auth.role.DRolePermissionBridge;
 import apple.discord.clover.database.benchmark.PasswordBenchmark;
 import apple.discord.clover.database.character.DCharacter;
+import apple.discord.clover.database.log.DCommandLog;
 import apple.discord.clover.database.player.DPlayer;
 import apple.discord.clover.database.player.guild.DGuild;
 import apple.discord.clover.database.primitive.IncrementalBigInt;
@@ -74,7 +75,7 @@ public class CloverDatabase extends AppleModule {
         entities.addAll(List.of(DIdentityRoleBridge.class, DRolePermissionBridge.class, DAuthPermission.class, DAuthRole.class));
         entities.addAll(List.of(DAuthIdentity.class, DUserBasicCredentials.class));
         entities.addAll(List.of(DAuthentication.class, DAuthToken.class));
-
+        entities.add(DCommandLog.class);
         return entities;
     }
 

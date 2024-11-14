@@ -85,7 +85,11 @@ public class GuildStorage {
 
     private static Comparator<DGuild> findPartialGuildComparator(String guildArg) {
         return Comparator.comparing(DGuild::getName, Comparator.comparingInt(
-            (guild) -> LevenshteinDetailedDistance.getDefaultInstance().apply(guildArg, guild).getDistance()));
+            (guild) -> distance(guildArg, guild)));
+    }
+
+    private static Integer distance(String guildArg, String guild) {
+        return LevenshteinDetailedDistance.getDefaultInstance().apply(guildArg, guild).getDistance();
     }
 
     public static List<DGuild> find(String guildArg) {

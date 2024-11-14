@@ -1,13 +1,13 @@
 package apple.discord.clover.api;
 
 import io.javalin.config.JavalinConfig;
-import io.javalin.plugin.bundled.CorsPluginConfig;
+import io.javalin.plugin.bundled.CorsPluginConfig.CorsRule;
 import org.apache.logging.log4j.Logger;
 
 public class ApiConfig {
 
     private static ApiConfig instance;
-    private final int port = 80;
+    protected final int port = 80;
     public boolean cors = false;
 
     public ApiConfig() {
@@ -19,11 +19,11 @@ public class ApiConfig {
     }
 
     public void commonConfig(JavalinConfig config) {
-        config.routing.treatMultipleSlashesAsSingleSlash = true;
-        config.routing.ignoreTrailingSlashes = true;
+        config.router.treatMultipleSlashesAsSingleSlash = true;
+        config.router.ignoreTrailingSlashes = true;
         config.showJavalinBanner = false;
         if (this.cors)
-            config.plugins.enableCors((cors -> cors.add(CorsPluginConfig::anyHost)));
+            config.bundledPlugins.enableCors((cors -> cors.addRule(CorsRule::anyHost)));
         config.requestLogger.http((ctx, time) -> {
             Logger logger = ApiModule.get().logger();
             String message = "(%s) -- %s => %d -- %fms".formatted(ctx.ip(), ctx.path(), ctx.statusCode(), time);
@@ -35,7 +35,7 @@ public class ApiConfig {
                 logger.warn(message);
                 return;
             }
-            logger.error(message + ctx.result());
+            logger.error("{}{}", message, ctx.result());
         });
     }
 

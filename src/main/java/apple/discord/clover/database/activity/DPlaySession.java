@@ -21,11 +21,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "play_session")
-@UniqueConstraint(columnNames = {"player_uuid", "join_time"})
 public class DPlaySession extends BaseEntity {
 
     @Id
@@ -73,7 +71,11 @@ public class DPlaySession extends BaseEntity {
 
     public DPlaySession(DPlayer playerInDB, DPlaySession lastSession, DLoginQueue login, WynnPlayer currentValue) {
         this.player = playerInDB;
-        this.joinTime = login.joinTime;
+        if (lastSession != null && login.joinTime.equals(lastSession.joinTime)) {
+            this.joinTime = lastSession.retrievedTime;
+        } else {
+            this.joinTime = login.joinTime;
+        }
         this.retrievedTime = Timestamp.from(currentValue.retrieved());
         this.guild = currentValue.dGuild();
         this.apiVersion = currentValue.version();

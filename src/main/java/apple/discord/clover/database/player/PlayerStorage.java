@@ -12,7 +12,6 @@ import apple.discord.clover.database.player.query.QDPlayer;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
 import io.ebean.DB;
-import io.ebean.DuplicateKeyException;
 import io.ebean.Transaction;
 import java.util.Collections;
 import java.util.List;
@@ -26,9 +25,15 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerStorage {
 
     public static boolean save(DLoginQueue login, WynnPlayer currentValue) {
-        DPlaySession lastSession = new QDPlaySession().where().player.uuid.eq(currentValue.uuid).orderBy().joinTime.desc()
+        DPlaySession lastSession = new QDPlaySession().where()
+            .player.uuid.eq(currentValue.uuid)
+            .orderBy().retrievedTime.desc()
             .setMaxRows(1)
             .findOne();
+        if (lastSession != null && login.joinTime.equals(lastSession.retrievedTime)) {
+            // no time has passed
+            return true;
+        }
 
         DPlayer playerInDB = new QDPlayer().where().uuid.eq(currentValue.uuid).findOne();
         if (playerInDB == null) {
@@ -37,14 +42,10 @@ public class PlayerStorage {
         } else {
             playerInDB.setUsername(currentValue.username).save();
         }
+
+        DPlaySession session = new DPlaySession(playerInDB, lastSession, login, currentValue);
         try (Transaction transaction = DB.beginTransaction()) {
-            DPlaySession session = new DPlaySession(playerInDB, lastSession, login, currentValue);
-            try {
-                session.insert(transaction);
-            } catch (DuplicateKeyException e) {
-                transaction.rollback();
-                return false;
-            }
+            session.insert(transaction);
             for (Entry<UUID, WynnPlayerCharacter> dataChar : currentValue.characters.entrySet()) {
                 DCharacter lastChar = lastSession == null ? null : lastSession.getCharacter(dataChar.getKey());
                 DCharacter character = new DCharacter(dataChar.getKey(), session, dataChar.getValue(), lastChar);

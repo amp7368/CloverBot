@@ -9,7 +9,10 @@ import apple.discord.clover.wynncraft.overview.guild.WynncraftGuildListResponse;
 import apple.discord.clover.wynncraft.response.WynnResponse;
 import apple.discord.clover.wynncraft.run.WynncraftOldRatelimit;
 import apple.utilities.threading.service.priority.TaskPriorityCommon;
+import com.google.gson.reflect.TypeToken;
 import discord.util.dcf.util.TimeMillis;
+import java.util.Map;
+import java.util.UUID;
 import okhttp3.CacheControl;
 import okhttp3.Request.Builder;
 import okhttp3.Response;
@@ -63,8 +66,10 @@ public class GuildListService extends DaemonService<WynncraftGuildListResponse> 
 
     @Override
     protected WynncraftGuildListResponse deserialize(Response response) {
-        WynncraftGuildListEntry[] guilds = WynncraftModule.gson()
-            .fromJson(response.body().charStream(), WynncraftGuildListEntry[].class);
+        TypeToken<?> type = TypeToken.getParameterized(Map.class,
+            UUID.class, WynncraftGuildListEntry.class);
+        Map<UUID, WynncraftGuildListEntry> guilds = WynncraftModule.gson()
+            .fromJson(response.body().charStream(), type.getType());
         return new WynncraftGuildListResponse(guilds);
     }
 

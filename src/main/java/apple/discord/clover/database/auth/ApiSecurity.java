@@ -8,14 +8,12 @@ import apple.discord.clover.database.auth.permission.DefaultAuthPermission;
 import com.password4j.Password;
 import io.javalin.http.Context;
 import io.javalin.http.ForbiddenResponse;
-import io.javalin.http.Handler;
-import io.javalin.security.AccessManager;
 import io.javalin.security.RouteRole;
 import java.util.Set;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
-public class ApiSecurity implements AccessManager {
+public class ApiSecurity {
 
     public static String hashPassword(String password) {
         return Password.hash(password)
@@ -68,21 +66,19 @@ public class ApiSecurity implements AccessManager {
         return Password.check(input, hashed).addPepper(CloverDatabaseConfig.get().pepper).withArgon2();
     }
 
-    @Override
-    public void manage(@NotNull Handler handler, @NotNull Context ctx, @NotNull Set<? extends RouteRole> routeRoles) throws Exception {
+    public void manage(@NotNull Context ctx) throws Exception {
+        Set<RouteRole> routeRoles = ctx.routeRoles();
         if (routeRoles.isEmpty()) {
-            handler.handle(ctx);
             return;
         }
         // todo
         if (true) {
-            handler.handle(ctx);
             return;
         }
         DAuthIdentity identity = verifyRequestIdentity(ctx);
 
-        if (identity.hasPermissions(routeRoles)) handler.handle(ctx);
-        else throw new ForbiddenResponse("Insufficient permissions");
+        if (!identity.hasPermissions(routeRoles))
+            throw new ForbiddenResponse("Insufficient permissions");
     }
 
 }
