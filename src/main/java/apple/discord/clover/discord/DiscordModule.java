@@ -5,6 +5,7 @@ import apple.discord.clover.discord.command.activity.CommandActivity;
 import apple.discord.clover.discord.command.bug.CommandBug;
 import apple.discord.clover.discord.command.help.CommandHelp;
 import apple.discord.clover.discord.command.player.CommandPlayerActivity;
+import apple.discord.clover.discord.system.log.DiscordLogListener;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import discord.util.dcf.DCF;
@@ -13,6 +14,7 @@ import java.util.List;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class DiscordModule extends AppleModule {
 
@@ -32,9 +34,19 @@ public class DiscordModule extends AppleModule {
 
     @Override
     public void onEnable() {
-        JDA client = JDABuilder.createLight(DiscordConfig.get().getToken()).build();
-        client.getPresence().setPresence(Activity.playing("/help - new commands!"), false);
-        dcf = new DCF(client);
+        JDA jda = JDABuilder.createDefault(DiscordConfig.get().token)
+            .disableCache(CacheFlag.VOICE_STATE, CacheFlag.STICKER, CacheFlag.SCHEDULED_EVENTS)
+            .build();
+        try {
+            jda.awaitReady();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        dcf = new DCF(jda);
+        DiscordBot.ready(dcf);
+
+        jda.getPresence().setActivity(Activity.customStatus("Generating activity reports!"));
+        DiscordConfig.get().load();
 
         DCFCommandManager commands = dcf.commands();
         commands.addCommand(new CommandActivity());
@@ -43,14 +55,8 @@ public class DiscordModule extends AppleModule {
         commands.addCommand(new CommandBug());
         commands.updateCommands();
 
-        client.addEventListener(new CloverAutoCompleteListener());
-
-        try {
-            client.awaitReady();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        DiscordConfig.get().load();
+        jda.addEventListener(new CloverAutoCompleteListener());
+        jda.addEventListener(new DiscordLogListener());
     }
 
     @Override

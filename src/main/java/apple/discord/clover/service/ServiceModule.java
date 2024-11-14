@@ -1,5 +1,6 @@
 package apple.discord.clover.service;
 
+import apple.discord.clover.database.activity.blacklist.BlacklistStorage;
 import apple.discord.clover.service.guild.GuildListConfig;
 import apple.discord.clover.service.guild.GuildListService;
 import apple.discord.clover.service.network.ServiceServerList;
@@ -29,6 +30,7 @@ public class ServiceModule extends AppleModule {
         new GuildListService();
         new ServicePlayerStats();
         new ServiceServerList();
+        BlacklistStorage.load();
     }
 
     @Override

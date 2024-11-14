@@ -9,7 +9,6 @@ import apple.discord.clover.wynncraft.WynncraftUrls;
 import apple.discord.clover.wynncraft.WynncraftUrls.Status;
 import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
 import apple.discord.clover.wynncraft.response.WynnHeaders;
-import apple.discord.clover.wynncraft.response.WynncraftErrorResponse;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -122,7 +121,7 @@ public class ServicePlayerStats {
         }
         logger().info("Players left in cached queue: {}", nextPlayers.size());
         DLoginQueue nextPlayer = this.nextPlayers.remove(0);
-        logger().info("Downloading " + nextPlayer.player);
+        logger().info("Downloading {}", nextPlayer.player);
         Call call = http.newCall(request(nextPlayer.player).build());
         try (Response httpResponse = call.execute()) {
             if (!httpResponse.isSuccessful()) {
@@ -189,10 +188,11 @@ public class ServicePlayerStats {
             return;
         }
         String body = httpResponse.body().string();
-        WynncraftErrorResponse error = WynncraftErrorResponse.readError(body);
-        switch (error.toError()) {
-            case PLAYER_NOT_FOUND:
-                return;
+
+        if (code == Status.NOT_FOUND) {
+            LoginStorage.failure(nextPlayer);
+            ServiceModule.get().logger().warn("404 Not Found: " + nextPlayer.player);
+            return;
         }
         throttle.incrementError();
         if (code == Status.TOO_MANY_REQUESTS) {

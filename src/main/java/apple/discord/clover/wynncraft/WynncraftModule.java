@@ -4,11 +4,14 @@ import apple.discord.clover.api.base.json.InstantGsonSerializing;
 import apple.lib.modules.AppleModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.time.Instant;
 import org.jetbrains.annotations.NotNull;
 
 public class WynncraftModule extends AppleModule {
 
-    private static final GsonBuilder GSON_BUILDER = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm");
+    private static final GsonBuilder GSON_BUILDER = new GsonBuilder()
+        .registerTypeAdapter(Instant.class, new InstantGsonSerializing())
+        .setDateFormat("yyyy-MM-dd'T'HH:mm");
     private static WynncraftModule instance;
 
     static {

@@ -64,6 +64,7 @@ public abstract class DaemonService<Res> implements Runnable {
         WynnResponse<Res> response;
         try {
             response = this.call();
+            if (response == null) return;
         } catch (Exception e) {
             throttle.incrementError();
             logger().error("", e);
@@ -94,6 +95,9 @@ public abstract class DaemonService<Res> implements Runnable {
             if (!response.isSuccessful()) {
                 if (response.code() == Status.TOO_MANY_REQUESTS) {
                     logger().warn("Rate limit reached: %d error(s) in a row".formatted(throttle.getErrorCount()));
+                } else if (response.code() == Status.NOT_FOUND) {
+                    logger().error("404 Not Found:" + response.request().url());
+                    return null;
                 } else {
                     ResponseBody body = response.body();
                     String message = body.string();

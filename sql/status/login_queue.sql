@@ -34,8 +34,14 @@ FROM login_queue
 GROUP BY id
 HAVING COUNT(*) > 1;
 
+SELECT COUNT(*), offline
+FROM login_queue
+GROUP BY offline
+ORDER BY offline;
+
 SELECT *
-FROM login_queue;
+FROM login_queue
+WHERE offline > 5;
 
 SELECT *
 FROM play_session ps
@@ -55,8 +61,25 @@ FROM play_session ps
 WHERE ps.player_uuid = '42644be8-5c39-4566-8e74-0874bdcb5eb0'
 ORDER BY retrieved_time DESC;
 
+SELECT *
+FROM play_session
+ORDER BY retrieved_time DESC
+LIMIT 1000;
 
 
 SELECT *
 FROM player
-WHERE username = 'Shadow_loll'
+WHERE username = 'Shadow_loll';
+
+SELECT DISTINCT player_uuid
+FROM clover.public.player_character pc
+         LEFT JOIN public.play_session ps ON pc.session_id = ps.id
+WHERE character_id IN (
+                      SELECT DISTINCT pc2.character_id
+                      FROM play_session ps2
+                               LEFT JOIN player_character pc2 ON ps2.id = pc2.session_id
+                      WHERE ps2.player_uuid = '5ff551f4-bd02-4f63-b7cf-71621f55ece9'
+                      ORDER BY pc2.character_id)
+
+
+

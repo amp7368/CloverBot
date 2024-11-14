@@ -69,7 +69,7 @@ public class DCharacter extends BaseEntity {
     public DCharacter(UUID characterId, DPlaySession session, WynnPlayerCharacter current, DCharacter last) {
         this.characterId = characterId;
         this.session = session;
-        this.type = current.type;
+        this.type = current.getTypeReskinned();
         this.itemsIdentified = IncrementalInt.create(last, l -> l.itemsIdentified, current.itemsIdentified);
         this.mobsKilled = IncrementalInt.create(last, l -> l.mobsKilled, current.mobsKilled);
         this.blocksWalked = IncrementalBigInt.create(last, l -> l.blocksWalked, current.blocksWalked);

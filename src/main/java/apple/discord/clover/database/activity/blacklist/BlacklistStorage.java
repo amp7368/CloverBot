@@ -1,27 +1,47 @@
 package apple.discord.clover.database.activity.blacklist;
 
+import apple.discord.clover.CloverBot;
 import apple.discord.clover.database.activity.blacklist.query.QDBlacklist;
 import apple.discord.clover.database.activity.partial.DLoginQueue;
 import io.ebean.DB;
 import io.ebean.Transaction;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class BlacklistStorage {
 
     private static final TemporalAmount BLACKLIST_WAIT = Duration.of(1, ChronoUnit.DAYS);
     private static final int MAX_FAILURES = 15;
+    private static final Duration CLEANUP_LAST_FAILURE = Duration.of(7, ChronoUnit.DAYS);
+
+    public static void load() {
+        ScheduledExecutorService executor = CloverBot.get().executor();
+        Runnable command = BlacklistStorage::cleanupBlacklist;
+        long period = CLEANUP_LAST_FAILURE.getSeconds();
+        executor.scheduleAtFixedRate(command, 0, period, TimeUnit.SECONDS);
+    }
+
+    public static void cleanupBlacklist() {
+        Instant lastFailureCleanup = Instant.now().minus(CLEANUP_LAST_FAILURE);
+        new QDBlacklist().where()
+            .or()
+            .success.gt(0)
+            .lastFailure.before(Timestamp.from(lastFailureCleanup))
+            .delete();
+    }
 
     public synchronized static void success(DLoginQueue login) {
         try (Transaction transaction = DB.beginTransaction()) {
             DBlacklist blacklist = query(login).usingTransaction(transaction).findOne();
-            if (blacklist != null) {
-                blacklist.incrementSuccess()
-                    .setLogin(null)
-                    .save(transaction);
-            }
+            if (blacklist == null) return;
+            blacklist.incrementSuccess()
+                .setLogin(null)
+                .save(transaction);
             transaction.commit();
         }
     }
