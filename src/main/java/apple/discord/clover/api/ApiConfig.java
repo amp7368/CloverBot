@@ -6,17 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 public class ApiConfig {
 
-    private static ApiConfig instance;
     protected final int port = 80;
     public boolean cors = false;
-
-    public ApiConfig() {
-        instance = this;
-    }
-
-    public static ApiConfig get() {
-        return instance;
-    }
 
     public void commonConfig(JavalinConfig config) {
         config.router.treatMultipleSlashesAsSingleSlash = true;

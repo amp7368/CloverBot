@@ -1,5 +1,6 @@
 package apple.discord.clover.api;
 
+import apple.discord.clover.CloverConfig;
 import apple.discord.clover.api.auth.AuthController;
 import apple.discord.clover.api.base.ApiController;
 import apple.discord.clover.api.character.CharacterController;
@@ -30,7 +31,7 @@ public class ApiModule extends AppleModule {
     @Override
     public void onEnable() {
         app = Javalin.create(cfg -> {
-            ApiConfig.get().commonConfig(cfg);
+            CloverConfig.getApi().commonConfig(cfg);
             cfg.jsonMapper(new JavalinGson(ApiController.apiGson(), false));
         });
         app.beforeMatched(new ApiSecurity()::manage);
@@ -53,7 +54,7 @@ public class ApiModule extends AppleModule {
     }
 
     private int getPort() {
-        return ApiConfig.get().getPort();
+        return CloverConfig.getApi().getPort();
     }
 
     @Override

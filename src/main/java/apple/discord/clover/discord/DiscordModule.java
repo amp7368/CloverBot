@@ -1,5 +1,6 @@
 package apple.discord.clover.discord;
 
+import apple.discord.clover.CloverConfig;
 import apple.discord.clover.discord.autocomplete.CloverAutoCompleteListener;
 import apple.discord.clover.discord.command.activity.CommandActivity;
 import apple.discord.clover.discord.command.bug.CommandBug;
@@ -7,10 +8,9 @@ import apple.discord.clover.discord.command.help.CommandHelp;
 import apple.discord.clover.discord.command.player.CommandPlayerActivity;
 import apple.discord.clover.discord.system.log.DiscordLogListener;
 import apple.lib.modules.AppleModule;
-import apple.lib.modules.configs.factory.AppleConfigLike;
 import discord.util.dcf.DCF;
 import discord.util.dcf.DCFCommandManager;
-import java.util.List;
+import java.time.ZoneId;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 public class DiscordModule extends AppleModule {
 
 
+    public static final ZoneId TIME_ZONE = ZoneId.of("US/Eastern");
     public static DCF dcf;
     public static String INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=616398849803681889&permissions=18496"
         + "&scope=applications.commands%20bot";
@@ -34,7 +35,7 @@ public class DiscordModule extends AppleModule {
 
     @Override
     public void onEnable() {
-        JDA jda = JDABuilder.createDefault(DiscordConfig.get().token)
+        JDA jda = JDABuilder.createDefault(CloverConfig.getDiscord().token)
             .disableCache(CacheFlag.VOICE_STATE, CacheFlag.STICKER, CacheFlag.SCHEDULED_EVENTS)
             .build();
         try {
@@ -46,7 +47,7 @@ public class DiscordModule extends AppleModule {
         DiscordBot.ready(dcf);
 
         jda.getPresence().setActivity(Activity.customStatus("Generating activity reports!"));
-        DiscordConfig.get().load();
+        CloverConfig.getDiscord().load();
 
         DCFCommandManager commands = dcf.commands();
         commands.addCommand(new CommandActivity());
@@ -57,11 +58,6 @@ public class DiscordModule extends AppleModule {
 
         jda.addEventListener(new CloverAutoCompleteListener());
         jda.addEventListener(new DiscordLogListener());
-    }
-
-    @Override
-    public List<AppleConfigLike> getConfigs() {
-        return List.of(configJson(DiscordConfig.class, "CloverConfig"));
     }
 
     @Override

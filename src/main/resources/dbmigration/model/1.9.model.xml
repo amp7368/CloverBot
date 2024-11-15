@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addUniqueConstraint constraintName="uq_play_session_player_uuid_join_time" tableName="play_session" columnNames="DROP CONSTRAINT" nullableColumns="player_uuid,join_time"/>
+        <createTable name="service_status" identityType="external" pkName="pk_service_status">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="activity" type="varchar(12)" notnull="true" checkConstraint="check ( activity in ('PROGRAM','DISCORD_BOT','PLAY_SESSION'))" checkConstraintName="ck_service_status_activity"/>
+            <column name="is_online" type="boolean" defaultValue="false" notnull="true"/>
+            <column name="start_at" type="timestamp" notnull="true"/>
+            <column name="end_at" type="timestamp" notnull="true"/>
+            <column name="previous_id" type="uuid" uniqueOneToOne="uq_service_status_previous_id" references="service_status.id" foreignKeyName="fk_service_status_previous_id"/>
+        </createTable>
+        <createTable name="service_status_notification" identityType="external" pkName="pk_service_status_notification">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="created_at" type="timestamp" notnull="true"/>
+            <column name="status_id" type="uuid" references="service_status.id" foreignKeyName="fk_service_status_notification_status_id" foreignKeyIndex="ix_service_status_notification_status_id"/>
+            <column name="type" type="varchar(6)" notnull="true" checkConstraint="check ( type in ('REPORT','PING'))" checkConstraintName="ck_service_status_notification_type"/>
+            <column name="success" type="varchar(7)" notnull="true" checkConstraint="check ( success in ('PENDING','FAILED','RESENT','SENT'))" checkConstraintName="ck_service_status_notification_success"/>
+            <column name="message_id" type="bigint" notnull="true"/>
+            <column name="channel_id" type="bigint" notnull="true"/>
+            <column name="error_message" type="varchar"/>
+        </createTable>
+        <createIndex indexName="ix_service_status_activity" tableName="service_status" columns="activity"/>
+        <createIndex indexName="ix_service_status_start_at" tableName="service_status" columns="start_at"/>
+    </changeSet>
+</migration>

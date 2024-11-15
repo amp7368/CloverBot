@@ -1,9 +1,9 @@
 package apple.discord.clover.discord.system.log;
 
 import apple.discord.clover.CloverBot;
+import apple.discord.clover.CloverConfig;
 import apple.discord.clover.database.log.CommandLogApi;
 import apple.discord.clover.database.log.DCommandLog;
-import apple.discord.clover.discord.DiscordConfig;
 import java.time.Duration;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -26,8 +26,8 @@ public class DiscordLogListener extends ListenerAdapter {
         public void run() {
             DCommandLog log = CommandLogApi.log(event);
 
-            if (DiscordConfig.get().isDevServer(event.getGuild())) return;
-            TextChannel channel = DiscordConfig.get().getLogChannel();
+            if (CloverConfig.getDiscord().isDevServer(event.getGuild())) return;
+            TextChannel channel = CloverConfig.getDiscord().getCommandLogChannel();
             channel.sendMessageEmbeds(log.toMessage()).queue();
         }
     }

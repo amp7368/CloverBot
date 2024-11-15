@@ -1,5 +1,6 @@
 package apple.discord.clover.discord;
 
+import apple.discord.clover.CloverBot;
 import discord.util.dcf.DCF;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -44,5 +45,12 @@ public class DiscordBot {
 
     public static User getSelfUser() {
         return SELF_USER;
+    }
+
+    public static void awaitReady(Runnable callback) {
+        CloverBot.get().execute(() -> {
+            awaitReady();
+            callback.run();
+        });
     }
 }
