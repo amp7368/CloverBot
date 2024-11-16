@@ -1,10 +1,11 @@
-package apple.discord.clover.service.status;
+package apple.discord.clover.service.status.service;
 
 import apple.discord.clover.CloverConfig;
 import apple.discord.clover.database.activity.DPlaySession;
 import apple.discord.clover.database.activity.query.QDPlaySession;
 import apple.discord.clover.database.status.ServiceActivityType;
 import apple.discord.clover.database.status.ServiceStatusApi;
+import apple.discord.clover.service.status.CloverStatusService;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -32,10 +33,5 @@ public class CloverPlaySessionService extends CloverStatusService {
     @Override
     protected ServiceActivityType getActivity() {
         return ServiceActivityType.PLAY_SESSION;
-    }
-
-    @Override
-    protected Duration getPeriod() {
-        return Duration.ofMinutes(1);
     }
 }

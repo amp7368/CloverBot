@@ -39,3 +39,27 @@ where guild.created > other.created
 order by guild.name;
 
 
+selecT last_status.id, notif.*
+from (select distinct nth_value(id, 2)
+                      over (partition by activity
+                          order by end_at desc
+                          ) id
+
+      from service_status) last_status
+         left join service_status_notification notif on notif.status_id = last_status.id;
+-- left join service_status status on notif.status_id = last_status.id;
+
+select activity, start_at, is_online, *
+from service_status
+order by end_at desc
+
+delete
+from play_session
+where retrieved_time > now() - INTERVAL '2 hour';
+
+select *
+from play_session
+order by retrieved_time desc;
+
+select *
+from blacklist;

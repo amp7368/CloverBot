@@ -1,6 +1,7 @@
 package apple.discord.clover.database.status.notification;
 
 import apple.discord.clover.database.status.DServiceStatus;
+import apple.discord.clover.service.status.DeliveryVerificationService;
 import io.ebean.Model;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -75,6 +76,7 @@ public class DServiceStatusNotification extends Model {
     public void markFailure(Throwable throwable) {
         this.success = NotificationSuccess.FAILED;
         this.errorMessage = throwable.getMessage();
+        DeliveryVerificationService.queueFailed(this.status, this);
         save();
     }
 }

@@ -9,6 +9,9 @@ import apple.discord.clover.database.status.notification.DServiceStatusNotificat
 import apple.discord.clover.database.status.notification.NotificationApi;
 import apple.discord.clover.database.status.notification.NotificationType;
 import apple.discord.clover.service.ServiceActivityDownConfig;
+import apple.discord.clover.service.status.service.CloverDiscordBotService;
+import apple.discord.clover.service.status.service.CloverPlaySessionService;
+import apple.discord.clover.service.status.service.CloverProgramService;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
@@ -20,16 +23,14 @@ public abstract class CloverStatusService {
     private ServiceActivityDownConfig config;
 
     public static void load() {
-        CloverConfig.getService().load();
         new CloverProgramService().start();
         new CloverPlaySessionService().start();
-//        todo new CloverDiscordBotService().start();
+        new CloverDiscordBotService().start();
     }
 
 
     protected void start() {
         init();
-        run();
 
         ScheduledExecutorService executor = CloverBot.get().executor();
         long period = getPeriod().getSeconds();
@@ -46,7 +47,7 @@ public abstract class CloverStatusService {
         DServiceStatus status = ServiceStatusApi.mark(getActivity(), currentUpdate, true);
 
         DServiceStatusNotification lastReport = status.getLastNotification(NotificationType.REPORT);
-        if (lastReport == null) NotificationApi.notify(NotificationType.REPORT, status, null, isSilent);
+        if (lastReport == null) NotificationApi.notify(NotificationType.REPORT, status, isSilent);
     }
 
     protected void markOffline(Instant currentUpdate, boolean isSilent) {
@@ -55,11 +56,11 @@ public abstract class CloverStatusService {
 
         DServiceStatusNotification lastReport = status.getLastNotification(NotificationType.REPORT);
         boolean shouldReport = getStatusConfig().shouldNotify(timeDown, lastReport);
-        if (shouldReport) NotificationApi.notify(NotificationType.REPORT, status, lastReport, isSilent);
+        if (shouldReport) NotificationApi.notify(NotificationType.REPORT, status, isSilent);
 
         DServiceStatusNotification lastPing = status.getLastNotification(NotificationType.PING);
         boolean shouldPing = getStatusConfig().shouldPing(timeDown, lastPing);
-        if (shouldPing) NotificationApi.notify(NotificationType.PING, status, lastPing, isSilent);
+        if (shouldPing) NotificationApi.notify(NotificationType.PING, status, isSilent);
     }
 
     protected ServiceActivityDownConfig getStatusConfig() {
@@ -69,6 +70,7 @@ public abstract class CloverStatusService {
 
     protected abstract ServiceActivityType getActivity();
 
-    protected abstract Duration getPeriod();
-
+    protected Duration getPeriod() {
+        return Duration.ofMinutes(1);
+    }
 }

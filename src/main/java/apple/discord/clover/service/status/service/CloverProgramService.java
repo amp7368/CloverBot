@@ -1,8 +1,9 @@
-package apple.discord.clover.service.status;
+package apple.discord.clover.service.status.service;
 
 import apple.discord.clover.database.status.DServiceStatus;
 import apple.discord.clover.database.status.ServiceActivityType;
 import apple.discord.clover.database.status.ServiceStatusApi;
+import apple.discord.clover.service.status.CloverStatusService;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -10,7 +11,7 @@ public class CloverProgramService extends CloverStatusService {
 
     @Override
     public void init() {
-        DServiceStatus recent = ServiceStatusApi.findMostRecent(ServiceActivityType.PROGRAM);
+        DServiceStatus recent = ServiceStatusApi.findMostRecent(getActivity());
         if (recent == null) return;
         Duration timeInactive = Duration.between(recent.getEnd(), Instant.now());
         boolean isDown = getStatusConfig().isConsideredDown(timeInactive);
@@ -28,10 +29,5 @@ public class CloverProgramService extends CloverStatusService {
     @Override
     protected ServiceActivityType getActivity() {
         return ServiceActivityType.PROGRAM;
-    }
-
-    @Override
-    protected Duration getPeriod() {
-        return Duration.ofMinutes(1);
     }
 }

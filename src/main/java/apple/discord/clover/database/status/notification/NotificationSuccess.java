@@ -7,9 +7,14 @@ import org.jetbrains.annotations.NotNull;
 
 public enum NotificationSuccess {
     PENDING,
+    SENT,
     FAILED,
-    RESENT,
-    SENT;
+    RETRYING,
+    RESENT;
+
+    public boolean isHealthy() {
+        return this != FAILED;
+    }
 
     @DbEnumValue
     public String id() {
@@ -31,6 +36,7 @@ public enum NotificationSuccess {
         return switch (this) {
             case PENDING -> "is pending";
             case FAILED -> "failed to send";
+            case RETRYING -> "is resending";
             case RESENT -> "was resent";
             case SENT -> "sent successfully";
         };

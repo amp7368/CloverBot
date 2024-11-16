@@ -23,9 +23,6 @@ public class ServiceModuleConfig implements IAppleConfigInit {
             status.computeIfAbsent(activityType, ServiceActivityDownConfig::createDefault);
         }
         CloverConfig.get().save();
-    }
-
-    public void load() {
         this.pingTarget = "<@%d>".formatted(pingTargetId);
     }
 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <alterColumn columnName="success" tableName="service_status_notification" type="varchar(8)" currentType="varchar(7)" currentNotnull="true" checkConstraint="check ( success in ('PENDING','SENT','FAILED','RETRYING','RESENT'))" checkConstraintName="ck_service_status_notification_success"/>
+    </changeSet>
+</migration>
