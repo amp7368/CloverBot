@@ -11,6 +11,7 @@ import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import io.ebean.annotation.Index;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -111,5 +112,9 @@ public class DPlaySession extends BaseEntity {
 
     public List<DCharacter> getCharacters() {
         return this.characters;
+    }
+
+    public Instant getRetrievedAt() {
+        return this.retrievedTime.toInstant();
     }
 }

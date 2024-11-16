@@ -26,6 +26,8 @@ import apple.discord.clover.database.primitive.IncrementalBigInt;
 import apple.discord.clover.database.primitive.IncrementalFloat;
 import apple.discord.clover.database.primitive.IncrementalInt;
 import apple.discord.clover.database.primitive.IncrementalString;
+import apple.discord.clover.database.status.DServiceStatus;
+import apple.discord.clover.database.status.notification.DServiceStatusNotification;
 import apple.discord.clover.database.user.DUser;
 import apple.discord.clover.database.user.DUserDiscord;
 import apple.discord.clover.database.user.DUserMinecraft;
@@ -75,7 +77,10 @@ public class CloverDatabase extends AppleModule {
         entities.addAll(List.of(DIdentityRoleBridge.class, DRolePermissionBridge.class, DAuthPermission.class, DAuthRole.class));
         entities.addAll(List.of(DAuthIdentity.class, DUserBasicCredentials.class));
         entities.addAll(List.of(DAuthentication.class, DAuthToken.class));
+
+        // system entities
         entities.add(DCommandLog.class);
+        entities.addAll(List.of(DServiceStatus.class, DServiceStatusNotification.class));
         return entities;
     }
 

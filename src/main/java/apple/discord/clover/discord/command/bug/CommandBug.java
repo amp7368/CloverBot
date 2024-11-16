@@ -1,6 +1,6 @@
 package apple.discord.clover.discord.command.bug;
 
-import apple.discord.clover.discord.DiscordConfig;
+import apple.discord.clover.CloverConfig;
 import apple.discord.clover.discord.DiscordModule;
 import apple.discord.clover.discord.util.FindOption;
 import discord.util.dcf.slash.DCFSlashCommand;
@@ -57,7 +57,7 @@ public class CommandBug extends DCFSlashCommand implements FindOption {
         }
         message.addEmbeds(embed.build());
         try {
-            DiscordConfig.get().getReportsChannel().sendMessage(message.build()).queue(
+            CloverConfig.getDiscord().getReportsChannel().sendMessage(message.build()).queue(
                 e -> successResponse(description, pendingResponse),
                 e -> errorResponse(description, pendingResponse));
         } catch (Exception e) {

@@ -5,27 +5,19 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class DiscordConfig {
 
-    private static DiscordConfig instance;
-    protected String token = "YourTokenHere";
-    protected long reportsChannelId = 0;
-    protected long logChannelId = 0;
+    protected String token = "token";
+    protected long systemChannelId = 882396439420993546L;
+    protected long commandLogChannelId = 769737908293992509L;
     protected long devServerId = 603039156892860417L;
-    private transient TextChannel reportsChannel;
-    private transient TextChannel logChannel;
+    private transient TextChannel systemChannel;
+    private transient TextChannel commandLogChannel;
 
-    public DiscordConfig() {
-        instance = this;
-    }
-
-    public static DiscordConfig get() {
-        return instance;
-    }
 
     public void load() {
-        reportsChannel = DiscordModule.dcf.jda().getTextChannelById(reportsChannelId);
-        logChannel = DiscordModule.dcf.jda().getTextChannelById(logChannelId);
-        assert reportsChannel != null;
-        assert logChannel != null;
+        systemChannel = DiscordModule.dcf.jda().getTextChannelById(systemChannelId);
+        commandLogChannel = DiscordModule.dcf.jda().getTextChannelById(commandLogChannelId);
+        assert systemChannel != null;
+        assert commandLogChannel != null;
     }
 
     public String getToken() {
@@ -33,11 +25,15 @@ public class DiscordConfig {
     }
 
     public TextChannel getReportsChannel() {
-        return reportsChannel;
+        return systemChannel;
     }
 
-    public TextChannel getLogChannel() {
-        return logChannel;
+    public TextChannel getStatusChannel() {
+        return systemChannel;
+    }
+
+    public TextChannel getCommandLogChannel() {
+        return commandLogChannel;
     }
 
     public boolean isDevServer(Guild guild) {

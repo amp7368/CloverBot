@@ -7,7 +7,10 @@ import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.ApplePlugin;
+import apple.lib.modules.configs.factory.AppleConfigLike;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class CloverBot extends ApplePlugin {
 
@@ -25,6 +28,16 @@ public class CloverBot extends ApplePlugin {
     @Override
     public String getName() {
         return "CloverBot";
+    }
+
+    @Override
+    public List<AppleConfigLike> getConfigs() {
+        return List.of(configJson(CloverConfig.class, "CloverConfig").setPretty());
+    }
+
+    @Override
+    protected ScheduledExecutorService makeExecutor() {
+        return new ScheduledThreadPoolExecutor(4);
     }
 
     @Override

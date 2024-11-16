@@ -15,6 +15,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import discord.util.dcf.util.TimeMillis;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -111,7 +112,7 @@ public class ServicePlayerStats {
 
     private synchronized PlaySessionRaw call() throws IOException {
         if (!nextPlayerUUIDs.isEmpty()) {
-            return handleNextPlayerUUID(nextPlayerUUIDs.remove(0));
+            return handleNextPlayerUUID(nextPlayerUUIDs.removeFirst());
         }
         if (nextPlayers.isEmpty()) {
             logger().info("Caching queue with more players from LoginStorage");
@@ -120,7 +121,7 @@ public class ServicePlayerStats {
             this.nextPlayers.addAll(updates);
         }
         logger().info("Players left in cached queue: {}", nextPlayers.size());
-        DLoginQueue nextPlayer = this.nextPlayers.remove(0);
+        DLoginQueue nextPlayer = this.nextPlayers.removeFirst();
         logger().info("Downloading {}", nextPlayer.player);
         Call call = http.newCall(request(nextPlayer.player).build());
         try (Response httpResponse = call.execute()) {
@@ -129,13 +130,17 @@ public class ServicePlayerStats {
                 return null;
             }
             return handleSuccessResponse(httpResponse, nextPlayer);
+        } catch (UnknownHostException e) {
+            logger().warn("No connection to Wynncraft when trying {}", nextPlayer.player);
+            // will be readded to DLoginQueueCache on next LoginStorage.findUpdates()
+            return null;
         }
     }
 
     private PlaySessionRaw handleNextPlayerUUID(LoginQueueUUID nextUUID) throws IOException {
         UUID nextPlayerUUID = nextUUID.popUUID();
 
-        logger().info("Downloading UUID " + nextPlayerUUID);
+        logger().info("Downloading UUID {}", nextPlayerUUID);
         Call call = http.newCall(request(nextPlayerUUID.toString()).build());
         try (Response response = call.execute()) {
             if (!response.isSuccessful()) {
@@ -159,6 +164,10 @@ public class ServicePlayerStats {
             player.setVersion(WynnHeaders.version(response));
             player.setRetrieved(WynnHeaders.date(response));
             return new PlaySessionRaw(nextUUID.login(), player);
+        } catch (UnknownHostException e) {
+            logger().warn("No connection to Wynncraft when trying {}", nextPlayerUUID);
+            // will be readded to DLoginQueueCache on next LoginStorage.findUpdates()
+            return null;
         }
     }
 
