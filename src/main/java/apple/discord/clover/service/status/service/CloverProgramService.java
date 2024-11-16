@@ -1,8 +1,8 @@
 package apple.discord.clover.service.status.service;
 
-import apple.discord.clover.database.status.DServiceStatus;
-import apple.discord.clover.database.status.ServiceActivityType;
-import apple.discord.clover.database.status.ServiceStatusApi;
+import apple.discord.clover.database.meta.status.DServiceStatus;
+import apple.discord.clover.database.meta.status.ServiceActivityType;
+import apple.discord.clover.database.meta.status.ServiceStatusApi;
 import apple.discord.clover.service.status.CloverStatusService;
 import java.time.Duration;
 import java.time.Instant;

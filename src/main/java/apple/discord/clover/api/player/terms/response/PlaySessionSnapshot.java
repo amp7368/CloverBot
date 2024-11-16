@@ -1,6 +1,6 @@
 package apple.discord.clover.api.player.terms.response;
 
-import apple.discord.clover.database.activity.DPlaySession;
+import apple.discord.clover.database.player.DPlaySession;
 
 public class PlaySessionSnapshot {
 

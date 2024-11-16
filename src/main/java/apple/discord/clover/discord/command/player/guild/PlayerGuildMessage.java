@@ -1,6 +1,6 @@
 package apple.discord.clover.discord.command.player.guild;
 
-import apple.discord.clover.database.player.guild.DGuild;
+import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.database.query.player.PlayerGuildChange;
 import apple.discord.clover.discord.util.CloverColor;
 import apple.discord.clover.discord.util.DiscordPlayerUtils;

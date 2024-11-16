@@ -1,6 +1,6 @@
 package apple.discord.clover.service.player;
 
-import apple.discord.clover.database.activity.partial.DLoginQueue;
+import apple.discord.clover.database.queue.partial.DLoginQueue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

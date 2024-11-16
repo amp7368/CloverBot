@@ -2,9 +2,9 @@ package apple.discord.clover.database.query.player;
 
 import apple.discord.clover.api.player.request.PlayerRequest;
 import apple.discord.clover.api.player.stats.response.PlayerStatsResponse;
-import apple.discord.clover.database.activity.DPlaySession;
-import apple.discord.clover.database.activity.query.QDPlaySession;
+import apple.discord.clover.database.player.DPlaySession;
 import apple.discord.clover.database.player.DPlayer;
+import apple.discord.clover.database.player.query.QDPlaySession;
 
 public class PlayerStatsQuery {
 

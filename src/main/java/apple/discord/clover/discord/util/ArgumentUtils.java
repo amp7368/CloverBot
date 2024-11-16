@@ -1,7 +1,7 @@
 package apple.discord.clover.discord.util;
 
-import apple.discord.clover.database.player.guild.DGuild;
-import apple.discord.clover.database.player.guild.GuildStorage;
+import apple.discord.clover.database.guild.DGuild;
+import apple.discord.clover.database.guild.GuildStorage;
 import apple.utilities.util.Pretty;
 import java.util.List;
 import java.util.stream.Collectors;

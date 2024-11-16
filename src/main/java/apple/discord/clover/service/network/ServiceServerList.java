@@ -1,6 +1,6 @@
 package apple.discord.clover.service.network;
 
-import apple.discord.clover.database.activity.partial.LoginStorage;
+import apple.discord.clover.database.queue.partial.LoginStorage;
 import apple.discord.clover.service.base.DaemonService;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.WynncraftUrls;

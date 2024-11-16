@@ -1,6 +1,6 @@
 package apple.discord.clover.service.status.service;
 
-import apple.discord.clover.database.status.ServiceActivityType;
+import apple.discord.clover.database.meta.status.ServiceActivityType;
 import apple.discord.clover.discord.DiscordBot;
 import apple.discord.clover.service.status.CloverStatusService;
 import java.time.Instant;

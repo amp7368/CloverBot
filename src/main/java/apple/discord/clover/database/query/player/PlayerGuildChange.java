@@ -1,7 +1,7 @@
 package apple.discord.clover.database.query.player;
 
-import apple.discord.clover.database.player.guild.DGuild;
-import apple.discord.clover.database.player.guild.GuildStorage;
+import apple.discord.clover.database.guild.DGuild;
+import apple.discord.clover.database.guild.GuildStorage;
 import apple.utilities.util.ObjectUtilsFormatting;
 import java.sql.Timestamp;
 import java.time.Instant;

@@ -1,6 +1,6 @@
 package apple.discord.clover.api.player.terms.response;
 
-import apple.discord.clover.database.activity.DPlaySession;
+import apple.discord.clover.database.player.DPlaySession;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;

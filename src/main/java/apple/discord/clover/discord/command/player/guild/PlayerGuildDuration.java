@@ -1,6 +1,6 @@
 package apple.discord.clover.discord.command.player.guild;
 
-import apple.discord.clover.database.player.guild.DGuild;
+import apple.discord.clover.database.guild.DGuild;
 import apple.utilities.util.ObjectUtilsFormatting;
 import java.time.Instant;
 import java.time.ZoneId;

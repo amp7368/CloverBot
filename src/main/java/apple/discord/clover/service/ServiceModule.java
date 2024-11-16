@@ -1,7 +1,7 @@
 package apple.discord.clover.service;
 
 import apple.discord.clover.CloverConfig;
-import apple.discord.clover.database.activity.blacklist.BlacklistStorage;
+import apple.discord.clover.database.queue.blacklist.BlacklistStorage;
 import apple.discord.clover.discord.DiscordBot;
 import apple.discord.clover.service.guild.GuildListConfig;
 import apple.discord.clover.service.guild.GuildListService;

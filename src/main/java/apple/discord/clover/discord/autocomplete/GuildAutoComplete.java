@@ -1,6 +1,6 @@
 package apple.discord.clover.discord.autocomplete;
 
-import apple.discord.clover.database.player.guild.GuildStorage;
+import apple.discord.clover.database.guild.GuildStorage;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command.Choice;

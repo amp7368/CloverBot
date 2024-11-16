@@ -1,7 +1,7 @@
 package apple.discord.clover.service;
 
 import apple.discord.clover.CloverConfig;
-import apple.discord.clover.database.status.ServiceActivityType;
+import apple.discord.clover.database.meta.status.ServiceActivityType;
 import apple.lib.modules.configs.data.config.init.IAppleConfigInit;
 import java.util.HashMap;
 import java.util.Map;

@@ -5,9 +5,9 @@ import apple.discord.clover.api.character.raid.request.CharacterRaidRequest;
 import apple.discord.clover.api.character.raid.response.PlayerRaidListResponse;
 import apple.discord.clover.api.character.term.request.CharacterRequest;
 import apple.discord.clover.api.character.term.response.CharacterStatsListResponse;
-import apple.discord.clover.database.auth.ApiSecurity;
 import apple.discord.clover.database.query.character.CharacterQuery;
 import apple.discord.clover.database.query.raid.RaidRunQuery;
+import apple.discord.clover.database.web.auth.ApiSecurity;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 

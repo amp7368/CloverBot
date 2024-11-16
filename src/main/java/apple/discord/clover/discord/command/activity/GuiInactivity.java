@@ -1,6 +1,6 @@
 package apple.discord.clover.discord.command.activity;
 
-import apple.discord.clover.database.player.guild.DGuild;
+import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.discord.command.activity.base.player.InactivePlayer;
 import apple.discord.clover.wynncraft.stats.guild.WynnGuild;
 import discord.util.dcf.DCF;

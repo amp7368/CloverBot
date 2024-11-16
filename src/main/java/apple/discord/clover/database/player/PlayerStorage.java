@@ -1,14 +1,13 @@
 package apple.discord.clover.database.player;
 
 import apple.discord.clover.database.CloverDatabase;
-import apple.discord.clover.database.activity.DPlaySession;
-import apple.discord.clover.database.activity.partial.DLoginQueue;
-import apple.discord.clover.database.activity.query.QDPlaySession;
-import apple.discord.clover.database.activity.run.DDungeonRun;
-import apple.discord.clover.database.activity.run.DLevelupRun;
-import apple.discord.clover.database.activity.run.DRaidRun;
-import apple.discord.clover.database.character.DCharacter;
+import apple.discord.clover.database.player.character.DCharacter;
+import apple.discord.clover.database.player.query.QDPlaySession;
 import apple.discord.clover.database.player.query.QDPlayer;
+import apple.discord.clover.database.player.run.DDungeonRun;
+import apple.discord.clover.database.player.run.DLevelupRun;
+import apple.discord.clover.database.player.run.DRaidRun;
+import apple.discord.clover.database.queue.partial.DLoginQueue;
 import apple.discord.clover.wynncraft.stats.player.WynnPlayer;
 import apple.discord.clover.wynncraft.stats.player.character.WynnPlayerCharacter;
 import io.ebean.DB;

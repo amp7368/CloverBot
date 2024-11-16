@@ -1,9 +1,9 @@
 package apple.discord.clover.discord.command.player.history;
 
 import apple.discord.clover.api.base.request.PlayerNameOrUUID;
-import apple.discord.clover.database.activity.DPlaySession;
+import apple.discord.clover.database.guild.DGuild;
+import apple.discord.clover.database.player.DPlaySession;
 import apple.discord.clover.database.player.DPlayer;
-import apple.discord.clover.database.player.guild.DGuild;
 import apple.discord.clover.database.query.player.PlayerStatsQuery;
 import apple.discord.clover.discord.command.activity.base.player.InactivePlayer;
 import com.google.common.util.concurrent.Futures;

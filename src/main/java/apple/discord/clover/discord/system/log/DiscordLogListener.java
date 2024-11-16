@@ -2,8 +2,8 @@ package apple.discord.clover.discord.system.log;
 
 import apple.discord.clover.CloverBot;
 import apple.discord.clover.CloverConfig;
-import apple.discord.clover.database.log.CommandLogApi;
-import apple.discord.clover.database.log.DCommandLog;
+import apple.discord.clover.database.meta.log.CommandLogApi;
+import apple.discord.clover.database.meta.log.DCommandLog;
 import java.time.Duration;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

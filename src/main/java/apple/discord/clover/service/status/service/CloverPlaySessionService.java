@@ -1,10 +1,10 @@
 package apple.discord.clover.service.status.service;
 
 import apple.discord.clover.CloverConfig;
-import apple.discord.clover.database.activity.DPlaySession;
-import apple.discord.clover.database.activity.query.QDPlaySession;
-import apple.discord.clover.database.status.ServiceActivityType;
-import apple.discord.clover.database.status.ServiceStatusApi;
+import apple.discord.clover.database.meta.status.ServiceActivityType;
+import apple.discord.clover.database.meta.status.ServiceStatusApi;
+import apple.discord.clover.database.player.DPlaySession;
+import apple.discord.clover.database.player.query.QDPlaySession;
 import apple.discord.clover.service.status.CloverStatusService;
 import java.time.Duration;
 import java.time.Instant;

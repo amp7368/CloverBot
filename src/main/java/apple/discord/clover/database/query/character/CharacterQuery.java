@@ -3,7 +3,7 @@ package apple.discord.clover.database.query.character;
 import apple.discord.clover.api.character.term.request.CharacterRequest;
 import apple.discord.clover.api.character.term.response.CharacterStats;
 import apple.discord.clover.api.character.term.response.CharacterStatsListResponse;
-import apple.discord.clover.database.character.query.QDCharacter;
+import apple.discord.clover.database.player.character.query.QDCharacter;
 import java.util.List;
 import java.util.UUID;
 

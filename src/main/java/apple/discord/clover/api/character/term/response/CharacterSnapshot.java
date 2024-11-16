@@ -1,6 +1,6 @@
 package apple.discord.clover.api.character.term.response;
 
-import apple.discord.clover.database.character.DCharacter;
+import apple.discord.clover.database.player.character.DCharacter;
 
 public class CharacterSnapshot {
 

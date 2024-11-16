@@ -3,7 +3,7 @@ package apple.discord.clover.database.query.raid;
 import apple.discord.clover.api.character.raid.request.CharacterRaidRequest;
 import apple.discord.clover.api.character.raid.response.PlayerRaidListResponse;
 import apple.discord.clover.api.character.raid.response.term.PlayerRaidTerm;
-import apple.discord.clover.database.activity.run.query.QDRaidRun;
+import apple.discord.clover.database.player.run.query.QDRaidRun;
 import apple.discord.clover.database.query.character.CharacterQuery;
 import java.util.List;
 import java.util.UUID;

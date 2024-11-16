@@ -1,6 +1,6 @@
 package apple.discord.clover.database.query.run;
 
-import apple.discord.clover.database.activity.run.DLevelupRun;
+import apple.discord.clover.database.player.run.DLevelupRun;
 import io.avaje.lang.Nullable;
 import io.ebean.DB;
 import java.util.UUID;

@@ -1,11 +1,11 @@
 package apple.discord.clover.service.status;
 
-import apple.discord.clover.database.status.DServiceStatus;
-import apple.discord.clover.database.status.ServiceActivityType;
-import apple.discord.clover.database.status.notification.DServiceStatusNotification;
-import apple.discord.clover.database.status.notification.NotificationApi;
-import apple.discord.clover.database.status.notification.NotificationType;
-import apple.discord.clover.database.status.query.QDServiceStatus;
+import apple.discord.clover.database.meta.status.DServiceStatus;
+import apple.discord.clover.database.meta.status.ServiceActivityType;
+import apple.discord.clover.database.meta.status.notification.DServiceStatusNotification;
+import apple.discord.clover.database.meta.status.notification.NotificationApi;
+import apple.discord.clover.database.meta.status.notification.NotificationType;
+import apple.discord.clover.database.meta.status.query.QDServiceStatus;
 
 public class DeliveryVerificationService {
 

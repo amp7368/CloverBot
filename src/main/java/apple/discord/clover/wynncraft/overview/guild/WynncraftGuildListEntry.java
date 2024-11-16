@@ -1,6 +1,6 @@
 package apple.discord.clover.wynncraft.overview.guild;
 
-import apple.discord.clover.database.player.guild.DGuild;
+import apple.discord.clover.database.guild.DGuild;
 import com.google.common.base.Objects;
 import java.util.UUID;
 

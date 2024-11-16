@@ -1,7 +1,6 @@
 package apple.discord.clover.database.player;
 
 import apple.discord.clover.api.base.BaseEntity;
-import apple.discord.clover.database.activity.DPlaySession;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;

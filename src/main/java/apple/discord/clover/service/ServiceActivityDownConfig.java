@@ -1,7 +1,7 @@
 package apple.discord.clover.service;
 
-import apple.discord.clover.database.status.ServiceActivityType;
-import apple.discord.clover.database.status.notification.DServiceStatusNotification;
+import apple.discord.clover.database.meta.status.ServiceActivityType;
+import apple.discord.clover.database.meta.status.notification.DServiceStatusNotification;
 import java.time.Duration;
 import org.jetbrains.annotations.Nullable;
 

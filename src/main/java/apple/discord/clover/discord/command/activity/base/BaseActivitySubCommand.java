@@ -1,6 +1,6 @@
 package apple.discord.clover.discord.command.activity.base;
 
-import apple.discord.clover.database.player.guild.DGuild;
+import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.discord.command.activity.GuiInactivity;
 import apple.discord.clover.discord.command.activity.MessageInactivityProgress;
 import apple.discord.clover.discord.util.ArgumentUtils;

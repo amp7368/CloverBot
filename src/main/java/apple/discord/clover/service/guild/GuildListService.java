@@ -1,6 +1,6 @@
 package apple.discord.clover.service.guild;
 
-import apple.discord.clover.database.player.guild.GuildStorage;
+import apple.discord.clover.database.guild.GuildStorage;
 import apple.discord.clover.service.base.DaemonService;
 import apple.discord.clover.wynncraft.WynncraftModule;
 import apple.discord.clover.wynncraft.WynncraftUrls;

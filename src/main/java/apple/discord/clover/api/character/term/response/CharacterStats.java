@@ -1,6 +1,6 @@
 package apple.discord.clover.api.character.term.response;
 
-import apple.discord.clover.database.character.DCharacter;
+import apple.discord.clover.database.player.character.DCharacter;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
 package apple.discord.clover.discord.command.player.history;
 
 import apple.discord.clover.api.base.request.TimeResolution;
-import apple.discord.clover.database.player.guild.DGuild;
+import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.discord.util.CloverColor;
 import apple.discord.clover.discord.util.DiscordPlayerUtils;
 import discord.util.dcf.gui.base.page.DCFGuiPage;
