@@ -10,20 +10,18 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class BlacklistStorage {
 
-    private static final TemporalAmount BLACKLIST_WAIT = Duration.of(1, ChronoUnit.DAYS);
+    private static final TemporalAmount BLACKLIST_WAIT = Duration.of(6, ChronoUnit.HOURS);
     private static final int MAX_FAILURES = 15;
     private static final Duration CLEANUP_LAST_FAILURE = Duration.of(7, ChronoUnit.DAYS);
 
     public static void load() {
-        ScheduledExecutorService executor = CloverBot.get().executor();
         Runnable command = BlacklistStorage::cleanupBlacklist;
         long period = CLEANUP_LAST_FAILURE.getSeconds();
-        executor.scheduleAtFixedRate(command, 0, period, TimeUnit.SECONDS);
+        CloverBot.get().executor().scheduleAtFixedRate(command, 0, period, TimeUnit.SECONDS);
     }
 
     public static void cleanupBlacklist() {

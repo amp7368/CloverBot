@@ -34,6 +34,11 @@ public class DiscordModule extends AppleModule {
     }
 
     @Override
+    public String getName() {
+        return "Discord";
+    }
+
+    @Override
     public void onEnable() {
         JDA jda = JDABuilder.createDefault(CloverConfig.getDiscord().token)
             .disableCache(CacheFlag.VOICE_STATE, CacheFlag.STICKER, CacheFlag.SCHEDULED_EVENTS)
@@ -58,10 +63,5 @@ public class DiscordModule extends AppleModule {
 
         jda.addEventListener(new CloverAutoCompleteListener());
         jda.addEventListener(new DiscordLogListener());
-    }
-
-    @Override
-    public String getName() {
-        return "Discord";
     }
 }

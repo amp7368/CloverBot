@@ -29,37 +29,34 @@ FROM login_queue;
 SELECT *
 FROM blacklist;
 
-select other.created, guild.*
-from guild
-         left join guild other
-                   on guild.name = other.name
-                       and guild.id != other.id
-where guild.created > other.created
-  and not guild.is_active
-order by guild.name;
+SELECT other.created, guild.*
+FROM guild
+         LEFT JOIN guild other
+                   ON guild.name = other.name
+                       AND guild.id != other.id
+WHERE guild.created > other.created
+  AND NOT guild.is_active
+ORDER BY guild.name;
 
 
-selecT last_status.id, notif.*
-from (select distinct nth_value(id, 2)
-                      over (partition by activity
-                          order by end_at desc
+SELECT last_status.id, notif.*
+FROM (SELECT DISTINCT NTH_VALUE(id, 2)
+                      OVER (PARTITION BY activity
+                          ORDER BY end_at DESC
                           ) id
 
-      from service_status) last_status
-         left join service_status_notification notif on notif.status_id = last_status.id;
+      FROM service_status) last_status
+         LEFT JOIN service_status_notification notif ON notif.status_id = last_status.id;
 -- left join service_status status on notif.status_id = last_status.id;
 
-select activity, start_at, is_online, *
-from service_status
-order by end_at desc
+SELECT activity, start_at, is_online, *
+FROM service_status
+ORDER BY end_at DESC;
 
-delete
-from play_session
-where retrieved_time > now() - INTERVAL '2 hour';
+SELECT *
+FROM service_status_notification
 
-select *
-from play_session
-order by retrieved_time desc;
+SELECT *
+FROM play_session
+ORDER BY retrieved_time DESC;
 
-select *
-from blacklist;

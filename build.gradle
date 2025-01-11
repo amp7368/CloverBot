@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.gradleup.shadow' version '8.3.5'
+    id 'com.gradleup.shadow' version '9.0.0-beta4'
     id "io.ebean" version "15.8.0"
 }
 
@@ -60,9 +60,9 @@ dependencies {
     implementation 'com.password4j:password4j:1.7.0'
 
     // apple
+    implementation 'discord.util:discorddcf:1.1-SNAPSHOT'
     implementation 'apple.utilities:AppleUtilities:1.4-SNAPSHOT'
     implementation 'apple.lib:applemodules:2.0-SNAPSHOT'
-    implementation 'discord.util:discorddcf:1.0-SNAPSHOT'
 
     // google's guava
     implementation 'com.google.guava:guava:32.1.3-jre'

@@ -7,8 +7,10 @@ import discord.util.dcf.gui.scroll.DCFEntry;
 import discord.util.dcf.gui.scroll.DCFScrollGui;
 import java.time.Duration;
 import java.util.Comparator;
+import java.util.List;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.LayoutComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -52,16 +54,13 @@ public abstract class MessageActivity extends DCFScrollGui<GuiInactivity, Inacti
         return 5;
     }
 
-    @Override
-    protected final int entriesPerPage() {
-        return 15;
-    }
-
     private ActionRow getNavigationRow() {
-        return ActionRow.of(this.btnPrev(),
+        return ActionRow.of(
+            this.btnPrev(),
             this.btnNext(),
             this.getTopButton(),
-            this.getReverseButton());
+            this.getReverseButton()
+        );
     }
 
     private Button getTopButton() {
@@ -76,9 +75,11 @@ public abstract class MessageActivity extends DCFScrollGui<GuiInactivity, Inacti
     public MessageCreateData makeMessage() {
         return new MessageCreateBuilder()
             .setContent(this.messageContent())
-            .addComponents(this.getNavigationRow())
+            .addComponents(List.of(getSortByRow(), getNavigationRow()))
             .build();
     }
+
+    protected abstract LayoutComponent getSortByRow();
 
     private String messageContent() {
         StringBuilder content = new StringBuilder(header());
@@ -94,18 +95,27 @@ public abstract class MessageActivity extends DCFScrollGui<GuiInactivity, Inacti
 
     private String asEntryString(DCFEntry<InactivePlayer> entry) {
         InactivePlayer player = entry.entry();
+        String starredPlayer = playerName(player);
         return String.format("|%4d. %-23s|%17s |%17s |%17s |",
             entry.indexInAll() + 1,
-            Pretty.limit(player.getName(), 23),
+            starredPlayer,
             Pretty.limit(value1(player), 17),
             Pretty.limit(value2(player), 17),
             Pretty.limit(value3(player), 17)
         );
     }
 
+    @NotNull
+    private String playerName(InactivePlayer player) {
+        String stars = player.getGuildRank().getStars();
+        int playerNameLimit = 23 - stars.length();
+        String playerName = Pretty.limit(player.getName(), playerNameLimit);
+        return playerName + " ".repeat(playerNameLimit - playerName.length()) + stars;
+    }
+
     private String header() {
-        String guildName = Pretty.limit(this.parent.getGuildName(), 23 - " Members".length());
-        return String.format("```ml\n|%5s %-23s| %-17s| %-17s| %-17s|\n", "", guildName + " Members", header1(), header2(), header3());
+        String guildName = Pretty.limit(this.parent.getGuildName(), 23);
+        return String.format("```ml\n|%5s %-23s| %-17s| %-17s| %-17s|\n", "", guildName, header1(), header2(), header3());
     }
 
     @NotNull
@@ -114,7 +124,7 @@ public abstract class MessageActivity extends DCFScrollGui<GuiInactivity, Inacti
     }
 
     protected String value1(InactivePlayer player) {
-        return Pretty.uppercaseFirst(player.getGuildRank());
+        return player.getGuildRank().toString();
     }
 
     @NotNull
@@ -131,6 +141,11 @@ public abstract class MessageActivity extends DCFScrollGui<GuiInactivity, Inacti
     protected final Comparator<? super InactivePlayer> entriesComparator() {
         Comparator<InactivePlayer> comparator = entriesComparatorDefault();
         return isReversed ? comparator.reversed() : comparator;
+    }
+
+    @Override
+    protected final int entriesPerPage() {
+        return 15;
     }
 
     protected abstract Comparator<InactivePlayer> entriesComparatorDefault();

@@ -1,5 +1,6 @@
 package apple.discord.clover.service.player;
 
+import apple.discord.clover.CloverBot;
 import apple.discord.clover.database.player.PlayerStorage;
 import apple.discord.clover.database.queue.partial.DLoginQueue;
 import apple.discord.clover.database.queue.partial.LoginStorage;
@@ -49,7 +50,7 @@ public class ServicePlayerStats {
 
     public ServicePlayerStats() {
         instance = this;
-        new Thread(this::run).start();
+        CloverBot.get().execute(this::run);
     }
 
     public static ServicePlayerStats get() {

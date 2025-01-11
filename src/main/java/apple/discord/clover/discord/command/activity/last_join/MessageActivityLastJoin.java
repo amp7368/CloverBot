@@ -6,6 +6,12 @@ import apple.discord.clover.discord.command.activity.base.MessageActivity;
 import apple.discord.clover.discord.command.activity.base.player.InactivePlayer;
 import java.time.Duration;
 import java.util.Comparator;
+import java.util.List;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.LayoutComponent;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import org.jetbrains.annotations.NotNull;
 
 public class MessageActivityLastJoin extends MessageActivity {
@@ -18,9 +24,39 @@ public class MessageActivityLastJoin extends MessageActivity {
         }
         return -1;
     };
+    private Comparator<InactivePlayer> comparator;
 
     public MessageActivityLastJoin(GuiInactivity gui) {
         super(gui);
+        registerSelectString("sortby", this::sortBy);
+    }
+
+    private void sortBy(StringSelectInteractionEvent event) {
+        List<SelectOption> selectedOptions = event.getSelectedOptions();
+        if (selectedOptions.isEmpty()) return;
+        String sortBy = selectedOptions.getFirst().getValue();
+        comparator = switch (sortBy) {
+            case "1week" -> Comparator.<InactivePlayer, Duration>comparing(p -> p.getPlaytime(TimeResolution.WEEK, 1))
+                .thenComparing(LAST_JOIN_COMPARATOR);
+            case "rank" -> Comparator.comparing(InactivePlayer::getGuildRank)
+                .thenComparing(LAST_JOIN_COMPARATOR);
+            default -> LAST_JOIN_COMPARATOR;
+        };
+        entryPage = 0;
+        sort();
+    }
+
+    @Override
+    protected LayoutComponent getSortByRow() {
+        return ActionRow.of(
+            StringSelectMenu.create("sortby")
+                .setRequiredRange(1, 1)
+                .setPlaceholder("Sort by")
+                .addOption("Rank", "rank", "Sort by the player's guild rank")
+                .addOption("Time Inactive", "lastjoin", "Sort by player's last join")
+                .addOption("Week Playtime", "1week", "Sort by playtime in the last week")
+                .build()
+        );
     }
 
     @NotNull
@@ -49,10 +85,11 @@ public class MessageActivityLastJoin extends MessageActivity {
         Duration playtime = player.getPlaytime(TimeResolution.WEEK, 1);
         return displayHours(playtime);
     }
-    
+
     @Override
     protected Comparator<InactivePlayer> entriesComparatorDefault() {
-        return LAST_JOIN_COMPARATOR;
+        if (comparator == null) comparator = LAST_JOIN_COMPARATOR;
+        return comparator;
     }
 
 }

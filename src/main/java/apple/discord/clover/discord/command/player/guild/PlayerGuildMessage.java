@@ -2,8 +2,8 @@ package apple.discord.clover.discord.command.player.guild;
 
 import apple.discord.clover.database.guild.DGuild;
 import apple.discord.clover.database.query.player.PlayerGuildChange;
-import apple.discord.clover.discord.util.CloverColor;
-import apple.discord.clover.discord.util.DiscordPlayerUtils;
+import apple.discord.clover.discord.system.theme.CloverColor;
+import apple.discord.clover.discord.util.ClientMessage;
 import apple.discord.clover.discord.util.SendMessage;
 import discord.util.dcf.gui.scroll.DCFEntry;
 import discord.util.dcf.gui.scroll.DCFScrollGui;
@@ -113,9 +113,9 @@ public class PlayerGuildMessage extends DCFScrollGui<PlayerGuildGui, PlayerGuild
     }
 
     private EmbedBuilder embed(String desc) {
-        return DiscordPlayerUtils.user(parent.getPlayer())
+        return ClientMessage.user(parent.getPlayer())
             .setAuthor("Guild History")
-            .setColor(CloverColor.PLAYER)
+            .setColor(CloverColor.BLUE_NORMAL)
             .setDescription(desc)
             .setFooter(footer());
     }

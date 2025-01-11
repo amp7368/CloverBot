@@ -25,9 +25,9 @@ public abstract class BaseActivitySubCommand extends DCFSlashSubCommand implemen
         if (wynnGuild == null) return;
 
         GuiInactivity gui = new GuiInactivity(dcf, event::reply, wynnGuild);
-        MessageInactivityProgress progressPage = new MessageInactivityProgress(gui, () -> onProgressCompletion(gui));
-        gui.addPage(progressPage);
-        gui.send();
+        new MessageInactivityProgress(gui, () -> onProgressCompletion(gui))
+            .addPageToGui()
+            .send();
     }
 
 

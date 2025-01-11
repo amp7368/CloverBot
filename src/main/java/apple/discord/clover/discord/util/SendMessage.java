@@ -1,12 +1,18 @@
 package apple.discord.clover.discord.util;
 
+import apple.discord.clover.discord.system.theme.CloverColor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public interface SendMessage {
 
+    static SendMessage get() {
+        return new SendMessage() {
+        };
+    }
+
     default EmbedBuilder success() {
-        return new EmbedBuilder().setColor(CloverColor.SUCCESS);
+        return new EmbedBuilder().setColor(CloverColor.GREEN);
     }
 
     default MessageEmbed success(String msg) {
@@ -14,7 +20,7 @@ public interface SendMessage {
     }
 
     default EmbedBuilder error() {
-        return new EmbedBuilder().setColor(CloverColor.BAD);
+        return new EmbedBuilder().setColor(CloverColor.RED);
     }
 
     default MessageEmbed error(String msg) {

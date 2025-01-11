@@ -2,8 +2,8 @@ package apple.discord.clover.discord.command.player.history;
 
 import apple.discord.clover.api.base.request.TimeResolution;
 import apple.discord.clover.database.guild.DGuild;
-import apple.discord.clover.discord.util.CloverColor;
-import apple.discord.clover.discord.util.DiscordPlayerUtils;
+import apple.discord.clover.discord.system.theme.CloverColor;
+import apple.discord.clover.discord.util.ClientMessage;
 import discord.util.dcf.gui.base.page.DCFGuiPage;
 import java.time.Duration;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -24,8 +24,8 @@ public class PlayerHistoryMessage extends DCFGuiPage<PlayerHistoryGui> {
 
     @Override
     public MessageCreateData makeMessage() {
-        EmbedBuilder embed = DiscordPlayerUtils.user(parent.getPlayerName());
-        embed.setColor(CloverColor.PLAYER)
+        EmbedBuilder embed = ClientMessage.user(parent.getPlayerName());
+        embed.setColor(CloverColor.BLUE_NORMAL)
             .setAuthor("Player History");
 
         StringBuilder desc = new StringBuilder();

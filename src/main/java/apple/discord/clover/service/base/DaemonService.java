@@ -1,5 +1,6 @@
 package apple.discord.clover.service.base;
 
+import apple.discord.clover.CloverBot;
 import apple.discord.clover.service.ServiceModule;
 import apple.discord.clover.wynncraft.WynncraftUrls.Status;
 import apple.discord.clover.wynncraft.overview.guild.response.RepeatThrottle;
@@ -28,7 +29,7 @@ public abstract class DaemonService<Res> implements Runnable {
     }
 
     protected void queueStart() {
-        new Thread(this::start).start();
+        CloverBot.get().execute(this::start);
     }
 
     protected void start() {

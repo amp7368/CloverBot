@@ -34,9 +34,10 @@ public abstract class InactivePlayer {
         return Duration.between(lastJoin, Instant.now());
     }
 
-    public String getGuildRank() {
-        return guildMember == null ? "???" : guildMember.rank;
+    public GuildRank getGuildRank() {
+        return guildMember == null ? GuildRank.UNKNOWN : GuildRank.parse(guildMember.rank);
     }
+
 
     @Nullable
     public Duration getPlaytime(TimeResolution resolution, int termsAfter) {

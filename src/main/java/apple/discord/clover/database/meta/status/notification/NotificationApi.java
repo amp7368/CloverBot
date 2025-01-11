@@ -1,6 +1,6 @@
 package apple.discord.clover.database.meta.status.notification;
 
-import static apple.discord.clover.discord.system.theme.CloverMessages.formatDateLong;
+import static apple.discord.clover.discord.system.theme.CloverMessages.formatDate;
 
 import apple.discord.clover.CloverConfig;
 import apple.discord.clover.database.meta.status.DServiceStatus;
@@ -12,11 +12,11 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 public interface NotificationApi {
 
     static void notify(NotificationType notificationType, DServiceStatus status, boolean isSilent) {
+        MessageCreateBuilder msg = makeMessage(notificationType, status, isSilent);
+
         DServiceStatusNotification notification = new DServiceStatusNotification(Instant.now(), status, notificationType);
         status.addNotification(notification);
         notification.save();
-
-        MessageCreateBuilder msg = makeMessage(notificationType, status, isSilent);
 
         CloverConfig.getDiscord().getStatusChannel()
             .sendMessage(msg.build())
@@ -40,7 +40,7 @@ public interface NotificationApi {
         if (lastNotification != null) {
             String success = lastNotification.getSuccess().pastTense();
             String type = notificationType.display();
-            String date = formatDateLong(lastNotification.getCreatedAt());
+            String date = formatDate(lastNotification.getCreatedAt());
             embed.setFooter("Most recent %s for this %s on %s\n".formatted(type, success, date));
         }
         embed.setTimestamp(Instant.now());
@@ -48,8 +48,7 @@ public interface NotificationApi {
         MessageCreateBuilder msg = new MessageCreateBuilder()
             .setEmbeds(embed.build());
 
-        if (isSilent) msg = msg.mentionUsers(CloverConfig.getService().getPingTarget());
-        else msg = msg.setAllowedMentions(List.of());
+        if (isSilent) msg = msg.setAllowedMentions(List.of());
 
         return msg;
     }

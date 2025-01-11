@@ -111,7 +111,7 @@ public class CloverDatabase extends AppleModule {
             System.exit(1);
         }
         if (!CloverDatabaseConfig.get().isConfigured()) {
-            this.logger().fatal("Please configure " + this.databaseConfigFile.getAbsolutePath());
+            this.logger().fatal("Please configure {}", this.databaseConfigFile.getAbsolutePath());
             System.exit(1);
         }
         DataSourceConfig dataSourceConfig = configureDataSource(CloverDatabaseConfig.get());
